@@ -5,7 +5,7 @@
     
   <url>
     <loc>chunlife.top/2018/07/22/%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8Hexo/</loc>
-    <lastmod>2018-07-25T14:46:10.624Z</lastmod>
+    <lastmod>2018-07-25T14:57:51.254Z</lastmod>
     <data>
         <display>
         <title>搭建博客——使用Hexo</title>
@@ -15,6 +15,9 @@
          
          
            
+             
+              <breadCrumb title="搭建" url="chunlife.top/categories/%E6%90%AD%E5%BB%BA/"/>
+          
         </display>
     </data>
     </url>
