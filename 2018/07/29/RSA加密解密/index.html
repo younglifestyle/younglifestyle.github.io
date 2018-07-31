@@ -17,8 +17,8 @@
 <meta property="og:description" content="因为项目需要，最近做一个RSA加密解密的接口，使用Go进行开发，接口使用jsonrpc，go 对RSA加密解密有很好的支持，不过由于受限于底层单片机，所以上层应用需要做一些稍微的调整。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/1533047035026.png">
-<meta property="og:image" content="/1533047635959.png">
-<meta property="og:updated_time" content="2018-07-31T14:57:35.088Z">
+<meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/1533047635959.png">
+<meta property="og:updated_time" content="2018-07-31T15:01:01.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RSA加密解密">
 <meta name="twitter:description" content="因为项目需要，最近做一个RSA加密解密的接口，使用Go进行开发，接口使用jsonrpc，go 对RSA加密解密有很好的支持，不过由于受限于底层单片机，所以上层应用需要做一些稍微的调整。">
@@ -209,7 +209,7 @@
 <p><a href="https://blog.csdn.net/yue7603835/article/details/73395580" target="_blank" rel="noopener">golang实现AES ECB模式的加密和解密</a></p>
 <p>Go的实现可参考贴出来的链接，不过此处给出我遇到的一个问题。</p>
 <p>截取自博客中的原文：</p>
-<p><img src="/1533047635959.png" alt="1533047635959"></p>
+<p><img src="1533047635959.png" alt="1533047635959"></p>
 <p>标记出来的话，其实是有问题的，AES算法，区块长度是固定的，为128bit。</p>
 <p>摘抄自<a href="https://baike.baidu.com/item/aes/5903?fr=aladdin" target="_blank" rel="noopener">百度百科</a>：严格地说，AES和Rijndael加密法并不完全一样（虽然在实际应用中二者可以互换），因为Rijndael加密法可以支持更大范围的区块和密钥长度：AES的区块长度固定为128比特，密钥长度则可以是128、192、256比特；而Rijndael使用的密钥和区块长度可以是32位的整数倍，以128位为下限，256比特为上限。加密过程中使用的密钥是由Rijndael密钥生成方案产生。</p>
 <p>在golang的源码设计中也可以证明这点，其blocksize设定为const，其值为16(byte)，显然，标准库是并不允许使用者去修改这个值的，那么AES-128/192/256，其实是针对的密钥长度来说的。</p>
@@ -492,10 +492,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
@@ -505,6 +501,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
             
             <div class="clearfix"></div>
