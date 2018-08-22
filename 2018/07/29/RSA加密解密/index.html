@@ -18,7 +18,12 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/1533047035026.png">
 <meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/1533047635959.png">
-<meta property="og:updated_time" content="2018-07-31T15:01:01.503Z">
+<meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/clip_image001.png">
+<meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/clip_image002.png">
+<meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/clip_image003.png">
+<meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/clip_image001-1534941259919.png">
+<meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/clip_image004.png">
+<meta property="og:updated_time" content="2018-08-22T12:36:57.360Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RSA加密解密">
 <meta name="twitter:description" content="因为项目需要，最近做一个RSA加密解密的接口，使用Go进行开发，接口使用jsonrpc，go 对RSA加密解密有很好的支持，不过由于受限于底层单片机，所以上层应用需要做一些稍微的调整。">
@@ -228,6 +233,42 @@
 <h3 id="将数组转换为以“-”分割的字符串"><a href="#将数组转换为以“-”分割的字符串" class="headerlink" title="将数组转换为以“,”分割的字符串"></a>将数组转换为以“,”分割的字符串</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings.Replace(strings.Trim(fmt.Sprint(byteArr),<span class="string">"[]"</span>), <span class="string">" "</span>, <span class="string">","</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
 <h3 id="将十六进制的字符，转换为整数"><a href="#将十六进制的字符，转换为整数" class="headerlink" title="将十六进制的字符，转换为整数"></a>将十六进制的字符，转换为整数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strconv.ParseUint(data, 16, 8)</span><br></pre></td></tr></table></figure>
 <p>data：字符，16：进制，8：转换数据的大小，8则是8bit。</p>
+<h2 id="2018年8月22日17-38-32"><a href="#2018年8月22日17-38-32" class="headerlink" title="2018年8月22日17:38:32"></a>2018年8月22日17:38:32</h2><p>本来以为rsa加密解密的事都要翻篇了，谁知道底层突然和我说交互出了问题，STM32使用的RSA是官方库，Go使用的是官方库，理论上不应该有什么问题的，但实际上就是出了问题。</p>
+<p>问题是这样的，Go使用私钥加密，STM32无法使用公钥进行解密；STM32使用私钥加密，Go无法进行公钥解密。但双方公钥加密，对方都可以进行私钥解密。</p>
+<p>然后花了一天的时间的去细细的琢磨这个事，觉得这个过程还是很有意思的。</p>
+<p>首先，则是两方都去检查源码是否出现使用错误，在互相review代码确认无误，这样不会造成总是去怀疑对方的代码，至少在使用上都是按照官方文档进行的操作。</p>
+<p>第二步，再三确认私钥加密，公钥解密这个种非标用法是可行的。因为RSA签名和验证过程是包含有私钥加密，公钥解密的，这个点是不需要再去考虑正确性的。</p>
+<p>第三步，双方通讯无法通过对方，那么很自然的就会想到，先抛弃掉对方，使用另外一种标准库，或者是语言的标准库来佐证自己的库的正确性，这里我选择的是使用OpenSSL的接口，使用CGo，调用的OpenSSL的接口，放上借用的库链接<a href="https://github.com/dgkang/rsa，最终测试结果是与Go库中的结果是一样的。我这里用的库是https://github.com/wenzhenxi/gorsa，因为官方库并没有将RSA私钥加密暴露出来，若需要使用的话就需要自己动手了。" target="_blank" rel="noopener">https://github.com/dgkang/rsa，最终测试结果是与Go库中的结果是一样的。我这里用的库是https://github.com/wenzhenxi/gorsa，因为官方库并没有将RSA私钥加密暴露出来，若需要使用的话就需要自己动手了。</a></p>
+<p>第四步，我单方面的证明了Go库没有问题，此时怀疑的方向就只能是STM32官方库出了问题，哪里出了问题呢。偶然地，在使用<a href="https://github.com/dgkang/rsa库时，OpenSSL上报错信息是：error:0407006A:rsa" target="_blank" rel="noopener">https://github.com/dgkang/rsa库时，OpenSSL上报错信息是：error:0407006A:rsa</a> routines:RSA_padding_check_PKCS1_type_1:block type is not 01。这个报错信息很关键，STM32库上说的是PKCS1 padding方式，那现在OpenSSL又报出了type方式不同，那只能说明这是有点问题。使用了库的nopadding方式，可以解密出来的数据都打印出来（PKCS1会直接返回数据，填充的信息会直接过滤掉）。</p>
+<p><img src="clip_image001.png" alt="img"></p>
+<p>在调试时，这些数据也是一头雾水的，实际打印的信息是下面的，我实际想要的是后面的数字，这个byte数组和string乱码看的也是脑袋大，为了搞清楚这个，需要了解加密填充信息。</p>
+<p><img src="clip_image002.png" alt="img"></p>
+<p>以下介绍填充方式的知识皆参考自：</p>
+<p>RSA_PKCS1_PADDING</p>
+<p>来自 &lt;<a href="https://www.douban.com/note/338531480/" target="_blank" rel="noopener">https://www.douban.com/note/338531480/</a>&gt; </p>
+<p>padding的三种方式：</p>
+<p>RSA加密常用的填充方式有下面3种：</p>
+<p>1.RSA_PKCS1_PADDING 填充模式，最常用的模式</p>
+<p>要求:</p>
+<p>输入：必须 比 RSA 钥模长(modulus) 短至少11个字节, 也就是　RSA_size(rsa) – 11</p>
+<p>如果输入的明文过长，必须切割，然后填充</p>
+<p>输出：和modulus一样长</p>
+<p>2.RSA_PKCS1_OAEP_PADDING</p>
+<p>输入：RSA_size(rsa) – 41</p>
+<p>输出：和modulus一样长</p>
+<p>3.RSA_NO_PADDING　　不填充</p>
+<p>输入：可以和RSA钥模长一样长（因为不填充，必须要填入模长），如果输入的明文过长，必须切割，然后填充</p>
+<p>输出：和modulus一样长</p>
+<p>其中PKCS1需要遵守的填充规则是</p>
+<p><img src="clip_image003.png" alt="img"></p>
+<p>可以看到数据组成方式是有着固定的规则的。</p>
+<p>那再看看我们从STM32解密出来的数据，可以看到这个数据有点问题，明明是私钥加的密，开头确实0 2，大概率这里有问题。</p>
+<p><img src="clip_image001-1534941259919.png" alt="img"></p>
+<p>于是我在我的私钥加密中，将这位修改成2，将数据发给STM32,32那边随即便将数据返回出来了。</p>
+<p>还有一个问题，那就是为什么PKCS标准需要留11个字节呢。</p>
+<p><img src="clip_image004.png" alt="img"></p>
+<p>这11个字长那么大概率就是为了增加秘钥安全性所预留的随机数了。</p>
+<p>至此，算是终于将问题找到，并找到解决的办法了，解决问题大概是经历了那几个步骤，中间夹杂着各种尝试，当然写出来的却是每一步走得都很正确，中间与人沟通的成本不低，沟通愉快的时候解决问题的方法就会非常的多。</p>
 
       
 
@@ -389,7 +430,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、概要"><span class="toc-number">1.</span> <span class="toc-text">一、概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、RSA一些名词的解释"><span class="toc-number">2.</span> <span class="toc-text">三、RSA一些名词的解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、Go中的RSA加密解密"><span class="toc-number">3.</span> <span class="toc-text">二、Go中的RSA加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、Go-RSA库的使用"><span class="toc-number">4.</span> <span class="toc-text">四、Go RSA库的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、项目中的问题"><span class="toc-number">5.</span> <span class="toc-text">五、项目中的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、AES加密解密"><span class="toc-number">6.</span> <span class="toc-text">六、AES加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、使用的方法"><span class="toc-number">7.</span> <span class="toc-text">七、使用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bytes-Join将byte数组的数组进行组合"><span class="toc-number">7.1.</span> <span class="toc-text">bytes.Join将byte数组的数组进行组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将一个大数按大小端转换为byte数组模式"><span class="toc-number">7.2.</span> <span class="toc-text">将一个大数按大小端转换为byte数组模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#返回子串在字符串中的索引"><span class="toc-number">7.3.</span> <span class="toc-text">返回子串在字符串中的索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将数组转换为以“-”分割的字符串"><span class="toc-number">7.4.</span> <span class="toc-text">将数组转换为以“,”分割的字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将十六进制的字符，转换为整数"><span class="toc-number">7.5.</span> <span class="toc-text">将十六进制的字符，转换为整数</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、概要"><span class="toc-number">1.</span> <span class="toc-text">一、概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、RSA一些名词的解释"><span class="toc-number">2.</span> <span class="toc-text">三、RSA一些名词的解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、Go中的RSA加密解密"><span class="toc-number">3.</span> <span class="toc-text">二、Go中的RSA加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、Go-RSA库的使用"><span class="toc-number">4.</span> <span class="toc-text">四、Go RSA库的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、项目中的问题"><span class="toc-number">5.</span> <span class="toc-text">五、项目中的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、AES加密解密"><span class="toc-number">6.</span> <span class="toc-text">六、AES加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、使用的方法"><span class="toc-number">7.</span> <span class="toc-text">七、使用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bytes-Join将byte数组的数组进行组合"><span class="toc-number">7.1.</span> <span class="toc-text">bytes.Join将byte数组的数组进行组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将一个大数按大小端转换为byte数组模式"><span class="toc-number">7.2.</span> <span class="toc-text">将一个大数按大小端转换为byte数组模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#返回子串在字符串中的索引"><span class="toc-number">7.3.</span> <span class="toc-text">返回子串在字符串中的索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将数组转换为以“-”分割的字符串"><span class="toc-number">7.4.</span> <span class="toc-text">将数组转换为以“,”分割的字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将十六进制的字符，转换为整数"><span class="toc-number">7.5.</span> <span class="toc-text">将十六进制的字符，转换为整数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018年8月22日17-38-32"><span class="toc-number">8.</span> <span class="toc-text">2018年8月22日17:38:32</span></a></li></ol>
                     </div>
                 </span>
             </div>
