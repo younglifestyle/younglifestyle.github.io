@@ -152,6 +152,108 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-组件与语言特性的学习" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/26/组件与语言特性的学习/">组件与语言特性的学习</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/26/组件与语言特性的学习/" class="archive-article-date">
+  	<time datetime="2018-08-26T03:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="sync-Map"><a href="#sync-Map" class="headerlink" title="sync.Map"></a>sync.Map</h1><p>这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。</p>
+<p>以下内容取自<a href="https://blog.csdn.net/champly/article/details/77622328" target="_blank" rel="noopener">Go1.9 安全map用法</a>。</p>
+<p><img src="1535253147536.png" alt="1535253147536"></p>
+<h1 id="Gin框架"><a href="#Gin框架" class="headerlink" title="Gin框架"></a>Gin框架</h1><p>encoding/json 貌似不支持required json tag，实际验证好像也不支持，这个字段表示传递的json数据没有这个字段就会报错。</p>
+<p>GIN框架补充了这个字段，使用binding tag，如果没有该字段，直接报错。</p>
+<p><img src="clip_image001.png" alt="img"></p>
+<p>c.BindQuery可以直接把Query映射出来，当然可以操作form表单的数据，操作及其方便，涉及到反射操作，还有检查的时间。</p>
+<h1 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h1><p>指定浏览器直接下载文件，且使用文件下载原名，其不进行打开操作。</p>
+<p><a href="https://segmentfault.com/q/1010000000692593" target="_blank" rel="noopener">https://segmentfault.com/q/1010000000692593</a></p>
+<p><a href="https://golangtc.com/t/54d9ca47421aa9170200000f" target="_blank" rel="noopener">https://golangtc.com/t/54d9ca47421aa9170200000f</a></p>
+<p><img src="clip_image002.png" alt="指定下载文件名"></p>
+<p>golang filepath.Ext  获取文件后缀名 </p>
+<h1 id="时间戳格式变换为YYYYMMDD"><a href="#时间戳格式变换为YYYYMMDD" class="headerlink" title="时间戳格式变换为YYYYMMDD"></a>时间戳格式变换为YYYYMMDD</h1><p>//返回现在时间</p>
+<p>tNow:=time.Now()</p>
+<p>//时间转化为string，layout必须为”2006-01-0215:04:05”</p>
+<p>timeNow:=tNow.Format(“20060102”)</p>
+<p>fmt.Println(“tNow(timeformat):”,tNow)</p>
+<p>fmt.Println(“tNow(stringformat):”,timeNow)</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/项目//" class="article-tag-list-link color3">项目</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/26/组件与语言特性的学习/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-EE小白到CS小白" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -584,6 +686,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
@@ -596,10 +706,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
@@ -608,7 +714,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
             <div class="clearfix"></div>
