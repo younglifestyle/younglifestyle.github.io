@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>组件与语言特性的学习 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。 以下内容取自Go1.9 安全map用法。  Gin框架encoding/json 貌似不支持required json tag，实际验证好像也不支持，这个字段表示传递的json数据没有这个字段就会报错。 GIN框架补充了这个字段，">
+  <meta name="description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。">
 <meta name="keywords" content="学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="组件与语言特性的学习">
 <meta property="og:url" content="chunlife.top/2018/08/26/组件与语言特性的学习/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。 以下内容取自Go1.9 安全map用法。  Gin框架encoding/json 貌似不支持required json tag，实际验证好像也不支持，这个字段表示传递的json数据没有这个字段就会报错。 GIN框架补充了这个字段，">
+<meta property="og:description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/1535253147536.png">
 <meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/clip_image001.png">
 <meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/clip_image002.png">
-<meta property="og:updated_time" content="2018-08-26T12:07:14.298Z">
+<meta property="og:updated_time" content="2018-08-26T12:08:47.749Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="组件与语言特性的学习">
-<meta name="twitter:description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。 以下内容取自Go1.9 安全map用法。  Gin框架encoding/json 貌似不支持required json tag，实际验证好像也不支持，这个字段表示传递的json数据没有这个字段就会报错。 GIN框架补充了这个字段，">
+<meta name="twitter:description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。">
 <meta name="twitter:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/1535253147536.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
@@ -180,6 +180,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="sync-Map"><a href="#sync-Map" class="headerlink" title="sync.Map"></a>sync.Map</h1><p>这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。</p>
+<a id="more"></a>
 <p>以下内容取自<a href="https://blog.csdn.net/champly/article/details/77622328" target="_blank" rel="noopener">Go1.9 安全map用法</a>。</p>
 <p><img src="1535253147536.png" alt="1535253147536"></p>
 <h1 id="Gin框架"><a href="#Gin框架" class="headerlink" title="Gin框架"></a>Gin框架</h1><p>encoding/json 貌似不支持required json tag，实际验证好像也不支持，这个字段表示传递的json数据没有这个字段就会报错。</p>
