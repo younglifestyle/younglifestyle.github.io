@@ -19,7 +19,11 @@
 <meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/1535253147536.png">
 <meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/clip_image001.png">
 <meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/clip_image002.png">
-<meta property="og:updated_time" content="2018-08-26T12:08:47.749Z">
+<meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/1535287076868.png">
+<meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/first.png">
+<meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/1535287393700.png">
+<meta property="og:image" content="chunlife.top/2018/08/26/组件与语言特性的学习/1535287745538.png">
+<meta property="og:updated_time" content="2018-08-26T12:50:36.493Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="组件与语言特性的学习">
 <meta name="twitter:description" content="sync.Map这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。">
@@ -198,6 +202,15 @@
 <p>timeNow:=tNow.Format(“20060102”)</p>
 <p>fmt.Println(“tNow(timeformat):”,tNow)</p>
 <p>fmt.Println(“tNow(stringformat):”,timeNow)</p>
+<h1 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h1><p>Gorm使用first、find查询单个参数时，没有查到会返回not found错误，当Find使用数组去接数据时，没有找到也不会报错。</p>
+<p><strong>MySQL时间类型：</strong></p>
+<p><img src="1535287076868.png" alt="MySQL时间类参数"></p>
+<p>MySQL 中timestamp 类型使用默认值CURRENT_TIMESTAMP创建成功，使用datetime则不行。</p>
+<p>时间戳和时间格式的转换：</p>
+<p><img src="first.png" alt="1535287353268"></p>
+<p>转换成：</p>
+<p><img src="1535287393700.png" alt="时间戳"></p>
+<p><img src="1535287745538.png" alt="as用法"></p>
 
       
 
@@ -342,7 +355,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sync-Map"><span class="toc-number">1.</span> <span class="toc-text">sync.Map</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Gin框架"><span class="toc-number">2.</span> <span class="toc-text">Gin框架</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件下载"><span class="toc-number">3.</span> <span class="toc-text">文件下载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#时间戳格式变换为YYYYMMDD"><span class="toc-number">4.</span> <span class="toc-text">时间戳格式变换为YYYYMMDD</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sync-Map"><span class="toc-number">1.</span> <span class="toc-text">sync.Map</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Gin框架"><span class="toc-number">2.</span> <span class="toc-text">Gin框架</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件下载"><span class="toc-number">3.</span> <span class="toc-text">文件下载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#时间戳格式变换为YYYYMMDD"><span class="toc-number">4.</span> <span class="toc-text">时间戳格式变换为YYYYMMDD</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据库操作"><span class="toc-number">5.</span> <span class="toc-text">数据库操作</span></a></li></ol>
                     </div>
                 </span>
             </div>
