@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>Pure Life</title>
+  <title>服务器限流问题 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Pure Life">
-<meta property="og:url" content="chunlife.top/index.html">
+  <meta name="description" content="在观看慕课网的Go语言实战流媒体视频网站 ，里面有提高bucket token算法，也就是令牌桶算法，用于服务器限流。因为我刚好在做一个包含上传和下载的服务器接口，貌似会需要到这一块地方，就多加了一些了解，这里主要是将结果进行粘贴。">
+<meta name="keywords" content="Go,服务器,限流">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务器限流问题">
+<meta property="og:url" content="chunlife.top/2018/09/02/服务器限流问题/index.html">
 <meta property="og:site_name" content="Pure Life">
+<meta property="og:description" content="在观看慕课网的Go语言实战流媒体视频网站 ，里面有提高bucket token算法，也就是令牌桶算法，用于服务器限流。因为我刚好在做一个包含上传和下载的服务器接口，貌似会需要到这一块地方，就多加了一些了解，这里主要是将结果进行粘贴。">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-02T12:32:10.262Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pure Life">
+<meta name="twitter:title" content="服务器限流问题">
+<meta name="twitter:description" content="在观看慕课网的Go语言实战流媒体视频网站 ，里面有提高bucket token算法，也就是令牌桶算法，用于服务器限流。因为我刚好在做一个包含上传和下载的服务器接口，貌似会需要到这一块地方，就多加了一些了解，这里主要是将结果进行粘贴。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -150,16 +155,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-服务器限流问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-服务器限流问题" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/02/服务器限流问题/">服务器限流问题</a>
+    <h1 class="article-title" itemprop="name">
+      服务器限流问题
     </h1>
   
 
@@ -173,11 +176,49 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>在观看慕课网的<a href="https://coding.imooc.com/class/227.html" target="_blank" rel="noopener">Go语言实战流媒体视频网站</a> ，里面有提高bucket token算法，也就是令牌桶算法，用于服务器限流。因为我刚好在做一个包含上传和下载的服务器接口，貌似会需要到这一块地方，就多加了一些了解，这里主要是将结果进行粘贴。</p>
-        
-          <a class="article-more-a" href="/2018/09/02/服务器限流问题/#more">more >></a>
-        
+<a id="more"></a>
+<h1 id="服务器限流介绍"><a href="#服务器限流介绍" class="headerlink" title="服务器限流介绍"></a>服务器限流介绍</h1><p>服务治理之限流</p>
+<p>来自 &lt;<a href="https://blog.frognew.com/2017/06/rate-limiting.html" target="_blank" rel="noopener">https://blog.frognew.com/2017/06/rate-limiting.html</a>&gt; </p>
+<p>如何测试服务器带宽？</p>
+<p>来自 &lt;<a href="https://www.zhihu.com/question/20561349" target="_blank" rel="noopener">https://www.zhihu.com/question/20561349</a>&gt; </p>
+<h1 id="简单的限流方法"><a href="#简单的限流方法" class="headerlink" title="简单的限流方法"></a>简单的限流方法</h1><p>贴上视频中老师写的方法（代码出处为老师视频）。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ConnLimiter <span class="keyword">struct</span> &#123;</span><br><span class="line">	concurrentConn <span class="keyword">int</span></span><br><span class="line">	bucket         <span class="keyword">chan</span> <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// concurrentConn可以连接的数量，channel满了则</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewConnLimiter</span><span class="params">(cc <span class="keyword">int</span>)</span> *<span class="title">ConnLimiter</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;ConnLimiter&#123;</span><br><span class="line">		concurrentConn: cc,</span><br><span class="line">		bucket:         <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, cc),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cl *ConnLimiter)</span> <span class="title">GetConn</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(cl.bucket) &gt;= cl.concurrentConn &#123;</span><br><span class="line">		log.Printf(<span class="string">"Reached the rate limitation"</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	cl.bucket &lt;- <span class="number">1</span></span><br><span class="line">	log.Printf(<span class="string">"Successfully got connection"</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cl *ConnLimiter)</span> <span class="title">ReleaseConn</span><span class="params">()</span></span> &#123;</span><br><span class="line">	c := &lt;-cl.bucket</span><br><span class="line">	log.Printf(<span class="string">"New connection coming: %d"</span>, c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过封装ServeHTTP方法，达到嵌入限流代码的目的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> middleWareHandler <span class="keyword">struct</span> &#123;</span><br><span class="line">	r *httprouter.Router</span><br><span class="line">	l *ConnLimiter</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//NewMiddleWareHandler def</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewMiddleWareHandler</span><span class="params">(r *httprouter.Router, cc <span class="keyword">int</span>)</span> <span class="title">http</span>.<span class="title">Handler</span></span> &#123;</span><br><span class="line">	m := middleWareHandler&#123;&#125;</span><br><span class="line">	m.r = r</span><br><span class="line">	m.l = NewConnLimiter(cc)</span><br><span class="line">	<span class="keyword">return</span> m</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RegisterHandlers</span><span class="params">()</span> *<span class="title">httprouter</span>.<span class="title">Router</span></span> &#123;</span><br><span class="line">	router := httprouter.New()</span><br><span class="line"></span><br><span class="line">	router.GET(<span class="string">"/videos/:vid-id"</span>, streamHandler)</span><br><span class="line"></span><br><span class="line">	router.POST(<span class="string">"/upload/:vid-id"</span>, uploadHandler)</span><br><span class="line"></span><br><span class="line">	router.GET(<span class="string">"/testpage"</span>, testPageHandler)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> router</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Handler最终会调用httprouter.Router接口方法中的ServeHTTP，这里对Go方法进行DIY封装</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m middleWareHandler)</span> <span class="title">ServeHTTP</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> !m.l.GetConn() &#123;</span><br><span class="line">		sendErrorResponse(w, http.StatusTooManyRequests, <span class="string">"Too many requests"</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> m.l.ReleaseConn()</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 调用router起作用ServeHTTP</span></span><br><span class="line">	m.r.ServeHTTP(w, r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	r := RegisterHandlers()</span><br><span class="line">	mh := NewMiddleWareHandler(r, <span class="number">2</span>)</span><br><span class="line">	http.ListenAndServe(<span class="string">":9000"</span>, mh)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="复杂的限流方法介绍"><a href="#复杂的限流方法介绍" class="headerlink" title="复杂的限流方法介绍"></a>复杂的限流方法介绍</h1><p>服务器下载限流操作（使用token bucket）：</p>
+<p>各种类似算法实现：</p>
+<p><a href="https://hustcat.github.io/rate-limit-example-in-go/" target="_blank" rel="noopener">https://hustcat.github.io/rate-limit-example-in-go/</a></p>
+<p>HTTP限速中间件：</p>
+<p><a href="https://github.com/didip/tollbooth" target="_blank" rel="noopener">https://github.com/didip/tollbooth</a></p>
+<p>修改servefile来实现（用到<a href="https://github.com/juju/ratelimit）：" target="_blank" rel="noopener">https://github.com/juju/ratelimit）：</a></p>
+<p><a href="https://stackoverflow.com/questions/29445173/how-to-limit-download-speed-with-go" target="_blank" rel="noopener">https://stackoverflow.com/questions/29445173/how-to-limit-download-speed-with-go</a></p>
+<p>使用包来实现：</p>
+<p><a href="https://www.0value.com/throttled--guardian-of-the-web-server" target="_blank" rel="noopener">https://www.0value.com/throttled--guardian-of-the-web-server</a></p>
+<p><a href="https://github.com/throttled/throttled" target="_blank" rel="noopener">https://github.com/throttled/throttled</a></p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -205,16 +246,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/09/02/服务器限流问题/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http:chunlife.top/2018/09/02/服务器限流问题/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/26/组件与语言特性的学习/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">组件与语言特性的学习</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -229,439 +329,32 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-组件与语言特性的学习" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/26/组件与语言特性的学习/">组件与语言特性的学习</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/26/组件与语言特性的学习/" class="archive-article-date">
-  	<time datetime="2018-08-26T03:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="sync-Map"><a href="#sync-Map" class="headerlink" title="sync.Map"></a>sync.Map</h1><p>这是一种线程安全的map用法，在版本1.9时出现，按照以前的用法，多协程情况下，需要使用将map和锁一起使用才可以做到线程安全，而现在可直接使用该类型。</p>
-        
-          <a class="article-more-a" href="/2018/08/26/组件与语言特性的学习/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/项目//" class="article-tag-list-link color3">项目</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/26/组件与语言特性的学习/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#服务器限流介绍"><span class="toc-number">1.</span> <span class="toc-text">服务器限流介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的限流方法"><span class="toc-number">2.</span> <span class="toc-text">简单的限流方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#复杂的限流方法介绍"><span class="toc-number">3.</span> <span class="toc-text">复杂的限流方法介绍</span></a></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
   
-    <article id="post-EE小白到CS小白" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/12/EE小白到CS小白/">EE小白到CS小白</a>
-    </h1>
   
 
-        
-        <a href="/2018/08/12/EE小白到CS小白/" class="archive-article-date">
-  	<time datetime="2018-08-12T09:50:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>从武汉来到深圳，怀揣着一个傲娇的想法走出来，纯粹就是想要看看世界，毕业呆了四年的城市毕竟太过熟悉了。同时，之前做的是嵌入式开发，在公司当个软件组长太过安逸，而且在武汉工资和前景感觉都不是太好看，于是在毕业又做了大半年后，于公司辞职后，来到了深圳。</p>
-        
-          <a class="article-more-a" href="/2018/08/12/EE小白到CS小白/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/12/EE小白到CS小白/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-比特币—-挖矿" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/11/比特币—-挖矿/">比特币—-挖矿</a>
-    </h1>
   
 
-        
-        <a href="/2018/08/11/比特币—-挖矿/" class="archive-article-date">
-  	<time datetime="2018-08-11T14:42:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>以前做嵌入式智能感叹比特币价格的疯狂，曾突破到一万多美元一枚的价格，让我流下了没有技术的泪水，现在却是可以理解理解到底啥玩意叫个区块链，啥叫个比特币了。</p>
-        
-          <a class="article-more-a" href="/2018/08/11/比特币—-挖矿/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">区块链</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">比特币</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/11/比特币—-挖矿/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-RSA加密解密" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/29/RSA加密解密/">RSA加密解密</a>
-    </h1>
   
 
-        
-        <a href="/2018/07/29/RSA加密解密/" class="archive-article-date">
-  	<time datetime="2018-07-29T13:43:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>因为项目需要，最近做一个RSA加密解密的接口，使用Go进行开发，接口使用jsonrpc，go 对RSA加密解密有很好的支持，不过由于受限于底层单片机，所以上层应用需要做一些稍微的调整。</p>
-        
-          <a class="article-more-a" href="/2018/07/29/RSA加密解密/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OpenSSL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">RSA加密解密</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/项目//" class="article-tag-list-link color3">项目</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/29/RSA加密解密/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-搭建博客——使用Hexo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/22/搭建博客——使用Hexo/">搭建博客——使用Hexo</a>
-    </h1>
-  
-
-        
-        <a href="/2018/07/22/搭建博客——使用Hexo/" class="archive-article-date">
-  	<time datetime="2018-07-22T15:32:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="搭建博客"><a href="#搭建博客" class="headerlink" title="搭建博客"></a>搭建博客</h3><p>使用GitHub和Hexo搭建博客其实是非常顺畅的，毕竟工具到现在都已经经历很多版本的迭代了，已经很傻瓜式了。</p>
-<p>推荐搭建的教程：</p>
-        
-          <a class="article-more-a" href="/2018/07/22/搭建博客——使用Hexo/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">搭建博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/环境//" class="article-tag-list-link color3">环境</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/22/搭建博客——使用Hexo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
 
 
@@ -684,8 +377,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
