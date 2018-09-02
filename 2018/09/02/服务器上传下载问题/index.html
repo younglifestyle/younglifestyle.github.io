@@ -18,7 +18,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2018/09/02/服务器上传下载问题/clip_image001.png">
 <meta property="og:image" content="chunlife.top/2018/09/02/服务器上传下载问题/clip_image001-1535892856347.png">
-<meta property="og:updated_time" content="2018-09-02T12:56:13.241Z">
+<meta property="og:updated_time" content="2018-09-02T13:08:16.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务器上传下载问题">
 <meta name="twitter:description" content="做过服务器上传下载的一个接口，将其整理整理写出来备忘吧。">
@@ -193,6 +193,10 @@
 <h2 id="文件读写的问题："><a href="#文件读写的问题：" class="headerlink" title="文件读写的问题："></a>文件读写的问题：</h2><p>ReadAll后，再去读文件数据，为空，使用seek重新回到文件头位置。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; Seek 设置下一次 Read 或 Write 的偏移量为 offset，它的解释取决于 whence： 0 表示相对于文件的起始处，1 表示相对于当前的偏移，而 2 表示相对于其结尾处。 Seek 返回新的偏移量和一个错误，如果有的话。</span><br></pre></td></tr></table></figure>
 <p><img src="clip_image001-1535892856347.png" alt="读写文件"></p>
+<h2 id="Go-删除文件和文件夹"><a href="#Go-删除文件和文件夹" class="headerlink" title="Go 删除文件和文件夹"></a>Go 删除文件和文件夹</h2><p>删除空目录</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Remove</span><span class="params">(name <span class="keyword">string</span>)</span> <span class="title">error</span></span></span><br></pre></td></tr></table></figure>
+<p>强制删除目录，无论目录是否有文件</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RemoveAll</span><span class="params">(path <span class="keyword">string</span>)</span> <span class="title">error</span></span></span><br></pre></td></tr></table></figure>
 
       
 
@@ -334,7 +338,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#上传文件"><span class="toc-number">1.</span> <span class="toc-text">上传文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载文件（Gin）"><span class="toc-number">2.</span> <span class="toc-text">下载文件（Gin）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#指定浏览器直接下载文件，不进行打开操作"><span class="toc-number">3.1.</span> <span class="toc-text">指定浏览器直接下载文件，不进行打开操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Go作为客户端下载文件，实现类似于Wget的效果"><span class="toc-number">3.2.</span> <span class="toc-text">Go作为客户端下载文件，实现类似于Wget的效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件读写的问题："><span class="toc-number">3.3.</span> <span class="toc-text">文件读写的问题：</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#上传文件"><span class="toc-number">1.</span> <span class="toc-text">上传文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载文件（Gin）"><span class="toc-number">2.</span> <span class="toc-text">下载文件（Gin）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#指定浏览器直接下载文件，不进行打开操作"><span class="toc-number">3.1.</span> <span class="toc-text">指定浏览器直接下载文件，不进行打开操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Go作为客户端下载文件，实现类似于Wget的效果"><span class="toc-number">3.2.</span> <span class="toc-text">Go作为客户端下载文件，实现类似于Wget的效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件读写的问题："><span class="toc-number">3.3.</span> <span class="toc-text">文件读写的问题：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Go-删除文件和文件夹"><span class="toc-number">3.4.</span> <span class="toc-text">Go 删除文件和文件夹</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
