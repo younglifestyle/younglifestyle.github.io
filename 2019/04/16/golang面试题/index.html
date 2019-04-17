@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="暂时废弃，未补充。 收集碰到的一些题目：">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-17T07:18:49.114Z">
+<meta property="og:updated_time" content="2019-04-17T10:23:20.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang面试题">
 <meta name="twitter:description" content="暂时废弃，未补充。 收集碰到的一些题目：">
@@ -175,6 +175,9 @@
 <h2 id="是否可以编译通过？如果通过，输出什么？"><a href="#是否可以编译通过？如果通过，输出什么？" class="headerlink" title="是否可以编译通过？如果通过，输出什么？"></a>是否可以编译通过？如果通过，输出什么？</h2><p><code>list</code>类型是<code>*[]int</code>，append要求的第一个参数是<code>slice []Type</code>。</p>
 <p>编译会失败 59.175.182.99</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	list := <span class="built_in">new</span>([]<span class="keyword">int</span>)</span><br><span class="line">	list = <span class="built_in">append</span>(list, <span class="number">1</span>)</span><br><span class="line">	fmt.Println(list)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>可以编译通过，打印<code>0 1 zz zz 4</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	x = <span class="literal">iota</span></span><br><span class="line">	y</span><br><span class="line">	z = <span class="string">"zz"</span></span><br><span class="line">	k</span><br><span class="line">	p = <span class="literal">iota</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	fmt.Println(x,y,z,k,p)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
 
