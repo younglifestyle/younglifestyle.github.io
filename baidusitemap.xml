@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>chunlife.top/2017/04/13/%E6%88%91%E7%9A%84%E7%AE%80%E5%8E%86/</loc>
+    <lastmod>2019-04-24</lastmod>
+  </url>  <url>
     <loc>chunlife.top/2019/04/23/docker-Toolbox%E4%BF%AE%E6%94%B9%E6%BA%90/</loc>
     <lastmod>2019-04-24</lastmod>
   </url>  <url>
@@ -15,9 +18,6 @@
   </url>  <url>
     <loc>chunlife.top/2018/07/12/go%E9%87%8C%E9%9D%A2%E7%9A%84io-Writerr%E6%93%8D%E4%BD%9C/</loc>
     <lastmod>2019-04-19</lastmod>
-  </url>  <url>
-    <loc>chunlife.top/2019/04/13/%E6%88%91%E7%9A%84%E7%AE%80%E5%8E%86/</loc>
-    <lastmod>2019-04-18</lastmod>
   </url>  <url>
     <loc>chunlife.top/2019/04/16/golang%E9%9D%A2%E8%AF%95%E9%A2%98/</loc>
     <lastmod>2019-04-17</lastmod>
