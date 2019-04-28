@@ -16,10 +16,12 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="摘取自gateway，作者提到过这种方式，也是来源于另一个开源项目，操作方式极其硬核，故收藏了。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-10T13:32:44.608Z">
+<meta property="og:image" content="chunlife.top/2019/03/19/stringSlice转换——无需内存copy/sort接口的使用.png">
+<meta property="og:updated_time" content="2019-04-28T14:10:12.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="stringSlice转换——无需内存copy">
 <meta name="twitter:description" content="摘取自gateway，作者提到过这种方式，也是来源于另一个开源项目，操作方式极其硬核，故收藏了。">
+<meta name="twitter:image" content="chunlife.top/2019/03/19/stringSlice转换——无需内存copy/sort接口的使用.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -181,6 +183,8 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyStruct <span class="keyword">struct</span> &#123;</span><br><span class="line">    A <span class="keyword">int</span></span><br><span class="line">    B <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取结构体真实数据的大小</span></span><br><span class="line"><span class="keyword">var</span> sizeOfMyStruct = <span class="keyword">int</span>(unsafe.Sizeof(MyStruct&#123;&#125;))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填充[]byte的数据结构</span></span><br><span class="line"><span class="comment">// 结构体的数据指针也就是一个4字节的int类型（c基础知识！）</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MyStructToBytes</span><span class="params">(s *MyStruct)</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> x reflect.SliceHeader</span><br><span class="line">    x.Len = sizeOfMyStruct</span><br><span class="line">    x.Cap = sizeOfMyStruct</span><br><span class="line">    x.Data = <span class="keyword">uintptr</span>(unsafe.Pointer(s))</span><br><span class="line">    <span class="keyword">return</span> *(*[]<span class="keyword">byte</span>)(unsafe.Pointer(&amp;x))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// unsafe.Pointer(&amp;b)：取[]byte首地址</span></span><br><span class="line"><span class="comment">// (*reflect.SliceHeader)(unsafe.Pointer(&amp;b)) ： 强制转换其为reflect.SliceHeader指针</span></span><br><span class="line"><span class="comment">// (*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data ： 将slice的数据指针取出来</span></span><br><span class="line"><span class="comment">// unsafe.Pointer((*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data) : 将uint指针转成任意指针</span></span><br><span class="line"><span class="comment">// (*MyStruct)(unsafe.Pointer((*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data))：成功转换</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BytesToMyStruct</span><span class="params">(b []<span class="keyword">byte</span>)</span> *<span class="title">MyStruct</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (*MyStruct)(unsafe.Pointer(</span><br><span class="line">        (*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="写在后头"><a href="#写在后头" class="headerlink" title="写在后头"></a>写在后头</h3><p>上头写的东西，感觉有些突破语言既定的规范了，当然我这么想是有根据的，从源码注释上来看，显然，这个语言特性是不稳定的，指不定哪天Go开发人员觉着这个<code>黑魔法</code>不够魔性，直接不允许你这么做了。</p>
 <p><code>黑魔法</code>，也是被一些人诟病的地方吧，有好有坏，不了解也可以，了解了也不是不可。</p>
+<p><strong>注意</strong>：使用这种方式去转换，是无法对数据进行修改的。意思是，调用了<code>ToBytes</code>后得到的<code>[]byte</code>是没有办法改变的，一旦修改即会出现<code>unexpected fault address xxxxx</code>，<strong>只可读，而没有写操作的能力，切记切记</strong>，<img src="sort接口的使用.png" alt="img">。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToString unsafe 转换, 将 []byte 转换为 string</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ToString</span><span class="params">(p []<span class="keyword">byte</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> *(*<span class="keyword">string</span>)(unsafe.Pointer(&amp;p))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ToBytes unsafe 转换, 将 string 转换为 []byte</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ToBytes</span><span class="params">(str <span class="keyword">string</span>)</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> *(*[]<span class="keyword">byte</span>)(unsafe.Pointer(&amp;str))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// IntToBool int 类型转换为 bool</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">IntToBool</span><span class="params">(i <span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> i != <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceInt64ToString []int64 转换为 []string</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceInt64ToString</span><span class="params">(si []<span class="keyword">int64</span>)</span> <span class="params">(ss []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	ss = <span class="built_in">make</span>([]<span class="keyword">string</span>, <span class="number">0</span>, <span class="built_in">len</span>(si))</span><br><span class="line">	<span class="keyword">for</span> k := <span class="keyword">range</span> si &#123;</span><br><span class="line">		ss = <span class="built_in">append</span>(ss, strconv.FormatInt(si[k], <span class="number">10</span>))</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ss</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceStringToInt64 []string 转换为 []int64</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceStringToInt64</span><span class="params">(ss []<span class="keyword">string</span>)</span> <span class="params">(si []<span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">	si = <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>, <span class="built_in">len</span>(ss))</span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		i   <span class="keyword">int64</span></span><br><span class="line">		err error</span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">for</span> k := <span class="keyword">range</span> ss &#123;</span><br><span class="line">		i, err = strconv.ParseInt(ss[k], <span class="number">10</span>, <span class="number">64</span>)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		si = <span class="built_in">append</span>(si, i)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceStringToInt []string 转换为 []int</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceStringToInt</span><span class="params">(ss []<span class="keyword">string</span>)</span> <span class="params">(si []<span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	si = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="built_in">len</span>(ss))</span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		i   <span class="keyword">int</span></span><br><span class="line">		err error</span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">for</span> k := <span class="keyword">range</span> ss &#123;</span><br><span class="line">		i, err = strconv.Atoi(ss[k])</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		si = <span class="built_in">append</span>(si, i)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MustInt 将string转换为int, 忽略错误</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MustInt</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	n, _ = strconv.Atoi(s)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MustInt64 将string转换为int64, 忽略错误</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MustInt64</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(i <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">	i, _ = strconv.ParseInt(s, <span class="number">10</span>, <span class="number">64</span>)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
 
@@ -363,6 +367,29 @@
   
 
   
+  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div> 
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+
+if(true){
+	var gitalk = new Gitalk({
+  	clientID: '01eb77bfd18de524243f',
+  	clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
+  	repo: 'younglifestyle.github.io',
+  	owner: 'younglifestyle',
+  	admin: ['younglifestyle'],
+  	id: 'Tue Mar 19 2019 10:59:53 GMT+0800',
+  	distractionFreeMode: 'true'
+})
+gitalk.render('gitalk-container') 
+}
+</script>
+  
+
+  
+
 
 
           </div>
@@ -700,6 +727,34 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">转载</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">翻译</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多进程</a>
               </li>
             
             <div class="clearfix"></div>
