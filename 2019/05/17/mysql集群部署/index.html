@@ -17,7 +17,7 @@
 <meta property="og:description" content="在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/05/17/mysql集群部署/1558098597813.png">
-<meta property="og:updated_time" content="2019-05-18T07:53:08.430Z">
+<meta property="og:updated_time" content="2019-05-18T08:03:52.511Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql集群部署">
 <meta name="twitter:description" content="在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。">
@@ -201,14 +201,10 @@
 <p>这里简略说一下Ubuntu PXC的安装。</p>
 <p>以前装过mysql需要卸载干净，然后将<code>apparmor</code>也一并卸载。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get remove apparmor</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>获取仓库包:</p>
+<p>获取仓库包：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://repo.percona.com/apt/percona-release_latest.generic_all.deb</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>dpkg</code>安装最新的仓库，更新。</p>
+<p><code>dpkg</code>安装最新的仓库，更新。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i percona-release_latest.generic_all.deb</span><br><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install percona-xtradb-cluster-5.6</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
 <blockquote>
 <p>以下均为转载自仓库。</p>
 </blockquote>
