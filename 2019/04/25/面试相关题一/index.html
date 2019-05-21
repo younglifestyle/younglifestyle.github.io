@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>面试相关题一 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。  a := make([]int, 5, 20)fmt.Println(a[6])fmt.Println(a[6:10])    编译通过，运行出错。数组越界，此slice是一个长度为5，容量为20的slic">
+  <meta name="description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
 <meta name="keywords" content="Go">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试相关题一">
 <meta property="og:url" content="chunlife.top/2019/04/25/面试相关题一/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。  a := make([]int, 5, 20)fmt.Println(a[6])fmt.Println(a[6:10])    编译通过，运行出错。数组越界，此slice是一个长度为5，容量为20的slic">
+<meta property="og:description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-21T11:21:13.091Z">
+<meta property="og:updated_time" content="2019-05-21T11:23:52.771Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试相关题一">
-<meta name="twitter:description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。  a := make([]int, 5, 20)fmt.Println(a[6])fmt.Println(a[6:10])    编译通过，运行出错。数组越界，此slice是一个长度为5，容量为20的slic">
+<meta name="twitter:description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -171,6 +171,7 @@
 <li><h3 id="cap-map-是否正确-请说明理由"><a href="#cap-map-是否正确-请说明理由" class="headerlink" title="cap(map) 是否正确? 请说明理由"></a>cap(map) 是否正确? 请说明理由</h3></li>
 </ol>
 <p>不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。</p>
+<a id="more"></a>
 <ol start="2">
 <li><h3 id="a-make-int-5-20"><a href="#a-make-int-5-20" class="headerlink" title="a := make([]int, 5, 20)"></a>a := make([]int, 5, 20)</h3><p>fmt.Println(a[6])<br>fmt.Println(a[6:10]) </p>
 </li>
