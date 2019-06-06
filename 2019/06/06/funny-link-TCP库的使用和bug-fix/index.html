@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="公司项目需要对接嵌入式设备，底层stm32使用的是TCP网络协议，go语言中原生TCP编程还是比较简单的，像网络方面的编程，其实很多操作都比较繁复，在编写时，就希望能够有类似的框架性质的库帮助统一所有网络的代码，以及减轻网络编写的负担。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-06T07:03:53.672Z">
+<meta property="og:updated_time" content="2019-06-06T07:47:29.140Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="funny&#x2F;link TCP库的使用和bug fix">
 <meta name="twitter:description" content="公司项目需要对接嵌入式设备，底层stm32使用的是TCP网络协议，go语言中原生TCP编程还是比较简单的，像网络方面的编程，其实很多操作都比较繁复，在编写时，就希望能够有类似的框架性质的库帮助统一所有网络的代码，以及减轻网络编写的负担。">
@@ -191,6 +191,7 @@
 <blockquote>
 <p>以上还可以将reader改为<code>bufio.Reader</code>和<code>bufio.Writer</code>，但记住，带缓冲的IO，在写完数据后，一定要去记得显示调用<code>Flush()</code>函数，不然数据不会写入的。</p>
 </blockquote>
+<p>建议使用<code>bufio</code>，例如可以使用<code>peek</code>函数，读取协议包（自定义）中实际大小，通过实际的大小去读取<code>data</code>数据，可以设计用来解决TCP沾包的问题。</p>
 
       
 
