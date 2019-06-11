@@ -8,15 +8,26 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>TCP状态转换 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="UDP,TCP">
+  <meta name="description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
+<meta name="keywords" content="UDP,TCP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TCP状态转换">
 <meta property="og:url" content="chunlife.top/2019/06/10/TCP状态转换/index.html">
 <meta property="og:site_name" content="Pure Life">
+<meta property="og:description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-10T07:42:53.095Z">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560220515829.png">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560220578955.png">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP状态转换图.png">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560222452099.png">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560222690302.png">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP三次握手、4次挥手.png">
+<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP-PACKAGE.jpg">
+<meta property="og:updated_time" content="2019-06-11T03:28:42.048Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP状态转换">
+<meta name="twitter:description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
+<meta name="twitter:image" content="chunlife.top/2019/06/10/TCP状态转换/1560220515829.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -164,7 +175,98 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
+        <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。</p>
+<a id="more"></a>
+<p><img src="1560220515829.png" alt="协议对照"></p>
+<h2 id="二、TCP与UDP"><a href="#二、TCP与UDP" class="headerlink" title="二、TCP与UDP"></a>二、TCP与UDP</h2><h3 id="1、协议的联系"><a href="#1、协议的联系" class="headerlink" title="1、协议的联系"></a>1、协议的联系</h3><p>为了减少协议设计的复杂性，大多数网络模型均采用分层的方式来组织。每一层都有自己的功能，就像建筑物一样，每一层都靠下一层支持。每一层利用下一层提供的服务来为上一层提供服务，本层服务的实现细节对上层屏蔽。</p>
+<p><img src="1560220578955.png" alt="对照"></p>
+<h3 id="2、TCP与UDP"><a href="#2、TCP与UDP" class="headerlink" title="2、TCP与UDP"></a>2、TCP与UDP</h3><h4 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h4><p>一般来说，若是对两者协议进行定义，有个经典的归纳：</p>
+<p><strong>TCP通信：</strong><br>    面向连接的，可靠的数据包传输。</p>
+<p><strong>UDP通信：</strong><br>    无连接的，不可靠的报文传递。</p>
+<h4 id="2-2-对协议进行理解"><a href="#2-2-对协议进行理解" class="headerlink" title="2.2 对协议进行理解"></a>2.2 对协议进行理解</h4><p>为什么会出现上述的定义呢，这是由于两者本身的特点决定的。</p>
+<p>TCP有这么两个特点：</p>
+<ul>
+<li>发送数据前必须建立连接，建立链接后，发送数据的路线确定；</li>
+<li>发送完数据需要有ACK回执包，否则将进行重发；</li>
+</ul>
+<p>TCP在网络上对现有的环境，<em>对不稳定的网络层做完全弥补操作</em>，保证数据传输稳定。</p>
+<hr>
+<p>UDP，靠路由网络分发，无需提前建立连接，只需知道目标机器的IP地址，发送的路线不确定。<em>对不稳定的网络层，不作为</em>。</p>
+<h4 id="2-3-比较"><a href="#2-3-比较" class="headerlink" title="2.3 比较"></a>2.3 比较</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">TCP</th>
+<th style="text-align:center">UDP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">面向连接</td>
+<td style="text-align:center">面向无连接</td>
+</tr>
+<tr>
+<td style="text-align:center">要求系统资源较多</td>
+<td style="text-align:center">要求系统资源较少</td>
+</tr>
+<tr>
+<td style="text-align:center">TCP程序结构较复杂</td>
+<td style="text-align:center">UDP程序结构较简单</td>
+</tr>
+<tr>
+<td style="text-align:center">使用流式</td>
+<td style="text-align:center">使用数据包式</td>
+</tr>
+<tr>
+<td style="text-align:center">保证数据准确性</td>
+<td style="text-align:center">不保证数据准确性</td>
+</tr>
+<tr>
+<td style="text-align:center">保证数据顺序</td>
+<td style="text-align:center">不保证数据顺序</td>
+</tr>
+<tr>
+<td style="text-align:center">通讯速度较慢</td>
+<td style="text-align:center">通讯速度较快</td>
+</tr>
+</tbody>
+</table>
+<p>TCP：对数据传输安全性、稳定性要求较高的场合。 网络文件传输。下载、上传。</p>
+<p>UDP：对数据实时传输要求较高的场合。视频直播、在线电话会议。游戏。</p>
+<h3 id="3、TCP状态转换"><a href="#3、TCP状态转换" class="headerlink" title="3、TCP状态转换"></a>3、TCP状态转换</h3><p>由于TCP在通信时，有连接动作，这个动作并不是一个单一的动作，而是一连串动作的集合，也就是TCP中经典的<code>三次握手，四次挥手</code>。</p>
+<p><img src="TCP状态转换图.png" alt="TCP状态转换图"></p>
+<p>连接过程经历的状态变化：</p>
+<p><img src="1560222452099.png" alt="连接状态变化"></p>
+<p>关闭连接时的状态变化：</p>
+<p><img src="1560222690302.png" alt="关闭连接"></p>
+<p>那为什么是三次握手和四次挥手呢？</p>
+<p>在实际的通信中，三次握手阶段的第二次的通信中，被动接收端是将<code>ACK</code>与<code>SYN</code>包一起发送给主动发起连接端，也就省去了一次过程。那为什么会合并呢，这个问题也可以问，为什么挥手的过程不是合并发送呢？</p>
+<p>我的理解是关闭过程是各自关闭各自的发送功能，也就是：<strong>你关闭你的发送通道，我关闭我的发送通道</strong>。</p>
+<p>而握手阶段，若接收端没有准备好，则<code>ACK</code>包都不会回复。</p>
+<p>可以参考这张图，更为详细的了解状态间的变换。</p>
+<p><img src="TCP三次握手、4次挥手.png" alt="TCP三次握手、4次挥手"></p>
+<h3 id="4、TCP沾包"><a href="#4、TCP沾包" class="headerlink" title="4、TCP沾包"></a>4、TCP沾包</h3><blockquote>
+<p>以下转载自：<a href="https://www.v2ex.com/t/478610?p=2" target="_blank" rel="noopener">TCP 粘包问题浅析及其解决方案</a></p>
+</blockquote>
+<p>如下图所示，出现的粘包问题一共有三种情况：</p>
+<p><img src="TCP-PACKAGE.jpg" alt="TCP沾包"></p>
+<p><strong>第一种情况：</strong> 如上图中的第一根<strong>bar</strong>所示，服务端一共读到两个数据包，每个数据包都是完成的，并没有发生粘包的问题，这种情况比较好处理，服务器只需要简单的从网络缓冲区去读就好了，每次服务端读取到的消息都是完成的，并不会出现数据不正确的情况。</p>
+<p><strong>第二种情况：</strong> 服务端仅收到一个数据包，这个数据包包含客户端发出的两条消息的完整信息，这个时候基于第一种情况的逻辑实现的服务端就蒙了，因为服务端并不能很好的处理这个数据包，甚至不能处理，这种情况其实就是 TCP 的粘包问题。</p>
+<p><strong>第三种情况：</strong> 服务端收到了两个数据包，第一个数据包只包含了第一条消息的一部分，第一条消息的后半部分和第二条消息都在第二个数据包中，或者是第一个数据包包含了第一条消息的完整信息和第二条消息的一部分信息，第二个数据包包含了第二条消息的剩下部分，这种情况其实是发送了 TCP 拆包问题，因为发生了一条消息被拆分在两个包里面发送了，同样上面的服务器逻辑对于这种情况是不好处理的。</p>
+<p><strong>为什么会发生 TCP 粘包、拆包</strong></p>
+<ol>
+<li>应用程序写入的数据大于套接字缓冲区大小，这将会发生拆包。</li>
+<li>应用程序写入数据小于套接字缓冲区大小，网卡将应用多次写入的数据发送到网络上，这将会发生粘包。</li>
+<li>进行 MSS （最大报文长度）大小的 TCP 分段，当 TCP 报文长度-TCP 头部长度&gt;MSS 的时候将发生拆包。</li>
+<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。</li>
+</ol>
+<p><strong>如何处理粘包、拆包</strong></p>
+<p>通常会有以下一些常用的方法：</p>
+<ol>
+<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
+<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息，当消息不够长时，空位补上固定字符。</li>
+<li>设置消息边界，服务端从网络流中按消息编辑分离出消息内容，一般使用‘\n ’。</li>
+<li>更为复杂的协议，例如楼主最近接触比较多的车联网协议 808,809 协议。</li>
+</ol>
 
       
 
@@ -327,7 +429,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、概述"><span class="toc-number">1.</span> <span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、TCP与UDP"><span class="toc-number">2.</span> <span class="toc-text">二、TCP与UDP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、协议的联系"><span class="toc-number">2.1.</span> <span class="toc-text">1、协议的联系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、TCP与UDP"><span class="toc-number">2.2.</span> <span class="toc-text">2、TCP与UDP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-定义"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.1 定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-对协议进行理解"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2 对协议进行理解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-比较"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.3 比较</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、TCP状态转换"><span class="toc-number">2.3.</span> <span class="toc-text">3、TCP状态转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、TCP沾包"><span class="toc-number">2.4.</span> <span class="toc-text">4、TCP沾包</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>

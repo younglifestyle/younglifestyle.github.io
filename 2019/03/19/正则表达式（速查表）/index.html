@@ -17,7 +17,7 @@
 <meta property="og:description" content="如果strings包提供的函数能解决你的问题，那么就尽量使用它来解决。因为他们足够简单、而且性能和可读性都要比正则好。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/03/19/正则表达式（速查表）/正则表达式匹配规则.png">
-<meta property="og:updated_time" content="2019-06-11T01:22:47.876Z">
+<meta property="og:updated_time" content="2019-06-11T01:31:01.299Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式">
 <meta name="twitter:description" content="如果strings包提供的函数能解决你的问题，那么就尽量使用它来解决。因为他们足够简单、而且性能和可读性都要比正则好。">
@@ -172,8 +172,7 @@
         <p>如果strings包提供的函数能解决你的问题，那么就尽量使用它来解决。因为他们足够简单、而且性能和可读性都要比正则好。<br><a id="more"></a><br>Go使用的正则标准与其他编程语言的标准有些不同，这里参考：<a href="http://www.sun190.com/2015/01/re2-正则表达式/" target="_blank" rel="noopener">re2-正则表达式</a>。</p>
 <p>常用的可以参考以下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">----字符：</span><br><span class="line"></span><br><span class="line">	“.”: 匹配任意一个字符</span><br><span class="line"></span><br><span class="line">	&quot;[ ]&quot;: 匹配 [ ] 内任意一个字符。 </span><br><span class="line"></span><br><span class="line">	“-”：指定范围： a-z、A-Z、0-9</span><br><span class="line"></span><br><span class="line">	&quot;^&quot;: 取反。 使用在 [ ] 内部。[^xy]8 </span><br><span class="line"></span><br><span class="line">	[[:digit:]] ——&gt; 数字 == [0-9]</span><br><span class="line"></span><br><span class="line">-----次数：</span><br><span class="line"></span><br><span class="line">	“?”: 匹配 前面 单元出现 0-1次</span><br><span class="line"></span><br><span class="line">	“+”：匹配 前面 单元 出现 1-N次</span><br><span class="line"></span><br><span class="line">	“*”：匹配 前面 单元 出现 0-N次</span><br><span class="line"></span><br><span class="line">	“&#123;N&#125;”: 匹配 前面 单元  精确匹配 N 次</span><br><span class="line"></span><br><span class="line">	&quot;&#123;N,&#125;&quot;: 匹配 前面 单元 至少匹配 N 次</span><br><span class="line"></span><br><span class="line">	&quot;&#123;N,M&#125;&quot;: 匹配 前面 单元 匹配 N -- M 次。</span><br><span class="line"></span><br><span class="line">---- 单元限定符：</span><br><span class="line">	</span><br><span class="line">	“()”: 可以将一部分正则表达式，组成一个 单元，可以对该单元使用 数量限定符</span><br></pre></td></tr></table></figure>
-<p>更多例子则是参考：</p>
-<p><img src="正则表达式匹配规则.png" alt="正则表达式匹配规则"></p>
+<p>更多例子则是参考：<br><img src="正则表达式匹配规则.png" alt="正则表达式匹配规则"></p>
 
       
 
