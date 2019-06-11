@@ -23,7 +23,7 @@
 <meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560222690302.png">
 <meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP三次握手、4次挥手.png">
 <meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP-PACKAGE.jpg">
-<meta property="og:updated_time" content="2019-06-11T03:28:42.048Z">
+<meta property="og:updated_time" content="2019-06-11T04:20:20.077Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP状态转换">
 <meta name="twitter:description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
@@ -177,7 +177,7 @@
       
         <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。</p>
 <a id="more"></a>
-<p><img src="1560220515829.png" alt="协议对照"></p>
+<p><img src="1560220515829.png" alt="协议"></p>
 <h2 id="二、TCP与UDP"><a href="#二、TCP与UDP" class="headerlink" title="二、TCP与UDP"></a>二、TCP与UDP</h2><h3 id="1、协议的联系"><a href="#1、协议的联系" class="headerlink" title="1、协议的联系"></a>1、协议的联系</h3><p>为了减少协议设计的复杂性，大多数网络模型均采用分层的方式来组织。每一层都有自己的功能，就像建筑物一样，每一层都靠下一层支持。每一层利用下一层提供的服务来为上一层提供服务，本层服务的实现细节对上层屏蔽。</p>
 <p><img src="1560220578955.png" alt="对照"></p>
 <h3 id="2、TCP与UDP"><a href="#2、TCP与UDP" class="headerlink" title="2、TCP与UDP"></a>2、TCP与UDP</h3><h4 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h4><p>一般来说，若是对两者协议进行定义，有个经典的归纳：</p>
@@ -267,7 +267,10 @@
 <li>设置消息边界，服务端从网络流中按消息编辑分离出消息内容，一般使用‘\n ’。</li>
 <li>更为复杂的协议，例如楼主最近接触比较多的车联网协议 808,809 协议。</li>
 </ol>
-
+<hr>
+<p>另外解决方法还可以看程序前辈怒怼TCP，看着很搞笑，<a href="https://github.com/ideawu/FUCK_TCP" target="_blank" rel="noopener"><strong>FUCK_TCP</strong></a>。</p>
+<p>彻底解决 TCP 粘包和拆包问题的代码架构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">char tmp[];</span><br><span class="line">Buffer buffer;</span><br><span class="line">// 网络循环：必须在一个循环中读取网络，因为网络数据是源源不断的。</span><br><span class="line">while(1)&#123;</span><br><span class="line">    // 从TCP流中读取不定长度的一段流数据，不能保证读到的数据是你期望的长度</span><br><span class="line">    tcp.read(tmp);</span><br><span class="line">    // 将这段流数据和之前收到的流数据拼接到一起</span><br><span class="line">    buffer.append(tmp);</span><br><span class="line">    // 解析循环：必须在一个循环中解析报文，应对所谓的粘包</span><br><span class="line">    while(1)&#123;</span><br><span class="line">        // 尝试解析报文</span><br><span class="line">        msg = parse(buffer);</span><br><span class="line">        if(!msg)&#123;</span><br><span class="line">            // 报文还没有准备好，糟糕，我们遇到拆包了！跳出解析循环，继续读网络。</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        // 将解析过的报文对应的流数据清除</span><br><span class="line">        buffer.remove(msg.length);</span><br><span class="line">        // 业务处理</span><br><span class="line">        process(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
 
       
