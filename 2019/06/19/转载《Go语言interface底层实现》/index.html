@@ -18,7 +18,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/eface.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/eface_all.png">
-<meta property="og:image" content="/%E8%BD%AC%E8%BD%BD%E3%80%8AGo%E8%AF%AD%E8%A8%80interface%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E3%80%8B/iface.png">
+<meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_itable.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/eface.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/eface_all.png">
@@ -27,7 +27,7 @@
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_itable.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_all.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_fuzhi.png">
-<meta property="og:updated_time" content="2019-06-19T07:26:23.529Z">
+<meta property="og:updated_time" content="2019-06-19T07:31:42.929Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="转载《Go语言interface底层实现》">
 <meta name="twitter:description" content="interface底层是怎么实现的，由于一直都是浮于水面，未去深究过，这里也是去查了些资料了解，这篇博客把interface结构解构的很清楚了，我觉得，博主画的那几幅图就能很好的进行理解了。">
@@ -186,7 +186,7 @@
 <p><code>eface</code>的整体结构是：</p>
 <p><img src="eface_all.png" alt="eface_all"></p>
 <p><code>iface</code>的具体结构是：</p>
-<p><img src="/../%E8%BD%AC%E8%BD%BD%E3%80%8AGo%E8%AF%AD%E8%A8%80interface%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E3%80%8B/iface.png" alt="iface"></p>
+<p><img src="iface.png" alt="iface"></p>
 <p><code>itab</code>是<code>iface</code>不同于<code>eface</code>比较关键的数据结构。其可包含两部分：一部分是确定唯一的包含方法的interface的具体结构类型，一部分是指向具体方法集的指针。<br>具体结构为：<br><img src="iface_itable.png" alt="iface_itable"></p>
 <hr>
 <hr>
