@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="转载自：https://blog.csdn.net/qq_39393899/article/details/80405979   0.  前言从我们在浏览器的地址栏输入http: //blog.csdn.net/seu_calvin后回车，到我们看到该博客的主页，这中间经历了什么呢？简单地回答这个问题，大概是经历了域名解析、TCP的三次握手、建立TCP连接后发起HTTP请求、服务器响应HTTP请">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-19T06:22:57.808Z">
+<meta property="og:updated_time" content="2019-06-19T07:06:07.716Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="转载《一次完整的HTTP网络请求过程详解》">
 <meta name="twitter:description" content="转载自：https://blog.csdn.net/qq_39393899/article/details/80405979   0.  前言从我们在浏览器的地址栏输入http: //blog.csdn.net/seu_calvin后回车，到我们看到该博客的主页，这中间经历了什么呢？简单地回答这个问题，大概是经历了域名解析、TCP的三次握手、建立TCP连接后发起HTTP请求、服务器响应HTTP请">
@@ -178,18 +178,18 @@
 <p>（3）如果（2）中未找到，那么尝试读取位于C:\Windows\System32\drivers\etc下的hosts文件，如果找到对应的IP地址则解析成功。</p>
 <p>（4）如果（3）中未找到，浏览器首先会找TCP/IP参数中设置的本地DNS服务器，如果要查询的域名包含在本地配置的区域资源中，则完成域名解析，否则根据本地DNS服务器会请求根DNS服务器。</p>
 <p>（5）本地DNS会把请求发至13台根DNS，根DNS服务器收到请求后会返回负责这个域名(.net)的服务器的一个IP，本地DNS服务器使用该IP信息联系负责.net域的这台服务器。这台负责.net域的服务器收到请求后，如果自己无法解析，会返回.net域的下一级DNS服务器地址(blog.csdn.net)给本地DNS服务器。以此类推，直至找到。</p>
-<h2 id="2-TCP的三次握手"><a href="#2-TCP的三次握手" class="headerlink" title="2.  TCP的三次握手"></a><strong>2.  TCP的三次握手</strong></h2><p>这个部分正好之前整理过，可以参考NetWork——关于TCP协议的三次握手和四次挥手。</p>
+<h2 id="2-TCP的三次握手"><a href="#2-TCP的三次握手" class="headerlink" title="2.  TCP的三次握手"></a><strong>2.  TCP的三次握手</strong></h2><p>这个部分正好之前整理过，可以参考 <em>NetWork——关于TCP协议的三次握手和四次挥手</em>。</p>
 <p>（也可以参考我的<a href="https://chunlife.top/2019/06/10/TCP%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2/">TCP状态转换</a>。）</p>
 <h2 id="3-建立TCP连接后发起HTTP请求"><a href="#3-建立TCP连接后发起HTTP请求" class="headerlink" title="3.  建立TCP连接后发起HTTP请求"></a><strong>3.  建立TCP连接后发起HTTP请求</strong></h2><p>TCP三次握手建立连接成功后，客户端按照指定的格式开始向服务端发送HTTP请求，服务端接收请求后，解析HTTP请求，处理完业务逻辑，最后返回一个具有标准格式的HTTP响应给客户端。</p>
 <h3 id="3-1-HTTP请求格式"><a href="#3-1-HTTP请求格式" class="headerlink" title="3.1  HTTP请求格式"></a><strong>3.1  HTTP请求格式</strong></h3><p>HTTP请求格式如下所示四部分组成，分别是请求行、请求头、空行、消息体，每部分内容占一行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;request-line&gt;  </span><br><span class="line">&lt;general-headers&gt;  </span><br><span class="line">&lt;request-headers&gt;  </span><br><span class="line">&lt;entity-headers&gt;  </span><br><span class="line">&lt;empty-line&gt;  </span><br><span class="line">[&lt;message-body&gt;]  </span><br><span class="line"></span><br><span class="line">请求行：由三部分组成：分别是请求方法（GET/POST/DELETE/PUT/HEAD）、URI路径、HTTP版本号。</span><br><span class="line"></span><br><span class="line">请求头：缓存相关信息（Cache-Control，If-Modified-Since）、客户端身份信息（User-Agent）等键值对信息。</span><br><span class="line"></span><br><span class="line">空行。</span><br><span class="line"></span><br><span class="line">主体：客户端发给服务端的请求数据，这部分数据并不是每个请求必须的。</span><br></pre></td></tr></table></figure>
 <p>常用的GET、POST、PUT、DELETE四种请求方式中：</p>
-<p>（1）关于<em>GET和DELETE将要处理的资源信息直接放在了URL中</em>。通过”?&lt;键值对&gt;&amp;&lt;键值对&gt;“的形式追加。但是URL最大长度为1024字节。</p>
-<p>（2）关于<em>POST和PUT的请求参数存储在报文的主体中</em>。每一个参数都以”–boundary值“+”属性信息”+”空行“+”参数值”的数据结构存储。请求数据的最后以”–boundary值–“的格式结尾。</p>
+<p>（1）关于<strong><em>GET和DELETE将要处理的资源信息直接放在了URL中</em></strong>。通过”?&lt;键值对&gt;&amp;&lt;键值对&gt;“的形式追加。但是URL最大长度为1024字节。</p>
+<p>（2）关于<strong><em>POST和PUT的请求参数存储在报文的主体中</em></strong>。每一个参数都以”–boundary值“+”属性信息”+”空行“+”参数值”的数据结构存储。请求数据的最后以”–boundary值–“的格式结尾。</p>
 <h3 id="3-2-服务器响应HTTP请求"><a href="#3-2-服务器响应HTTP请求" class="headerlink" title="3. 2  服务器响应HTTP请求"></a><strong>3. 2  服务器响应HTTP请求</strong></h3><p>服务器接收处理完请求后返回一个HTTP响应消息给客户端。HTTP响应消息的格式包括：状态行、响应头、空行、消息体。每部分内容占一行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;status-line&gt;  </span><br><span class="line">&lt;general-headers&gt;  </span><br><span class="line">&lt;response-headers&gt;  </span><br><span class="line">&lt;entity-headers&gt;  </span><br><span class="line">&lt;empty-line&gt;  </span><br><span class="line">[&lt;message-body&gt;]  </span><br><span class="line"></span><br><span class="line">状态行：有HTTP协议版本号，状态码和状态说明三部分构成。</span><br><span class="line"></span><br><span class="line">响应头：用于说明数据的一些信息，比如数据类型、内容长度等键值对。</span><br><span class="line"></span><br><span class="line">空行。</span><br><span class="line"></span><br><span class="line">消息体：服务端返回给客户端的HTML文本内容。或者其他格式的数据，比如：视频流、图片或者音频数据。</span><br></pre></td></tr></table></figure>
-<h2 id="4-浏览器解析html代码，并请求html代码中的资源"><a href="#4-浏览器解析html代码，并请求html代码中的资源" class="headerlink" title="4  浏览器解析html代码，并请求html代码中的资源"></a><strong>4  浏览器解析html代码，并请求html代码中的资源</strong></h2><p>浏览器拿到html文件后，就开始解析其中的html代码，遇到<em>js/css/image等静态资源时</em>，向服务器端发起一个HTTP请求，如果服务器端返回304状态码（告诉浏览器服务器端没有修改该资源），那么浏览器会直接读取本地的该资源的缓存文件。否则开启新线程向服务器端去请求下载。（这个时候就用上<em>keep-alive</em>特性了，建立一次HTTP连接，可以请求多个资源。）</p>
-<p>最后，浏览器利用自己内部的工作机制，把请求到的<em>静态资源和html代码</em>进行渲染，再呈现给用户。</p>
+<h2 id="4-浏览器解析html代码，并请求html代码中的资源"><a href="#4-浏览器解析html代码，并请求html代码中的资源" class="headerlink" title="4  浏览器解析html代码，并请求html代码中的资源"></a><strong>4  浏览器解析html代码，并请求html代码中的资源</strong></h2><p>浏览器拿到html文件后，就开始解析其中的html代码，遇到<strong><em>js/css/image等静态资源时</em></strong>，向服务器端发起一个HTTP请求，如果服务器端返回<strong><em>304状态码</em></strong>（告诉浏览器服务器端没有修改该资源），那么浏览器会直接读取本地的该资源的缓存文件。否则开启新线程向服务器端去请求下载。（这个时候就用上<strong><em>keep-alive</em></strong>特性了，建立一次HTTP连接，可以请求多个资源。）</p>
+<p>最后，浏览器利用自己内部的工作机制，把请求到的<strong><em>静态资源和html代码</em></strong>进行渲染，再呈现给用户。</p>
 
       
 
