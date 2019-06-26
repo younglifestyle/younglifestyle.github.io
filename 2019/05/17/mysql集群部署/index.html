@@ -3,26 +3,25 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <meta name="baidu-site-verification" content="4rPaoOkClK">
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="dns-prefetch" href="www.chunlife.top">
+  <link rel="dns-prefetch" href="chunlife.top">
   <title>mysql集群部署 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。">
 <meta name="keywords" content="pxc,mysql,replication,percona-xtradb-cluster">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql集群部署">
-<meta property="og:url" content="www.chunlife.top/2019/05/17/mysql集群部署/index.html">
+<meta property="og:url" content="chunlife.top/2019/05/17/mysql集群部署/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="www.chunlife.top/2019/05/17/mysql集群部署/1558098597813.png">
+<meta property="og:image" content="chunlife.top/2019/05/17/mysql集群部署/1558098597813.png">
 <meta property="og:updated_time" content="2019-05-23T06:08:04.472Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql集群部署">
 <meta name="twitter:description" content="在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。">
-<meta name="twitter:image" content="www.chunlife.top/2019/05/17/mysql集群部署/1558098597813.png">
+<meta name="twitter:image" content="chunlife.top/2019/05/17/mysql集群部署/1558098597813.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -279,7 +278,7 @@ var _hmt = _hmt || [];
 
 <h5 id="Configure-Replication-Settings-1"><a href="#Configure-Replication-Settings-1" class="headerlink" title="Configure Replication Settings"></a>Configure Replication Settings</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/mysql/my.cnf&lt;&lt;EOF</span><br><span class="line">[mysqld]</span><br><span class="line">wsrep_provider=/usr/lib/libgalera_smm.so</span><br><span class="line">wsrep_cluster_name=democluster</span><br><span class="line">wsrep_cluster_address=gcomm://172.42.42.101,172.42.42.102</span><br><span class="line">wsrep_node_name=centosvm02</span><br><span class="line">wsrep_node_address=172.42.42.102</span><br><span class="line">wsrep_sst_method=xtrabackup-v2</span><br><span class="line">wsrep_sst_auth=repuser:reppassword</span><br><span class="line">pxc_strict_mode=ENFORCING</span><br><span class="line">binlog_format=ROW</span><br><span class="line">default_storage_engine=InnoDB</span><br><span class="line">innodb_autoinc_lock_mode=2</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 
-<h5 id="Start-mysql-to-join-the-cluster"><a href="#Start-mysql-to-join-the-cluster" class="headerlink" title="Start mysql to join the cluster"></a>Start mysql to join the cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysql</span><br></pre></td></tr></table></figure><div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="www.chunlife.top/2019/05/21/docker-pxc部署/">docker pxc部署</a></li><li><a href="www.chunlife.top/2019/02/21/mysql并发操作/">mysql并发操作</a></li><li><a href="chunlife.top/2019/05/21/docker-pxc部署/">docker pxc部署</a></li></ul></div>
+<h5 id="Start-mysql-to-join-the-cluster"><a href="#Start-mysql-to-join-the-cluster" class="headerlink" title="Start mysql to join the cluster"></a>Start mysql to join the cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysql</span><br></pre></td></tr></table></figure>
       
 
       
@@ -397,7 +396,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:www.chunlife.top/2019/05/17/mysql集群部署/" alt="微信分享二维码">
+	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:chunlife.top/2019/05/17/mysql集群部署/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -449,7 +448,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Replication"><span class="toc-number">1.</span> <span class="toc-text">Replication</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装mysql"><span class="toc-number">1.1.</span> <span class="toc-text">安装mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-number">1.2.</span> <span class="toc-text">master</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件"><span class="toc-number">1.2.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql"><span class="toc-number">1.2.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，创建用于集群的账号"><span class="toc-number">1.2.3.</span> <span class="toc-text">登录mysql，创建用于集群的账号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Slave"><span class="toc-number">1.3.</span> <span class="toc-text">Slave</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，配置从节点"><span class="toc-number">1.3.3.</span> <span class="toc-text">登录mysql，配置从节点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PXC"><span class="toc-number">2.</span> <span class="toc-text">PXC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Install-instructions-for-Ubuntu-18"><span class="toc-number">2.1.</span> <span class="toc-text">Install instructions for Ubuntu 18</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Assumptions"><span class="toc-number">2.2.</span> <span class="toc-text">Assumptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-First-node"><span class="toc-number">2.3.</span> <span class="toc-text">On First node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository"><span class="toc-number">2.3.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster"><span class="toc-number">2.3.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings"><span class="toc-number">2.3.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Bootstrap-Initialize-the-Cluster"><span class="toc-number">2.3.0.4.</span> <span class="toc-text">Bootstrap/Initialize the Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Create-Replication-User"><span class="toc-number">2.3.0.5.</span> <span class="toc-text">Create Replication User</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Update-Replication-configuration"><span class="toc-number">2.3.0.6.</span> <span class="toc-text">Update Replication configuration</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-Second-node"><span class="toc-number">2.4.</span> <span class="toc-text">On Second node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository-1"><span class="toc-number">2.4.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster-1"><span class="toc-number">2.4.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings-1"><span class="toc-number">2.4.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Start-mysql-to-join-the-cluster"><span class="toc-number">2.4.0.4.</span> <span class="toc-text">Start mysql to join the cluster</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Replication"><span class="toc-number">1.</span> <span class="toc-text">Replication</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装mysql"><span class="toc-number">1.1.</span> <span class="toc-text">安装mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-number">1.2.</span> <span class="toc-text">master</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件"><span class="toc-number">1.2.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql"><span class="toc-number">1.2.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，创建用于集群的账号"><span class="toc-number">1.2.3.</span> <span class="toc-text">登录mysql，创建用于集群的账号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Slave"><span class="toc-number">1.3.</span> <span class="toc-text">Slave</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，配置从节点"><span class="toc-number">1.3.3.</span> <span class="toc-text">登录mysql，配置从节点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PXC"><span class="toc-number">2.</span> <span class="toc-text">PXC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Install-instructions-for-Ubuntu-18"><span class="toc-number">2.1.</span> <span class="toc-text">Install instructions for Ubuntu 18</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Assumptions"><span class="toc-number">2.2.</span> <span class="toc-text">Assumptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-First-node"><span class="toc-number">2.3.</span> <span class="toc-text">On First node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository"><span class="toc-number">2.3.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster"><span class="toc-number">2.3.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings"><span class="toc-number">2.3.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Bootstrap-Initialize-the-Cluster"><span class="toc-number">2.3.0.4.</span> <span class="toc-text">Bootstrap/Initialize the Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Create-Replication-User"><span class="toc-number">2.3.0.5.</span> <span class="toc-text">Create Replication User</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Update-Replication-configuration"><span class="toc-number">2.3.0.6.</span> <span class="toc-text">Update Replication configuration</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-Second-node"><span class="toc-number">2.4.</span> <span class="toc-text">On Second node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository-1"><span class="toc-number">2.4.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster-1"><span class="toc-number">2.4.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings-1"><span class="toc-number">2.4.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Start-mysql-to-join-the-cluster"><span class="toc-number">2.4.0.4.</span> <span class="toc-text">Start mysql to join the cluster</span></a></li></ol></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -580,19 +579,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Gateway</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -604,27 +603,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -633,6 +612,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读写文件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -648,11 +631,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -661,10 +664,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">PCI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -680,11 +679,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -700,7 +699,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -712,19 +715,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -740,14 +739,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -756,23 +747,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -784,7 +763,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -796,15 +787,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -820,7 +807,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -840,15 +835,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -864,22 +863,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
              
@@ -888,7 +871,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -901,6 +892,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -920,14 +923,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
@@ -940,15 +935,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">raid</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
