@@ -5,29 +5,29 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="dns-prefetch" href="chunlife.top">
+  <link rel="dns-prefetch" href="www.chunlife.top">
   <title>TCP状态转换 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
 <meta name="keywords" content="UDP,TCP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TCP状态转换">
-<meta property="og:url" content="chunlife.top/2019/06/10/TCP状态转换/index.html">
+<meta property="og:url" content="www.chunlife.top/2019/06/10/TCP状态转换/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560220515829.png">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560220578955.png">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE.png">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560222452099.png">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/1560222690302.png">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E3%80%814%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
-<meta property="og:image" content="chunlife.top/2019/06/10/TCP状态转换/TCP-PACKAGE.jpg">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/1560220515829.png">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/1560220578955.png">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/TCP%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE.png">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/1560222452099.png">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/1560222690302.png">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E3%80%814%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
+<meta property="og:image" content="www.chunlife.top/2019/06/10/TCP状态转换/TCP-PACKAGE.jpg">
 <meta property="og:updated_time" content="2019-06-11T04:20:20.077Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP状态转换">
 <meta name="twitter:description" content="一、概述TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。">
-<meta name="twitter:image" content="chunlife.top/2019/06/10/TCP状态转换/1560220515829.png">
+<meta name="twitter:image" content="www.chunlife.top/2019/06/10/TCP状态转换/1560220515829.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -279,7 +279,7 @@ var _hmt = _hmt || [];
 <hr>
 <p>另外解决方法还可以看程序前辈怒怼TCP，看着很搞笑，<a href="https://github.com/ideawu/FUCK_TCP" target="_blank" rel="noopener"><strong>FUCK_TCP</strong></a>。</p>
 <p>彻底解决 TCP 粘包和拆包问题的代码架构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">char tmp[];</span><br><span class="line">Buffer buffer;</span><br><span class="line">// 网络循环：必须在一个循环中读取网络，因为网络数据是源源不断的。</span><br><span class="line">while(1)&#123;</span><br><span class="line">    // 从TCP流中读取不定长度的一段流数据，不能保证读到的数据是你期望的长度</span><br><span class="line">    tcp.read(tmp);</span><br><span class="line">    // 将这段流数据和之前收到的流数据拼接到一起</span><br><span class="line">    buffer.append(tmp);</span><br><span class="line">    // 解析循环：必须在一个循环中解析报文，应对所谓的粘包</span><br><span class="line">    while(1)&#123;</span><br><span class="line">        // 尝试解析报文</span><br><span class="line">        msg = parse(buffer);</span><br><span class="line">        if(!msg)&#123;</span><br><span class="line">            // 报文还没有准备好，糟糕，我们遇到拆包了！跳出解析循环，继续读网络。</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        // 将解析过的报文对应的流数据清除</span><br><span class="line">        buffer.remove(msg.length);</span><br><span class="line">        // 业务处理</span><br><span class="line">        process(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/">转载《一次完整的HTTP网络请求过程详解》</a></li><li><a href="chunlife.top/2019/06/10/TCP实现聊天室/">TCP实现聊天室</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="https://abelsu7.top/2018/10/18/http-notes-part-1/">HTTP 笔记 1：Web 基础及简单的 HTTP 协议</a></li></ul></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">char tmp[];</span><br><span class="line">Buffer buffer;</span><br><span class="line">// 网络循环：必须在一个循环中读取网络，因为网络数据是源源不断的。</span><br><span class="line">while(1)&#123;</span><br><span class="line">    // 从TCP流中读取不定长度的一段流数据，不能保证读到的数据是你期望的长度</span><br><span class="line">    tcp.read(tmp);</span><br><span class="line">    // 将这段流数据和之前收到的流数据拼接到一起</span><br><span class="line">    buffer.append(tmp);</span><br><span class="line">    // 解析循环：必须在一个循环中解析报文，应对所谓的粘包</span><br><span class="line">    while(1)&#123;</span><br><span class="line">        // 尝试解析报文</span><br><span class="line">        msg = parse(buffer);</span><br><span class="line">        if(!msg)&#123;</span><br><span class="line">            // 报文还没有准备好，糟糕，我们遇到拆包了！跳出解析循环，继续读网络。</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        // 将解析过的报文对应的流数据清除</span><br><span class="line">        buffer.remove(msg.length);</span><br><span class="line">        // 业务处理</span><br><span class="line">        process(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div><p>> 测试</p><br /><hr /><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/">转载《一次完整的HTTP网络请求过程详解》</a></li><li><a href="chunlife.top/2019/06/10/TCP实现聊天室/">TCP实现聊天室</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="https://abelsu7.top/2018/10/18/http-notes-part-1/">HTTP 笔记 1：Web 基础及简单的 HTTP 协议</a></li></ul></div>
       
 
       
@@ -389,7 +389,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:chunlife.top/2019/06/10/TCP状态转换/" alt="微信分享二维码">
+	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:www.chunlife.top/2019/06/10/TCP状态转换/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -572,23 +572,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Gateway</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -600,15 +584,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">基础</a>
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写文件</a>
+                <a href="javascript:void(0)" class="js-tag color3">Gateway</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -628,14 +616,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -644,7 +624,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -652,7 +632,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">基础</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写文件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -668,11 +664,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -684,14 +676,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">函数</a>
               </li>
              
@@ -700,11 +684,51 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">overlay</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -728,55 +752,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -788,19 +768,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">mysql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -812,11 +796,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -832,11 +836,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+                <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -852,6 +856,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
@@ -864,31 +876,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -908,23 +900,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">区块链</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">比特币</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -936,7 +928,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color4">区块链</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">比特币</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -944,15 +944,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -961,6 +957,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
             
             <div class="clearfix"></div>

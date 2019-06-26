@@ -5,14 +5,14 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="dns-prefetch" href="chunlife.top">
+  <link rel="dns-prefetch" href="www.chunlife.top">
   <title>TCP实现聊天室 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="简单的练手，使用到TCP协议和协程。">
 <meta name="keywords" content="UDP,TCP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TCP实现聊天室">
-<meta property="og:url" content="chunlife.top/2019/06/10/TCP实现聊天室/index.html">
+<meta property="og:url" content="www.chunlife.top/2019/06/10/TCP实现聊天室/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="简单的练手，使用到TCP协议和协程。">
 <meta property="og:locale" content="default">
@@ -183,7 +183,7 @@ var _hmt = _hmt || [];
 <p><code>chan struct{}</code>：<code>struct{}</code>不占用内存，仅做signal使用；<br><code>time.After</code>：超时函数是在进入<code>select</code>中才开始运行，通信每次使用<code>hasData</code>进行重置，不让<code>select</code>走到timeout分支。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"net"</span></span><br><span class="line">	<span class="string">"strings"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用户结构体类型</span></span><br><span class="line"><span class="keyword">type</span> Client <span class="keyword">struct</span> &#123;</span><br><span class="line">	C    <span class="keyword">chan</span> <span class="keyword">string</span></span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">	Addr <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局map，存储在线用户</span></span><br><span class="line"><span class="keyword">var</span> onlineMap <span class="keyword">map</span>[<span class="keyword">string</span>]Client</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局 channel 传递用户消息。</span></span><br><span class="line"><span class="keyword">var</span> message = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WriteMsgToClient</span><span class="params">(clnt Client, conn net.Conn)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 监听 用户自带Channel 上是否有消息。</span></span><br><span class="line">	<span class="keyword">for</span> msg := <span class="keyword">range</span> clnt.C &#123;</span><br><span class="line">		conn.Write([]<span class="keyword">byte</span>(msg + <span class="string">"\n"</span>))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MakeMsg</span><span class="params">(clnt Client, msg <span class="keyword">string</span>)</span> <span class="params">(buf <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	buf = <span class="string">"["</span> + clnt.Addr + <span class="string">"]"</span> + clnt.Name + <span class="string">": "</span> + msg</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">HandlerConnect</span><span class="params">(conn net.Conn)</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> conn.Close()</span><br><span class="line">	<span class="comment">// 创建channel 判断，用户是否活跃。</span></span><br><span class="line">	hasData := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 获取用户 网络地址 IP+port</span></span><br><span class="line">	netAddr := conn.RemoteAddr().String()</span><br><span class="line">	<span class="comment">// 创建新连接用户的 结构体. 默认用户是 IP+port</span></span><br><span class="line">	clnt := Client&#123;<span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>), netAddr, netAddr&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 将新连接用户，添加到在线用户map中. key: IP+port value：client</span></span><br><span class="line">	onlineMap[netAddr] = clnt</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 创建专门用来给当前 用户发送消息的 go 程</span></span><br><span class="line">	<span class="keyword">go</span> WriteMsgToClient(clnt, conn)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 发送 用户上线消息到 全局channel 中</span></span><br><span class="line">	<span class="comment">//message &lt;- "[" + netAddr + "]" + clnt.Name + "login"</span></span><br><span class="line">	message &lt;- MakeMsg(clnt, <span class="string">"login"</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 创建一个 channel， 用来判断用退出状态</span></span><br><span class="line">	isQuit := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 创建一个匿名 go 程， 专门处理用户发送的消息。</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			n, err := conn.Read(buf)</span><br><span class="line">			<span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">				isQuit &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">				fmt.Printf(<span class="string">"检测到客户端:%s退出\n"</span>, clnt.Name)</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				fmt.Println(<span class="string">"conn.Read err:"</span>, err)</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// 将读到的用户消息，保存到msg中，string 类型</span></span><br><span class="line">			msg := <span class="keyword">string</span>(buf[:n<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 提取在线用户列表</span></span><br><span class="line">			<span class="keyword">if</span> msg == <span class="string">"who"</span> &amp;&amp; <span class="built_in">len</span>(msg) == <span class="number">3</span> &#123;</span><br><span class="line">				conn.Write([]<span class="keyword">byte</span>(<span class="string">"online user list:\n"</span>))</span><br><span class="line">				<span class="comment">// 遍历当前 map ，获取在线用户</span></span><br><span class="line">				<span class="keyword">for</span> _, user := <span class="keyword">range</span> onlineMap &#123;</span><br><span class="line">					userInfo := user.Addr + <span class="string">":"</span> + user.Name + <span class="string">"\n"</span></span><br><span class="line">					conn.Write([]<span class="keyword">byte</span>(userInfo))</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 判断用户发送了 改名 命令</span></span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> <span class="built_in">len</span>(msg) &gt;= <span class="number">8</span> &amp;&amp; msg[:<span class="number">6</span>] == <span class="string">"rename"</span> &#123; <span class="comment">// rename|</span></span><br><span class="line">				newName := strings.Split(msg, <span class="string">"|"</span>)[<span class="number">1</span>] <span class="comment">// msg[8:]</span></span><br><span class="line">				clnt.Name = newName                   <span class="comment">// 修改结构体成员name</span></span><br><span class="line">				onlineMap[netAddr] = clnt             <span class="comment">// 更新 onlineMap</span></span><br><span class="line">				conn.Write([]<span class="keyword">byte</span>(<span class="string">"rename successful\n"</span>))</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">// 将读到的用户消息，写入到message中。</span></span><br><span class="line">				message &lt;- MakeMsg(clnt, msg)</span><br><span class="line">			&#125;</span><br><span class="line">			hasData &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 保证 不退出</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="comment">// 监听 channel 上的数据流动</span></span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-isQuit:</span><br><span class="line">			<span class="built_in">delete</span>(onlineMap, clnt.Addr)       <span class="comment">// 将用户从 online移除</span></span><br><span class="line">			message &lt;- MakeMsg(clnt, <span class="string">"logout"</span>) <span class="comment">// 写入用户退出消息到全局channel</span></span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		<span class="keyword">case</span> &lt;-hasData:</span><br><span class="line">			<span class="comment">// 什么都不做。 目的是重置 下面 case 的计时器。</span></span><br><span class="line">		<span class="keyword">case</span> &lt;-time.After(time.Second * <span class="number">60</span>): <span class="comment">// select进入时，开始计时</span></span><br><span class="line">			<span class="built_in">delete</span>(onlineMap, clnt.Addr)                <span class="comment">// 将用户从 online移除</span></span><br><span class="line">			message &lt;- MakeMsg(clnt, <span class="string">"time out leaved"</span>) <span class="comment">// 写入用户退出消息到全局channel</span></span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Manager</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 初始化 onlineMap</span></span><br><span class="line">	onlineMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]Client)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 监听全局channel 中是否有数据, 有数据存储至 msg， 无数据阻塞。</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		msg := &lt;-message</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 循环发送消息给 所有在线用户。要想执行，必须 msg := &lt;-message 执行完， 解除阻塞。</span></span><br><span class="line">		<span class="keyword">for</span> _, clnt := <span class="keyword">range</span> onlineMap &#123;</span><br><span class="line">			clnt.C &lt;- msg</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建监听套接字</span></span><br><span class="line">	listener, err := net.Listen(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8000"</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">"Listen err"</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> listener.Close()</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 创建管理者go程，管理map 和全局channel</span></span><br><span class="line">	<span class="keyword">go</span> Manager()</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 循环监听客户端连接请求</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		conn, err := listener.Accept()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">"Accept err"</span>, err)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 启动go程处理客户端数据请求</span></span><br><span class="line">		<span class="keyword">go</span> HandlerConnect(conn)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/">转载《一次完整的HTTP网络请求过程详解》</a></li><li><a href="chunlife.top/2019/06/10/TCP状态转换/">TCP状态转换</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="https://abelsu7.top/2018/10/18/http-notes-part-1/">HTTP 笔记 1：Web 基础及简单的 HTTP 协议</a></li></ul></div>
+<div><p>> 测试</p><br /><hr /><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/">转载《一次完整的HTTP网络请求过程详解》</a></li><li><a href="chunlife.top/2019/06/10/TCP状态转换/">TCP状态转换</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="https://abelsu7.top/2018/10/18/http-notes-part-1/">HTTP 笔记 1：Web 基础及简单的 HTTP 协议</a></li></ul></div>
       
 
       
@@ -293,7 +293,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:chunlife.top/2019/06/10/TCP实现聊天室/" alt="微信分享二维码">
+	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:www.chunlife.top/2019/06/10/TCP实现聊天室/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -476,23 +476,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Gateway</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -504,15 +488,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">基础</a>
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写文件</a>
+                <a href="javascript:void(0)" class="js-tag color3">Gateway</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -532,14 +520,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -548,7 +528,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -556,7 +536,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">基础</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写文件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -572,11 +568,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -588,14 +580,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">函数</a>
               </li>
              
@@ -604,11 +588,51 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">overlay</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -632,55 +656,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -692,19 +672,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">mysql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -716,11 +700,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -736,11 +740,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+                <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -756,6 +760,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
@@ -768,31 +780,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -812,23 +804,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">区块链</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">比特币</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -840,7 +832,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color4">区块链</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">比特币</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -848,15 +848,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -865,6 +861,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
             
             <div class="clearfix"></div>
