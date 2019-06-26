@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
@@ -19,7 +19,7 @@
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/2.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/3.png">
-<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/count自加1.png">
+<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/count%E8%87%AA%E5%8A%A01.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1538015777465.png">
 <meta property="og:updated_time" content="2019-04-12T10:03:30.827Z">
 <meta name="twitter:card" content="summary">
@@ -163,7 +163,7 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mysql操作-不定时持续补充" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-mysql操作-不定时持续补充" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -186,6 +186,7 @@ var _hmt = _hmt || [];
         <p>mysql操作是不区分大小写的。</p>
 <h1 id="Mysql安装后若出现问题"><a href="#Mysql安装后若出现问题" class="headerlink" title="Mysql安装后若出现问题"></a>Mysql安装后若出现问题</h1><p>ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)</p>
 <a id="more"></a>
+
 <p>解决方式：</p>
 <p> touch /var/run/mysqld/mysqld.sock</p>
 <p>ls -lart /var/run/mysqld/</p>
@@ -195,11 +196,14 @@ var _hmt = _hmt || [];
 <p>/etc/init.d/mysql restart</p>
 <h1 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h1><p>1 添加表字段</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter table table1 add transactor varchar(10) not Null;</span><br><span class="line"></span><br><span class="line">alter table table1 add id int unsigned not Null auto_increment primary key</span><br></pre></td></tr></table></figure>
+
 <p>2 如果要删除某一字段</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE mytable DROP 字段名;</span><br></pre></td></tr></table></figure>
+
 <p>3 修改数据表字段的默认值：</p>
 <p>修改字段默认值：role_id默认值设置为：1</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter table users_info alter column role_id set default 1;</span><br></pre></td></tr></table></figure>
+
 <p>修改字段默认值语法：</p>
 <p>alter table 表名 alter column 字段名 drop default; (若本身存在默认值，则先删除)</p>
 <p>alter table 表名 alter column 字段名 set default 默认值;(若本身不存在则可以直接设定)</p>
@@ -211,22 +215,28 @@ var _hmt = _hmt || [];
 <p><a href="http://xiaorui.cc/2018/04/13/%e8%ae%b0%e4%b8%80%e6%ac%a1%e9%9a%90%e5%bc%8f%e8%bd%ac%e6%8d%a2%e5%bc%95%e8%b5%b7%e7%9a%84sql%e6%85%a2%e6%9f%a5%e8%af%a2/" target="_blank" rel="noopener">记一次隐式转换引起的sql慢查询</a></p>
 <h1 id="日期索引"><a href="#日期索引" class="headerlink" title="日期索引"></a>日期索引</h1><p><a href="https://blog.csdn.net/spider_zhcl/article/details/53323166" target="_blank" rel="noopener">Mysql 索引问题-日期索引使用</a></p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在查询数据条数约占总条数五分之一以下时能够使用到索引，但超过五分之一时，则使用全表扫描了。</span><br></pre></td></tr></table></figure>
+
 <h1 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h1><p><a href="https://www.cnblogs.com/gimin/p/5459689.html" target="_blank" rel="noopener">MySQL查询缓存打开、设置、参数查询、性能变量</a></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW VARIABLES LIKE &apos;%query_cache%&apos;;</span><br><span class="line">+------------------------------+---------+</span><br><span class="line">| Variable_name                | Value   |</span><br><span class="line">+------------------------------+---------+</span><br><span class="line">| have_query_cache             | YES     |</span><br><span class="line">| query_cache_limit            | 1048576 |</span><br><span class="line">| query_cache_min_res_unit     | 4096    |</span><br><span class="line">| query_cache_size             | 1048576 |</span><br><span class="line">| query_cache_type             | OFF     |</span><br><span class="line">| query_cache_wlock_invalidate | OFF     |</span><br><span class="line">+------------------------------+---------+</span><br><span class="line"></span><br><span class="line">mysql&gt; show global status like &apos;QCache%&apos;;</span><br><span class="line">+-------------------------+---------+</span><br><span class="line">| Variable_name           | Value   |</span><br><span class="line">+-------------------------+---------+</span><br><span class="line">| Qcache_free_blocks      | 1       |</span><br><span class="line">| Qcache_free_memory      | 1031832 |</span><br><span class="line">| Qcache_hits             | 0       |</span><br><span class="line">| Qcache_inserts          | 0       |</span><br><span class="line">| Qcache_lowmem_prunes    | 0       |</span><br><span class="line">| Qcache_not_cached       | 106     |</span><br><span class="line">| Qcache_queries_in_cache | 0       |</span><br><span class="line">| Qcache_total_blocks     | 1       |</span><br><span class="line">+-------------------------+---------+</span><br></pre></td></tr></table></figure>
+
 <h1 id="mysql调试"><a href="#mysql调试" class="headerlink" title="mysql调试"></a>mysql调试</h1><p>慢查询可以将mysql执行慢的语句记录下来。</p>
-<p><a href="http://blog.51yip.com/mysql/972.html" target="_blank" rel="noopener">linux下开启mysql慢查询，分析查询语句</a></p>
+<p><a href="http://blog.51yip.com/mysql/972.html>" target="_blank" rel="noopener">linux下开启mysql慢查询，分析查询语句</a></p>
 <p><a href="http://www.cnblogs.com/luyucheng/p/6265594.html" target="_blank" rel="noopener">http://www.cnblogs.com/luyucheng/p/6265594.html</a></p>
 <p>慢查询使用pt-query-digest进行分析：</p>
 <p>安装过程：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# wget percona.com/get/pt-query-digest</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# chmod u+x pt-query-digest</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# mv /root/pt-query-digest /usr/bin/</span><br></pre></td></tr></table></figure>
+
 <p>开启慢查询后，会有慢查询的日志，对日志使用工具：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pt-query-digest --explain h=127.0.0.1,u=root,p=123 mysql_slow.log &gt; pt.ref</span><br></pre></td></tr></table></figure>
+
 <p>开启实时查询，能够得到每一次SQL语句的完整执行语句。</p>
 <p><a href="https://blog.csdn.net/qidaif/article/details/80931703" target="_blank" rel="noopener">MySQL查看实时执行的SQL语句</a></p>
 <h1 id="mysql插入CSV文件"><a href="#mysql插入CSV文件" class="headerlink" title="mysql插入CSV文件"></a>mysql插入CSV文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOAD DATA LOCAL INFILE &apos;./dbtestdata.csv&apos; INTO TABLE production_recorder.6 CHARACTER SET UTF8 FIELDS TERMINATED BY &apos;,&apos; LINES TERMINATED BY &apos;\n&apos;;</span><br></pre></td></tr></table></figure>
+
 <h1 id="GORM使用"><a href="#GORM使用" class="headerlink" title="GORM使用"></a>GORM使用</h1><h2 id="查找最大值"><a href="#查找最大值" class="headerlink" title="查找最大值"></a>查找最大值</h2><p><img src="3.png" alt="查询"></p>
 <h2 id="时间戳跟踪"><a href="#时间戳跟踪" class="headerlink" title="时间戳跟踪"></a>时间戳跟踪</h2><p>Gorm里面有个结构体：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// gorm.Model definition</span></span><br><span class="line"><span class="keyword">type</span> Model <span class="keyword">struct</span> &#123;</span><br><span class="line">  ID        <span class="keyword">uint</span> <span class="string">`gorm:"primary_key"`</span></span><br><span class="line">  CreatedAt time.Time</span><br><span class="line">  UpdatedAt time.Time</span><br><span class="line">  DeletedAt *time.Time</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这四个参数是Gorm固定的参数，例如，如果结构体中有“ID”成员，那么建表时它就是表中的主键。</p>
 <p>CreatedAt：也就是插入值时默认添加的时间戳；</p>
 <p>UpdatedAt：更新时添加的时间戳；</p>
@@ -234,13 +244,16 @@ var _hmt = _hmt || [];
 <p>GORM默认是使用蛇形命名，也就是CreatedAt成员将被命名为“created_at”。</p>
 <p>select * from production_recorder.6  WHERE errcode like “86:54:37%” LIMIT 1000000,10;</p>
 <h2 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h2><p><a href="https://stackoverflow.com/questions/46807891/using-a-subquery-in-from-in-gorm?rq=1" target="_blank" rel="noopener">https://stackoverflow.com/questions/46807891/using-a-subquery-in-from-in-gorm?rq=1</a></p>
-<p><img src="count自加1.png" alt="count自加1"></p>
+<p><img src="count%E8%87%AA%E5%8A%A01.png" alt="count自加1"></p>
 <p><img src="1538015777465.png" alt="子查询"></p>
 <p>从手册上摘出来的子查询使用方法：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.Where(<span class="string">"amount &gt; ?"</span>, DB.Table(<span class="string">"orders"</span>).Select(<span class="string">"AVG(amount)"</span>).Where(<span class="string">"state = ?"</span>, <span class="string">"paid"</span>).QueryExpr()).Find(&amp;orders)</span><br><span class="line"><span class="comment">// SELECT * FROM "orders"  WHERE "orders"."deleted_at" IS NULL AND (amount &gt; (SELECT AVG(amount) FROM "orders"  WHERE (state = 'paid')));</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="打印Gorm执行语句（包含时间）"><a href="#打印Gorm执行语句（包含时间）" class="headerlink" title="打印Gorm执行语句（包含时间）"></a>打印Gorm执行语句（包含时间）</h2><p>将执行的语句打印出来。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Debug a single operation, show detailed log for this operation</span></span><br><span class="line">db.Debug().Where(<span class="string">"name = ?"</span>, <span class="string">"jinzhu"</span>).First(&amp;User&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
 <h2 id="gorm拼接SQL语句"><a href="#gorm拼接SQL语句" class="headerlink" title="gorm拼接SQL语句"></a>gorm拼接SQL语句</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dt = dt.Table(models.TableRecords)</span><br><span class="line"></span><br><span class="line">scope := dt.NewScope(dt.Value)</span><br><span class="line">scope.InstanceSet(<span class="string">"skip_bindvar"</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">scope.Raw(fmt.Sprintf(<span class="string">"explain SELECT %v FROM %v %v"</span>, <span class="string">"count(*)"</span>,</span><br><span class="line">	scope.QuotedTableName(),</span><br><span class="line">	scope.CombinedConditionSql()))</span><br><span class="line"></span><br><span class="line">dbs.DbRecords.Raw(scope.SQL, scope.SQLVars...).Scan(&amp;test)</span><br></pre></td></tr></table></figure>
+
 <p>Gorm的官方文档其实已经比较详细了，想跟深入的了解，可以直接去看官方文档：</p>
 <p><a href="http://gorm.io/docs/conventions.html#Timestamp-Tracking" target="_blank" rel="noopener">http://gorm.io/docs/conventions.html#Timestamp-Tracking</a></p>
 <p><a href="https://jasperxu.github.io/gorm-zh/" target="_blank" rel="noopener">https://jasperxu.github.io/gorm-zh/</a></p>
@@ -537,19 +550,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -562,18 +575,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -593,7 +594,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -601,7 +602,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -613,11 +614,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -633,11 +642,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -649,15 +654,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -673,15 +678,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -697,39 +714,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">面试</a>
+                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -741,11 +738,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -754,14 +763,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">json</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -781,6 +782,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MD5</a>
               </li>
              
@@ -793,27 +806,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -821,7 +818,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -833,7 +830,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -845,11 +842,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -861,11 +882,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -881,10 +898,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
@@ -893,11 +906,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">raid</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">文件处理小程序</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -905,7 +914,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件处理小程序</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -933,7 +946,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         </div>
         <ul class="search-ul">
           <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
-            缺失模块。<br>1、请确保node版本大于6.2<br>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br> npm i hexo-generator-json-content --save<br><br>
+            缺失模块。<br/>1、请确保node版本大于6.2<br/>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
             3、在根目录_config.yml里添加配置：
 <pre style="font-size: 12px;" q-show="jsonFail">
   jsonContent:

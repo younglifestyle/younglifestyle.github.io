@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
@@ -159,7 +159,7 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Markdown-For-Typora-中文版使用指南（转载）" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-Markdown-For-Typora-中文版使用指南（转载）" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -185,31 +185,40 @@ var _hmt = _hmt || [];
 <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p><strong>Markdown</strong>诞生自 <a href="https://link.zhihu.com/?target=http%3A//daringfireball.net/" target="_blank" rel="noopener">Daring Fireball</a>之手，点击<a href="https://link.zhihu.com/?target=http%3A//daringfireball.net/projects/markdown/syntax" target="_blank" rel="noopener">这里</a>可以找到最早版本的语法标准。然而，它的语法标准因解析器和编辑器而异，<strong>Typora</strong>使用的是<a href="https://link.zhihu.com/?target=https%3A//help.github.com/articles/github-flavored-markdown/" target="_blank" rel="noopener">GitHub Flavored Markdown</a>标准。</p>
 <p>需要注意的是在Markdown中的HTML代码块可以被识别但并不会被解析和编译。同样要注意的是，保存之后的文档格式可能会对最初的编写的文档格式有所微调。</p>
 <a id="more"></a>
+
 <h2 id="二、块元件"><a href="#二、块元件" class="headerlink" title="二、块元件"></a>二、块元件</h2><h2 id="1-段落和行间隔"><a href="#1-段落和行间隔" class="headerlink" title="1. 段落和行间隔"></a>1. 段落和行间隔</h2><p>段落，顾名思义就是由一行或多行文本组成的，以段为形式的结构。在Markdown语法中，段落间以一行以上的空行作分隔。在Typora中，你只需要按一下<code>Enter</code>就可以插入一个新的段落。</p>
 <p>按<code>Shift</code>+<code>Enter</code>可以创建一个比段落间距更小的行间距。然而，大多数的Markdown解析器会忽略这个方式创建的行间距，但是你可以通过在这一行的最后插入两个空格<code>Space</code>或者插入<code>&lt;br/&gt;</code>令解析器强制识别。</p>
 <h2 id="2-标题"><a href="#2-标题" class="headerlink" title="2.标题"></a>2.标题</h2><p>可以通过在一行的开头使用1-6个<code>#</code>符号来创建标题，对应1-6个级别的标题。栗如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 这是一个一级标题</span><br><span class="line"></span><br><span class="line">## 这是一个二级标题</span><br><span class="line"></span><br><span class="line">###### 这是一个六级标题</span><br></pre></td></tr></table></figure>
+
 <p>在Typora中，在标题文本前输入<code>#</code>，然后按下<code>Enter</code>可以创建一个标题。</p>
 <h2 id="3-引用"><a href="#3-引用" class="headerlink" title="3.引用"></a>3.引用</h2><p>Markdown使用邮件风格的<code>&gt;</code>符号来创建引用块。栗如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; 这是一个由两个段落组成的引用块，这是第一个段落。</span><br><span class="line">&gt;</span><br><span class="line">&gt; 这是第二个段落，爱饭打森，爱乖出台，请曾爱萨菲，撒㩐，经爱抚，百分赛法。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; 这是另一个只有一个段落的引用块。两个代码块间可以用一空行来分隔。</span><br></pre></td></tr></table></figure>
+
 <p>在Typora中，只需要输入<code>&gt;</code>之后输入需要的引用内容就可以生成引用块格式。Typora在随后的输入过程中会自动为你添加<code>&gt;</code>和行间隔。引用块内的引用也是被允许的，只需要在引用块内同样使用<code>&gt;</code>即可。</p>
 <h2 id="4-普通清单"><a href="#4-普通清单" class="headerlink" title="4. 普通清单"></a>4. 普通清单</h2><p>输入<code>* 清单事项1</code>就会创建一个无序列表，这里的<code>*</code>符号可以用<code>-</code>和<code>+</code>代替。</p>
 <p>输入<code>1. 清单事项1</code>就会创建一个有序列表，它们的语法如下所示：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">## 无序列表</span><br><span class="line">* 红色</span><br><span class="line">* 绿色</span><br><span class="line">* 蓝色</span><br><span class="line"></span><br><span class="line">## 有序列表</span><br><span class="line">1. 红色</span><br><span class="line">2. 绿色</span><br><span class="line">3. 蓝色</span><br></pre></td></tr></table></figure>
+
 <h2 id="5-任务清单"><a href="#5-任务清单" class="headerlink" title="5.任务清单"></a>5.任务清单</h2><p>任务清单是一种特殊的列表，列表中的事项用<code>「 」</code>或者<code>「X」</code>分别标记<code>未完成</code>和<code>已完成</code>。栗如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- 「 」一个任务列表事项</span><br><span class="line">- 「 」可以有如下格式</span><br><span class="line">- 「 」正常 **加粗** @提及 #1234 等</span><br><span class="line">- 「 」未完成</span><br><span class="line">- 「x」已完成</span><br></pre></td></tr></table></figure>
+
 <p>你可以通过鼠标点击事项前的任务框，从而切换任务清单事项中的状态。</p>
 <h2 id="6-代码块"><a href="#6-代码块" class="headerlink" title="6.代码块"></a>6.代码块</h2><p>Typora仅仅支持<a href="https://link.zhihu.com/?target=https%3A//help.github.com/articles/github-flavored-markdown/" target="_blank" rel="noopener">GFM</a>的代码块，源码块是不支持的。[^此处翻译不确定]使用代码块的语法非常简单，输入<figure class="highlight plain"><figcaption><span>就可以。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">另外还可以自定义代码块的语言，只需要在 `````后追加输入所需要的语法名称后，我们就会通过语法高亮来实现它，栗如：</span><br><span class="line"></span><br><span class="line">~~~text</span><br><span class="line">这是一个栗子：</span><br></pre></td></tr></table></figure></p>
-<p>function test() {<br>  console.log(“notice the blank line before this function?”);<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">syntax highlighting:</span><br><span class="line">```ruby</span><br><span class="line">require &apos;redcarpet&apos;</span><br><span class="line">markdown = Redcarpet.new(&quot;Hello World!&quot;)</span><br><span class="line">puts markdown.to_html</span><br></pre></td></tr></table></figure></p>
-<p>~~~</p>
+<p>function test() {<br>  console.log(“notice the blank line before this function?”);<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">syntax highlighting:</span><br><span class="line">```ruby</span><br><span class="line">require &apos;redcarpet&apos;</span><br><span class="line">markdown = Redcarpet.new(&quot;Hello World!&quot;)</span><br><span class="line">puts markdown.to_html</span><br></pre></td></tr></table></figure>
+
+<p><del>~</del></p>
 <h2 id="7-数学公式"><a href="#7-数学公式" class="headerlink" title="7.数学公式"></a>7.数学公式</h2><p>你可以通过使用<strong>MathJax</strong>来实现<em>LaTeX</em>的数学符号的表达。</p>
-<p>输入<code>$$</code>，然后按下<code>Enter</code>键就会弹出一个支持TeX/LaTeX语法的输入框，下面是一个栗子：<br>$$<br>\mathbf{V}_1 \times \mathbf{V}_2 = \begin{vmatrix}<br>\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \<br>\frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \<br>\frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \<br>\end{vmatrix}<br>$$<br>在Markdown源文件中，数学的公式块是通过利用<code>$$</code>标记借用<em>LaTeX</em>语言来实现的：</p>
+<p>输入<code>$$</code>，然后按下<code>Enter</code>键就会弹出一个支持TeX/LaTeX语法的输入框，下面是一个栗子：<br>$$<br>\mathbf{V}_1 \times \mathbf{V}_2 = \begin{vmatrix}<br>\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} <br>\frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 <br>\frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 <br>\end{vmatrix}<br>$$<br>在Markdown源文件中，数学的公式块是通过利用<code>$$</code>标记借用<em>LaTeX</em>语言来实现的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">\mathbf&#123;V&#125;_1 \times \mathbf&#123;V&#125;_2 =  \begin&#123;vmatrix&#125; </span><br><span class="line">\mathbf&#123;i&#125; &amp; \mathbf&#123;j&#125; &amp; \mathbf&#123;k&#125; \\</span><br><span class="line">\frac&#123;\partial X&#125;&#123;\partial u&#125; &amp;  \frac&#123;\partial Y&#125;&#123;\partial u&#125; &amp; 0 \\</span><br><span class="line">\frac&#123;\partial X&#125;&#123;\partial v&#125; &amp;  \frac&#123;\partial Y&#125;&#123;\partial v&#125; &amp; 0 \\</span><br><span class="line">\end&#123;vmatrix&#125;</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
+
 <h2 id="8-表格"><a href="#8-表格" class="headerlink" title="8.表格"></a>8.表格</h2><p>输入<code>|标题一|标题二|</code>然后按下<code>Enter</code>将会创建一个有两个列的表格。</p>
 <p>表格创建之后，你会看到一个顶部工具栏也会随之出现，通过工具栏你可以实现调整大小，增添和删除表格的功能，你也可以使用</p>
 <p>下面的描述可以跳过，因为表格的源码语法是Typora自动生成的。</p>
 <p>在markdown语法中，它们如下所示：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">| First Header  | Second Header |</span><br><span class="line">| ------------- | ------------- |</span><br><span class="line">| Content Cell  | Content Cell  |</span><br><span class="line">| Content Cell  | Content Cell  |</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <table>
 <thead>
@@ -218,8 +227,7 @@ var _hmt = _hmt || [];
 <th>Second Header</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>Content Cell</td>
 <td>Content Cell</td>
 </tr>
@@ -227,40 +235,39 @@ var _hmt = _hmt || [];
 <td>Content Cell</td>
 <td>Content Cell</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>你也可以修饰内部的文本格式，比如链接、粗体、斜体、删除线等。</p>
 <p>最后，通过使用冒号<code>：</code>你可以实现标题栏文字的对齐功能，比如向左对齐、向右对齐和居中对齐：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">| Left-Aligned  | Center Aligned  | Right Aligned |</span><br><span class="line">| :------------ |:---------------:| -----:|</span><br><span class="line">| col 3 is      | some wordy text | $1600 |</span><br><span class="line">| col 2 is      | centered        |   $12 |</span><br><span class="line">| zebra stripes | are neat        |    $1 |</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">Left-Aligned</th>
-<th style="text-align:center">Center Aligned</th>
-<th style="text-align:right">Right Aligned</th>
+<th align="left">Left-Aligned</th>
+<th align="center">Center Aligned</th>
+<th align="right">Right Aligned</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:left">col 3 is</td>
-<td style="text-align:center">some wordy text</td>
-<td style="text-align:right">$1600</td>
+<tbody><tr>
+<td align="left">col 3 is</td>
+<td align="center">some wordy text</td>
+<td align="right">$1600</td>
 </tr>
 <tr>
-<td style="text-align:left">col 2 is</td>
-<td style="text-align:center">centered</td>
-<td style="text-align:right">$12</td>
+<td align="left">col 2 is</td>
+<td align="center">centered</td>
+<td align="right">$12</td>
 </tr>
 <tr>
-<td style="text-align:left">zebra stripes</td>
-<td style="text-align:center">are neat</td>
-<td style="text-align:right">$1</td>
+<td align="left">zebra stripes</td>
+<td align="center">are neat</td>
+<td align="right">$1</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>最左侧的<code>：</code>是向左对齐；最右侧的<code>：</code>是向右对齐；两侧各一个<code>：</code>是居中对齐。</p>
 <h2 id="9-脚注"><a href="#9-脚注" class="headerlink" title="9.脚注"></a>9.脚注</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">你可以创建一个脚注，如下所示：</span><br><span class="line"></span><br><span class="line">脚注示范[^这是一个脚注]</span><br></pre></td></tr></table></figure>
+
 <p>上面的语法会编译成：</p>
 <p>脚注示范[^这是一个脚注]</p>
 <p>鼠标移动到<code>这是一个脚注</code>超链接可以看到脚注的文本内容。</p>
@@ -274,6 +281,7 @@ var _hmt = _hmt || [];
 <p>在上面两种链接类型中，链接文本都用<code>[方框]</code>来定义。</p>
 <p>通过在<code>[ ]</code>后追加带有链接地址的<code>( )</code>来创建一个直接链接。在括号中，插入你需转到的网址链接，还可以在链接后追加一个<code>&quot;文本&quot;</code>来自定义所通往链接的网站标题。栗子如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这是一个[栗子](http://example.com/ &quot;栗子网站&quot;)网站的链接实例。</span><br><span class="line"></span><br><span class="line">这个[栗子](http://example.com/)没有网站标题。</span><br></pre></td></tr></table></figure>
+
 <p>上面语法效果如下：</p>
 <p>这是一个<a href="https://link.zhihu.com/?target=http%3A//example.com/" target="_blank" rel="noopener">栗子</a>网站的链接实例。</p>
 <p>这个<a href="https://link.zhihu.com/?target=http%3A//example.com/" target="_blank" rel="noopener">栗子</a>没有网站标题。</p>
@@ -281,21 +289,25 @@ var _hmt = _hmt || [];
 <p><code>Ctrl</code>（在Mac上是<code>Command</code>）+ <code>Click</code> <a href="https://zhuanlan.zhihu.com/write#二、块元素" target="_blank" rel="noopener">这个链接</a>就会跳转到标题<code>二、块元素</code>。如果你想看这是怎么做到的，你可以将鼠标移动到这个链接然后点击就可以看到此链接方式的markdown的语法结构。</p>
 <h2 id="2-引用链接"><a href="#2-引用链接" class="headerlink" title="2).引用链接"></a>2).引用链接</h2><p>引用类型的链接会使用第二个<code>[ ]</code>用来放置一个对应相应链接地址的标签，栗子如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">这是个引用链接的[栗子][id]呦。</span><br><span class="line"></span><br><span class="line">然后，你需要在文档的任何位置对标签作出有效的定义。</span><br><span class="line"></span><br><span class="line">[id]:http://example/com/ &quot;可选标题&quot;</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <p>这是个引用链接的<a href="https://link.zhihu.com/?target=http%3A//example/com/" target="_blank" rel="noopener">栗子</a>呦。</p>
 <p>然后，你需要在文档的任何位置对标签作出有效的定义。</p>
 <p>另一种简洁的语法可以使用文本本身作为链接的名称，因而允许忽略掉链接的名称也可以实现地址追踪，所以第二个<code>[ ]</code>只需要空着就好了，但是还是需要对文本本身作出定义以提供追踪地址。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[baidu][]</span><br><span class="line">然后输入对文本本身的定义：</span><br><span class="line"></span><br><span class="line">[baidu]:http://baidu.com/</span><br></pre></td></tr></table></figure>
+
 <p>在Typora中，<code>Click</code>链接就会展开语法结构供你编辑，<code>Ctrl</code> + <code>Click</code>会在内置浏览器中此超链接。</p>
 <h2 id="2-URLs"><a href="#2-URLs" class="headerlink" title="2.URLs"></a>2.URLs</h2><p>Typora允许你插入urls作为链接内容，用<code>&lt;括号&gt;</code>修饰。</p>
 <p><code>&lt;i@typora.io&gt;</code>就变成如下效果：<a href="mailto:i@typora.io" target="_blank" rel="noopener">i@typora.io</a>。</p>
 <p>Typora也支持链接标准的URLs，栗如：</p>
 <h2 id="3-图片"><a href="#3-图片" class="headerlink" title="3.图片"></a>3.图片</h2><p>图片也类似链接，但是需要额外的符号<code>!</code>放置在这一行的最开头。图片的语法结构如下所示：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">![图片名称](/path/to/img.jpg)</span><br><span class="line">![图片名称](/path/to/img.jpg &quot;可选名字&quot;)</span><br></pre></td></tr></table></figure>
+
 <p>你也可以使用<code>drag&amp;drop</code>动作从图片文件或者网页浏览器实现插入图片的操作。随后可以通过点击图片来编辑语法的源码达到进一步修饰图片的效果。如果图片文件和所编辑的markdown文档在相同目录或亚目录则<code>drop&amp;drop</code>操作会自动生成对应的相对路径。</p>
 <p>如果你想查看更多插入图片的技巧，请阅读 <a href="https://link.zhihu.com/?target=http%3A//support.typora.io//Images/" target="_blank" rel="noopener">http://support.typora.io//Images/</a>。</p>
 <h2 id="4-斜体"><a href="#4-斜体" class="headerlink" title="4.斜体"></a>4.斜体</h2><p>Markdown识别<code>*</code>和<code>_</code>作为斜体语法的标识。用一个<code>*</code>或<code>_</code>修饰的文本会有一个HTML的标签<code>&lt;em&gt;</code>，栗如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*一个乘号*</span><br><span class="line"></span><br><span class="line">_一个下划线_</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <p><em>一个乘号</em></p>
 <p><em>一个下划线</em></p>
@@ -305,16 +317,19 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>另一需要注意的问题是如果你需要<code>*</code>或<code>_</code>本身而不想让它编译成此处的强调标识，你可以使用<code>\</code>来免除编译，栗如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\*这个文本是被乘号修饰的，但是但不会变成斜体\*</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <p><em>这个文本是被乘号修饰的，但是但不会变成斜体</em></p>
 <p>附：Typora推荐使用<code>*</code>符号。</p>
 <h2 id="5-强调"><a href="#5-强调" class="headerlink" title="5.强调"></a>5.强调</h2><p>两个<code>*</code>或者<code>_</code>连用就会产生一个HTML标签<code>&lt;strong&gt;</code>实现强调加粗的效果。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">**两个乘号连用**</span><br><span class="line">__两个下划线连用__</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <p><strong>两个乘号连用两个下划线连用</strong></p>
 <p>附：Typora推荐使用<code>*</code>符号。</p>
-<h2 id="6-代码"><a href="#6-代码" class="headerlink" title="6.代码"></a>6.代码</h2><p>想要创建一个实时显示的代码，用两个<code>`</code>符号修饰就可以了。不像预格式化的代码块，这里的实时代码使用正常的段落来表达代码形式。栗如：</p>
+<h2 id="6-代码"><a href="#6-代码" class="headerlink" title="6.代码"></a>6.代码</h2><p>想要创建一个实时显示的代码，用两个` ``符号修饰就可以了。不像预格式化的代码块，这里的实时代码使用正常的段落来表达代码形式。栗如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用 `printf()`功能。</span><br></pre></td></tr></table></figure>
+
 <p>效果如下：</p>
 <p>使用 <code>printf()</code>功能。</p>
 <h2 id="7-删除线"><a href="#7-删除线" class="headerlink" title="7.删除线"></a>7.删除线</h2><p>GFM增添了使用符号添加删除线的语法，而标准的Markdown无此功能。</p>
@@ -336,7 +351,7 @@ var _hmt = _hmt || [];
 <p>为了触发行内内嵌数学符号的实时编译你需要：输入<code>$</code>然后按下<code>ESC</code>键之后输入TeX命令，之后就会弹出一个如图所示的工具提示栏：</p>
 <p><img src="v2-4033508b043cad96c59ec4edbca92f36_b.gif" alt="img"></p>
 <h2 id="12-下标"><a href="#12-下标" class="headerlink" title="12.下标"></a>12.下标</h2><p>想要使用这个功能，需要在设置面板的 <code>Markdown</code> 栏启动它，之后使用<code>~</code>来修饰下标文本。栗如：</p>
-<p><code>H~2~O</code> 和<code>X~long\ text~</code> 显示为 H~2~O 和X~long\ text~ 。</p>
+<p><code>H~2~O</code> 和<code>X~long\ text~</code> 显示为 H<del>2</del>O 和X<del>long\ text</del> 。</p>
 <h2 id="13-上标"><a href="#13-上标" class="headerlink" title="13.上标"></a>13.上标</h2><p>想要使用这个功能，需要在设置面板的 <code>Markdown</code> 栏启动它，之后使用<code>^</code>来修饰下标文本。栗如：</p>
 <p><code>X^2^</code> 显示为 X^2^ 。</p>
 <h2 id="14-高亮"><a href="#14-高亮" class="headerlink" title="14.高亮"></a>14.高亮</h2><p>想要使用这个功能，需要在设置面板的<code>Markdown</code> 栏启动它，之后使用<code>==</code>来修饰高亮文本，栗如：</p>
@@ -630,19 +645,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -655,18 +670,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -686,7 +689,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -694,7 +697,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -706,11 +709,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -726,11 +737,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -742,15 +749,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -766,15 +773,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -790,39 +809,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">面试</a>
+                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -834,11 +833,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -847,14 +858,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">json</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -874,6 +877,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MD5</a>
               </li>
              
@@ -886,27 +901,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -914,7 +913,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -926,7 +925,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -938,11 +937,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -954,11 +977,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -974,10 +993,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
@@ -986,11 +1001,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">raid</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">文件处理小程序</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -998,7 +1009,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件处理小程序</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">raid</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1026,7 +1041,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         </div>
         <ul class="search-ul">
           <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
-            缺失模块。<br>1、请确保node版本大于6.2<br>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br> npm i hexo-generator-json-content --save<br><br>
+            缺失模块。<br/>1、请确保node版本大于6.2<br/>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
             3、在根目录_config.yml里添加配置：
 <pre style="font-size: 12px;" q-show="jsonFail">
   jsonContent:
