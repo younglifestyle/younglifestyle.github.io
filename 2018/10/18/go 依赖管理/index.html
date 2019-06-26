@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>Go依赖管理 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -36,9 +36,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -169,6 +179,7 @@
       
         <h2 id="依赖管理的选择"><a href="#依赖管理的选择" class="headerlink" title="依赖管理的选择"></a>依赖管理的选择</h2><p>Go主要依赖管理工具包括dep，govendor，glide，gomodule。</p>
 <a id="more"></a>
+
 <p>dep：<a href="https://github.com/golang/dep" target="_blank" rel="noopener">https://github.com/golang/dep</a></p>
 <p>govendor：<a href="https://github.com/kardianos/govendor" target="_blank" rel="noopener">https://github.com/kardianos/govendor</a></p>
 <p>glide：<a href="https://github.com/Masterminds/glide/releases" target="_blank" rel="noopener">https://github.com/Masterminds/glide/releases</a></p>
@@ -179,37 +190,48 @@
 <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>下载glide，<a href="https://github.com/Masterminds/glide/releases，将文件放至$GOROOT/bin。" target="_blank" rel="noopener">https://github.com/Masterminds/glide/releases，将文件放至$GOROOT/bin。</a></p>
 <p>使用代码：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line"></span><br><span class="line">	. <span class="string">"gitlab.com/Utils/ErrCode"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	log.Println(<span class="string">"test"</span>, ERROR[<span class="string">"OK"</span>])</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="使用Glide"><a href="#使用Glide" class="headerlink" title="使用Glide"></a>使用Glide</h3><p><strong>注意</strong>：Glide与其他利用Vendor特性的工具一样，工程项目必须要放在GOPATH目录下。</p>
 <h4 id="大概流程："><a href="#大概流程：" class="headerlink" title="大概流程："></a>大概流程：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入到项目目录</span></span><br><span class="line">cd ~/src/testDep</span><br><span class="line"><span class="meta">#</span><span class="bash">glide初始化，初始化配置文件glide.yaml</span></span><br><span class="line">glide init</span><br><span class="line"><span class="meta">#</span><span class="bash">glide加载依赖包，自动归档到vendor目录</span></span><br><span class="line">glide up -v</span><br></pre></td></tr></table></figure>
+
 <h4 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h4><p>在项目顶层目录运行：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ glide.exe init testDep  <span class="comment"># specify project name</span></span><br></pre></td></tr></table></figure>
+
 <p>该工具会将项目依赖自动扫入配置文件（glide.yaml）中。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">package:</span> <span class="string">testDep</span></span><br><span class="line"><span class="attr">import:</span></span><br><span class="line"><span class="attr">- package:</span> <span class="string">gitlab.com/Utils</span></span><br></pre></td></tr></table></figure>
+
 <p>接下来可以使用”glide.exe install”，但对于私有库，若直接安装将无法正常clone到git项目，需要手动对配置文件进行改造：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">package:</span> <span class="string">testDep</span></span><br><span class="line"><span class="attr">import:</span></span><br><span class="line"><span class="attr">- package:</span> <span class="string">gitlab.com/Utils</span></span><br><span class="line"><span class="attr">  repo:</span>    <span class="string">git@172.16.8.189:third-party/Utils.git</span></span><br><span class="line"><span class="attr">  version:</span> <span class="string">branch</span></span><br></pre></td></tr></table></figure>
+
 <p>repo：指定真实仓库地址；</p>
 <p>version：指定tag，branch等其他参数，具体可参考文档。</p>
 <p>完成后，可使用：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ glide.exe install // 或者是glide up -v，配置文件更改后使用，一般第一次使用install，后面使用up</span><br></pre></td></tr></table></figure>
+
 <p>正常情况下，会自动下载Git项目到vendor目录中，且生成”glide.lock”。</p>
 <h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><h3 id="手动更新包依赖"><a href="#手动更新包依赖" class="headerlink" title="手动更新包依赖"></a>手动更新包依赖</h3><p>glide get操作通过手动维护Git包，使用此命令，包配置会自动配置到配置文件中，但对于私有仓库的操作是无法成功的。</p>
 <p>示例，#后面跟tag，branch。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glide get github.com/go-sql-driver/mysql#v1.2</span><br></pre></td></tr></table></figure>
+
 <h3 id="包被墙"><a href="#包被墙" class="headerlink" title="包被墙"></a>包被墙</h3><p>包若因为网络因素被墙，可使用glide的mirror命令绕过一些包访问的问题。</p>
 <p>例如<a href="https://golang.org/x/net。" target="_blank" rel="noopener">https://golang.org/x/net。</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> glide mirror <span class="built_in">set</span> https://golang.org/x/net https://github.com/golang/net --vcs git</span></span><br></pre></td></tr></table></figure>
+
 <p>然后使用update。</p>
 <p>这里glide无法处理包的子包，那可以参考：<a href="https://zhuanlan.zhihu.com/p/31402004" target="_blank" rel="noopener">让golang依赖也走mirror</a>，参考<a href="https://github.com/jokimina/glide-mirrors-yaml，一些常用的mirror，将文件放到~/.glide/。" target="_blank" rel="noopener">https://github.com/jokimina/glide-mirrors-yaml，一些常用的mirror，将文件放到~/.glide/。</a></p>
 <p>对包被墙的一些解决办法：<a href="https://blog.csdn.net/fenglailea/article/details/79107124" target="_blank" rel="noopener">golang 包管理工具</a>，综合来看，唯有代理才能彻底解决这个痛点。</p>
 <h2 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h2><p>上传git项目一般是只需上传glide.lock，glide.yaml即可，vendor目录可不做上传，若网络包被本地修改，或包需翻墙进行下载，此时建议一并上传。</p>
 <p>若依赖需要更新，或者配置更改，则可使用update。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ glide.exe update</span><br></pre></td></tr></table></figure>
+
 <h2 id="Add-2019-3-19"><a href="#Add-2019-3-19" class="headerlink" title="Add 2019-3-19"></a>Add 2019-3-19</h2><p>go如今已经发布到1.12了，之前说过Go1.11强势发布了gomodule特性，以此来统一整个包管理的江湖，但在之前刚发布时，对这个的使用实在是有点搞不明白，不过在不经意间就找到了一个Go的包代理网站，以此来使用gomodule即可应对各类<code>墙</code>包。<a href="https://goproxy.io。" target="_blank" rel="noopener">https://goproxy.io。</a></p>
 <p>1、升级Go1.12，启用GO111MODULE</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GO111MODULE=on</span><br></pre></td></tr></table></figure>
+
 <p>2、配置GOPROXY</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GOPROXY=https://goproxy.io</span><br></pre></td></tr></table></figure>
 
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li><li><a href="chunlife.top/2019/06/19/转载《解剖Go语言map底层实现》/">转载《解剖Go语言map底层实现》</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="www.chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li></ul></div>
       
 
       
@@ -337,18 +359,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/10/18/go build条件编译/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/10/22/我收藏的博客/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Go依赖管理
+          我收藏的博客
         
       </div>
     </a>
   
   
-    <a href="/2018/10/12/Go打印结构体的field/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Go打印结构体的field</div>
+    <a href="/2018/10/18/go build条件编译/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Go依赖管理</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -375,7 +397,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖管理的选择"><span class="toc-number">1.</span> <span class="toc-text">依赖管理的选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Glide"><span class="toc-number">2.</span> <span class="toc-text">Glide</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备"><span class="toc-number">2.1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Glide"><span class="toc-number">2.2.</span> <span class="toc-text">使用Glide</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#大概流程："><span class="toc-number">2.2.1.</span> <span class="toc-text">大概流程：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#示例："><span class="toc-number">2.2.2.</span> <span class="toc-text">示例：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他操作"><span class="toc-number">2.3.</span> <span class="toc-text">其他操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动更新包依赖"><span class="toc-number">2.4.</span> <span class="toc-text">手动更新包依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#包被墙"><span class="toc-number">2.5.</span> <span class="toc-text">包被墙</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#项目管理"><span class="toc-number">3.</span> <span class="toc-text">项目管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add-2019-3-19"><span class="toc-number">4.</span> <span class="toc-text">Add 2019-3-19</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖管理的选择"><span class="toc-number">1.</span> <span class="toc-text">依赖管理的选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Glide"><span class="toc-number">2.</span> <span class="toc-text">Glide</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备"><span class="toc-number">2.1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Glide"><span class="toc-number">2.2.</span> <span class="toc-text">使用Glide</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#大概流程："><span class="toc-number">2.2.1.</span> <span class="toc-text">大概流程：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#示例："><span class="toc-number">2.2.2.</span> <span class="toc-text">示例：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他操作"><span class="toc-number">2.3.</span> <span class="toc-text">其他操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动更新包依赖"><span class="toc-number">2.4.</span> <span class="toc-text">手动更新包依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#包被墙"><span class="toc-number">2.5.</span> <span class="toc-text">包被墙</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#项目管理"><span class="toc-number">3.</span> <span class="toc-text">项目管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add-2019-3-19"><span class="toc-number">4.</span> <span class="toc-text">Add 2019-3-19</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -506,11 +528,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -522,6 +544,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -530,7 +568,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -542,15 +580,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -558,7 +588,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -566,15 +596,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -582,19 +604,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -614,11 +632,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,14 +660,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -650,11 +668,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -662,15 +680,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -706,6 +744,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -715,6 +765,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -746,19 +800,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -774,11 +828,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -798,11 +856,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -810,7 +872,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -819,34 +917,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

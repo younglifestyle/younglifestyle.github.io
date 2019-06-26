@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>es告警功能——elastalert | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -36,9 +36,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -169,16 +179,20 @@
       
         <p>ElasticSearch可以使用X-Pack进行报警功能，由于其是收费使用，而当下也仅是使用告警功能。</p>
 <a id="more"></a> 
+
 <p>所以这里寻求的是开源解决方案，<strong><a href="https://github.com/Yelp/elastalert" target="_blank" rel="noopener">elastalert</a></strong>，在GitHub中star数量5K+，已经算是很受欢迎的项目了，可以配合<code>kibana</code>进行使用，适用于所有版本的Elasticsearch，而且官方使用教程还挺详细，可以参考进行使用。</p>
 <p>使用elastalert需要预先配置rule.yaml，根据软件介绍，选择适合自身规则的软件告警规则，根据告警规则填充详细的文档。</p>
 <p>我们可以定义多个yaml，同时进行多种告警。对于每个rule.yaml，其包含一种告警发生规则，即阈值；包含一些告警方式，即email、jira等。</p>
 <h2 id="安装Elastalert"><a href="#安装Elastalert" class="headerlink" title="安装Elastalert"></a>安装Elastalert</h2><p>安装之前需要准备好Python的环境，这里已经提前安装完成，<code>Python2.7</code>。</p>
 <p>拉取最新的elastalert仓库</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install elastalert</span></span><br><span class="line">或者</span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/Yelp/elastalert.git</span></span><br></pre></td></tr></table></figure>
+
 <p>安装模块：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install <span class="string">"setuptools&gt;=11.3"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo python setup.py install</span></span><br></pre></td></tr></table></figure>
+
 <p>安装成功后：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~$ ls /usr/local/bin/elastalert*</span><br><span class="line">/usr/local/bin/elastalert               /usr/local/bin/elastalert-rule-from-kibana</span><br><span class="line">/usr/local/bin/elastalert-create-index  /usr/local/bin/elastalert-test-rule</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>elastalert-create-index  ElastAlert将有关其查询及其警报的信息和元数据保存回Elasticsearch。这对于审计，调试很有用，它允许ElastAlert重新启动并从中断的位置恢复。并不实际影响ElastAlert运行，但强烈推荐这么做。</li>
 <li>elastalert-rule-from-kibana 从 Kibana 已保存的仪表盘中读取 Filtering 设置，帮助生成 <code>config.yaml</code>里的配置。不过注意，它只会读取 filtering，不包括 queries。</li>
@@ -190,42 +204,55 @@
 </blockquote>
 <p>会需要输入es host port等参数，其他默认即可。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ elastalert-create-index</span><br><span class="line">New index name (Default elastalert_status)</span><br><span class="line">Name of existing index to copy (Default None)</span><br><span class="line">New index elastalert_status created</span><br><span class="line">Done!</span><br></pre></td></tr></table></figure>
+
 <h2 id="设置配置文件config-yaml和规则Rule"><a href="#设置配置文件config-yaml和规则Rule" class="headerlink" title="设置配置文件config.yaml和规则Rule"></a>设置配置文件config.yaml和规则Rule</h2><h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`$ cp ~/elastalert/config.yaml.example ~/elastalert/config.yaml$ vi ~/elastalert/config.yaml`</span><br></pre></td></tr></table></figure>
+
 <p>调试时，我仅配置：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is the folder that contains the rule yaml files</span></span><br><span class="line"><span class="comment"># Any .yaml file will be loaded as a rule</span></span><br><span class="line"><span class="attr">rules_folder:</span> <span class="string">example_rules</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># How often ElastAlert will query Elasticsearch</span></span><br><span class="line"><span class="comment"># The unit can be anything from weeks to seconds</span></span><br><span class="line"><span class="attr">run_every:</span></span><br><span class="line"><span class="attr">  minutes:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ElastAlert will buffer results from the most recent</span></span><br><span class="line"><span class="comment"># period of time, in case some log sources are not in real time</span></span><br><span class="line"><span class="attr">buffer_time:</span></span><br><span class="line"><span class="attr">  minutes:</span> <span class="number">15</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The Elasticsearch hostname for metadata writeback</span></span><br><span class="line"><span class="comment"># Note that every rule can have its own Elasticsearch host</span></span><br><span class="line"><span class="attr">es_host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The Elasticsearch port</span></span><br><span class="line"><span class="attr">es_port:</span> <span class="number">9200</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The index on es_host which is used for metadata storage</span></span><br><span class="line"><span class="comment"># This can be a unmapped index, but it is recommended that you run</span></span><br><span class="line"><span class="comment"># elastalert-create-index to set a mapping</span></span><br><span class="line"><span class="attr">writeback_index:</span> <span class="string">elastalert_status</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If an alert fails for some reason, ElastAlert will retry</span></span><br><span class="line"><span class="comment"># sending the alert until this time period has elapsed</span></span><br><span class="line"><span class="attr">alert_time_limit:</span></span><br><span class="line"><span class="attr">  days:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
 <p>配置文件上的参数意义官方都已经注释。</p>
 <p>官方文档中同样也有<a href="https://elastalert.readthedocs.io/en/latest/recipes/writing_filters.html#negation-and-or" target="_blank" rel="noopener">注解</a>。</p>
 <h3 id="配置规则"><a href="#配置规则" class="headerlink" title="配置规则"></a>配置规则</h3><p><strong>特别重要</strong>：监控的index中都必须存在<code>@timestamp</code>字段；go语言中使用time格式进行存储。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;@timestamp&quot; : &#123;</span><br><span class="line">            &quot;type&quot; : &quot;date&quot;,</span><br><span class="line">            &quot;format&quot; : &quot;dateOptionalTime&quot;</span><br><span class="line">          &#125;</span><br></pre></td></tr></table></figure>
+
 <p>基于<code>example_rules/example_percentage_match.yaml</code>更改。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Example</span> <span class="string">Percentage</span> <span class="string">Match</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">percentage_match</span></span><br><span class="line"></span><br><span class="line"><span class="attr">es_host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">es_port:</span> <span class="number">9200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">index:</span> <span class="string">pro_record</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">"95% of all http requests should be successful"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">filter:</span></span><br><span class="line"><span class="attr">- term:</span></span><br><span class="line"><span class="attr">   _type:</span> <span class="string">record</span></span><br><span class="line"></span><br><span class="line"><span class="attr">buffer_time:</span></span><br><span class="line"><span class="attr">  minutes:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#use_terms_query: true</span></span><br><span class="line"><span class="attr">query_key:</span> <span class="string">["binx.keyword"]</span></span><br><span class="line"><span class="attr">doc_type:</span> <span class="string">record</span></span><br><span class="line"></span><br><span class="line"><span class="attr">match_bucket_filter:</span></span><br><span class="line"><span class="attr">- term:</span></span><br><span class="line">    <span class="string">binx.keyword:</span> <span class="string">"xxxxx"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#min_percentage: 1</span></span><br><span class="line"><span class="attr">max_percentage:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#bucket_interval:</span></span><br><span class="line"><span class="comment">#  minutes: 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#sync_bucket_interval: true</span></span><br><span class="line"><span class="comment">#allow_buffer_time_overlap: true</span></span><br><span class="line"><span class="comment">#use_run_every_query_size: true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># (Required)</span></span><br><span class="line"><span class="comment"># The alert is use when a match is found</span></span><br><span class="line"><span class="attr">alert:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">"debug"</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>文件作为演示，数据都已被更改</p>
 </blockquote>
 <p>使用<code>elastalert-test-rule</code>对规则进行测试。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`elastalert-test-rule ~/elastalert/example_rules/example_frequency.yaml`</span><br></pre></td></tr></table></figure>
+
 <p>正常出现<code>Successfully loaded Example Percentage Match</code>，然后实际输出也并没报错，那到这里就规则至少文件是没问题的了。</p>
 <p>参考：<a href="https://elastalert.readthedocs.io/en/latest/ruletypes.html#commonconfig" target="_blank" rel="noopener">Rule Types and Configuration Options</a></p>
 <p>若是想要监控特定订单下的bin错误，那就需要增加查询条件：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">match_bucket_filter:</span></span><br><span class="line"><span class="attr">- term:</span></span><br><span class="line">    <span class="string">order.keyword:</span> <span class="string">"TDRAM19012"</span></span><br><span class="line"><span class="attr">- term:</span></span><br><span class="line">    <span class="string">bin.keyword:</span> <span class="string">"2142134038"</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="使用HTTP-POST报警"><a href="#使用HTTP-POST报警" class="headerlink" title="使用HTTP POST报警"></a>使用HTTP POST报警</h3><p>根据官方<a href="https://elastalert.readthedocs.io/en/latest/ruletypes.html#rule-types" target="_blank" rel="noopener">文档</a>，查看配置参数的含义：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">alert:</span> <span class="string">post</span></span><br><span class="line"><span class="attr">http_post_url:</span> <span class="string">"http://example.com/api"</span></span><br><span class="line"><span class="attr">http_post_payload:</span></span><br><span class="line"><span class="attr">  ip:</span> <span class="string">clientip</span></span><br><span class="line"><span class="attr">http_post_static_payload:</span></span><br><span class="line"><span class="attr">  apikey:</span> <span class="string">abc123</span></span><br></pre></td></tr></table></figure>
+
 <p><code>alert: post</code>：指定警报方式；</p>
 <p><code>http_post_url: &quot;http://example.com/api&quot;</code>：post地址，route方法同样也为<code>post</code>；</p>
 <p><code>http_post_payload</code>：这个参数表示是否需要重定义ElastAlert的键值，例如设置了<code>ip: clientip</code>，那么原来数据中的<code>clientip</code>键，将被替换成<code>ip</code>，也可以填入没有的键值，只不过value是<code>null</code>。<strong>可以不需要此参数，表示直接返回ES的数据</strong>。</p>
 <p><code>http_post_static_payload</code>：这个表示每次警报发送固定的信息，也就是每次警报都会带上<code>apikey: abc123</code>。</p>
 <p>例如在上面基础上去掉了<code>http_post_payload</code>，返回的json数据是：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"num_hits"</span>: <span class="number">1</span>, <span class="attr">"@timestamp"</span>: <span class="string">"2019-03-28T06:54:51.043483Z"</span>, <span class="attr">"denominator"</span>: <span class="number">1</span>, <span class="attr">"bin.keyword"</span>: <span class="string">"2142134038"</span>, <span class="attr">"num_matches"</span>: <span class="number">1</span>, <span class="attr">"percentage"</span>: <span class="number">100.0</span>, <span class="attr">"order"</span>: <span class="string">"TDRAM19012"</span>&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>最后，运行命令:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> python -m elastalert.elastalert --config ./config.yaml</span></span><br></pre></td></tr></table></figure>
+
 <p>或者单独执行 <code>rules_folder</code> 里的某个 rule：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> python -m elastalert.elastalert --config ./config.yaml --rule ./examele_rules/example_percentage_match.yaml</span></span><br></pre></td></tr></table></figure>
+
 <p>调试时使用</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> python -m elastalert.elastalert --verbose --rule example_rules/example_percentage_match.yaml --config config.yaml --debug</span></span><br></pre></td></tr></table></figure>
+
 <p>启动后无error错误打印，代表程序运行成功。</p>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>向ES index <code>pro_record</code>插入一些数据，因为制定的规则是在一分钟之内，只要有符合匹配规则的数据插入，其百分比超过100%，就将会报错。</p>
 <p>若打印出现类似于：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">Percentage violation, value: 100.0 (min: None max : 1) of 1 items</span><br><span class="line"></span><br><span class="line">@timestamp: 2019-03-27T08:04:16.323823Z</span><br><span class="line">bin.keyword: 2142134038</span><br><span class="line">denominator: 1</span><br><span class="line">num_hits: 21</span><br><span class="line">num_matches: 9</span><br><span class="line">percentage: 100.0</span><br><span class="line"></span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+
 <p>表示规则已正常运行，且能成功进行匹配。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
 <p>介绍命令 <a href="https://www.ctolib.com/docs/sfile/ELKstack-guide-cn/elasticsearch/other/elastalert.html" target="_blank" rel="noopener">ElastAlert</a></p>
@@ -233,7 +260,7 @@
 <p>对各项报警进行分析，其是使用post方式告警 <a href="https://4hou.win/wordpress/?cat=3634" target="_blank" rel="noopener">基于Elastalert的安全告警剖析</a></p>
 <p>从安装到使用  <a href="https://anjia0532.github.io/2017/02/14/elasticsearch-elastalert/" target="_blank" rel="noopener">ElastAlert 基于Elasticsearch的监控告警</a></p>
 </blockquote>
-
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/03/14/ElasticSearch数据迁移/">ElasticSearch数据迁移</a></li><li><a href="www.chunlife.top/2019/03/27/es告警功能——elastalert/">es告警功能——elastalert</a></li></ul></div>
       
 
       
@@ -391,7 +418,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Elastalert"><span class="toc-number">1.</span> <span class="toc-text">安装Elastalert</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置Elasticsearch"><span class="toc-number">2.</span> <span class="toc-text">设置Elasticsearch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置配置文件config-yaml和规则Rule"><span class="toc-number">3.</span> <span class="toc-text">设置配置文件config.yaml和规则Rule</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置文件"><span class="toc-number">3.1.</span> <span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置规则"><span class="toc-number">3.2.</span> <span class="toc-text">配置规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用HTTP-POST报警"><span class="toc-number">3.3.</span> <span class="toc-text">使用HTTP POST报警</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">4.</span> <span class="toc-text">运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">5.</span> <span class="toc-text">测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Elastalert"><span class="toc-number">1.</span> <span class="toc-text">安装Elastalert</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置Elasticsearch"><span class="toc-number">2.</span> <span class="toc-text">设置Elasticsearch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置配置文件config-yaml和规则Rule"><span class="toc-number">3.</span> <span class="toc-text">设置配置文件config.yaml和规则Rule</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置文件"><span class="toc-number">3.1.</span> <span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置规则"><span class="toc-number">3.2.</span> <span class="toc-text">配置规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用HTTP-POST报警"><span class="toc-number">3.3.</span> <span class="toc-text">使用HTTP POST报警</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">4.</span> <span class="toc-text">运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">5.</span> <span class="toc-text">测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -522,11 +549,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -538,6 +565,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -546,7 +589,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -558,15 +601,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -574,7 +609,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -582,15 +617,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -598,19 +625,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -630,11 +653,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -650,14 +681,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -666,11 +689,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -678,15 +701,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -722,6 +765,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -731,6 +786,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -762,19 +821,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -790,11 +849,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -814,11 +877,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -826,7 +893,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -835,34 +938,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

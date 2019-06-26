@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>技术博客的重要性 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -39,9 +39,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -172,6 +182,7 @@
       
         <p>本篇文章由我翻译自：<a href="https://akomljen.com/the-importance-of-tech-blogging/" target="_blank" rel="noopener">https://akomljen.com/the-importance-of-tech-blogging/</a>，翻译难免出现差错，尽请谅解。</p>
 <a id="more"></a>
+
 <p>我有很多干货将在博客上分享，这实际上已经是我的第三个技术博客，算是比较的成功的。很多优秀的工程师有很多优秀的想法，但经常找不到开始动笔分享的理由。通常你会听到“我没有时间去写”这样的话，或者他们只是看不到这件事的重要之处。他们不了解博客如何在专业性领域帮助他们。现在，对你来说更重要的是将自己分享给世界，作为技术人员，我们应该成为一个榜样。</p>
 <h2 id="为什么要开始写博客？"><a href="#为什么要开始写博客？" class="headerlink" title="为什么要开始写博客？"></a>为什么要开始写博客？</h2><p>首先我来回答这个问题，为什么？</p>
 <p>这有很多答案，但其中最重要的一个原因是——曝光。作为计算机软件工程师，我们工作范围非常广泛，同时也面对着来自世界不同地区的竞争。<strong>你应该用着眼更大的范围去思考和行动！</strong></p>
@@ -190,13 +201,15 @@
 <p>有很多可以使用的托管服务提供商。对于Wordpress，你可以使用<a href="https://www.bluehost.com/track/komljen/" target="_blank" rel="noopener">Bluehost</a>，只需3.95美元/月，对于Ghost，有官方的<a href="https://ghost.org/pricing/" target="_blank" rel="noopener">Ghost pro</a>计划，其中最便宜的是每月79美元。在我看来，Ghost pro对于初学者来说太贵了。我使用了两个平台，我更喜欢Ghost。只是我个人的偏好。我在<a href="https://m.do.co/c/60b55ed9afcf" target="_blank" rel="noopener">DigitalOcean</a>上部署了Ghost，使用最小的VM进行备份只花了6美元/月。由于Cloudflare，它大部分时间都处于闲置状态，每天有1k用户。</p>
 <p>我是DevOps的人，我无法帮助自己不创建Terraform文件来启动VM，创建防火墙规则，启用备份，设置Cloudflare，复制所有文件并在Docker中启动Ghost博客。当然，使用像Docker和Let’s Encrypt这样的好东西 - 因为HTTPS是必须的。我的Terraform文件仍未准备好共享，但这里是docker compose文件，你可以使用它来启动Ghost博客并通过Let’s Encrypt获得免费的SSL证书：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">⚡ cat &gt; docker-compose.yml &lt;&lt;EOF</span><br><span class="line">version: &apos;3&apos;</span><br><span class="line">services:</span><br><span class="line">   nginx:</span><br><span class="line">     image: nginx</span><br><span class="line">     container_name: nginx-proxy</span><br><span class="line">     restart: always</span><br><span class="line">     volumes:</span><br><span class="line">       - certs:/etc/nginx/certs:ro</span><br><span class="line">       - nginx_conf.d:/etc/nginx/conf.d</span><br><span class="line">       - nginx_vhost.d:/etc/nginx/vhost.d</span><br><span class="line">       - nginx_html:/usr/share/nginx/html</span><br><span class="line">     labels:</span><br><span class="line">       - &quot;com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy&quot;</span><br><span class="line">     ports:</span><br><span class="line">       - &quot;80:80&quot;</span><br><span class="line">       - &quot;443:443&quot;</span><br><span class="line"></span><br><span class="line">   nginx-gen:</span><br><span class="line">     image: jwilder/docker-gen</span><br><span class="line">     restart: always</span><br><span class="line">     command: -notify-sighup nginx-proxy -watch /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf</span><br><span class="line">     volumes:</span><br><span class="line">       - ./files/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro</span><br><span class="line">       - /var/run/docker.sock:/tmp/docker.sock:ro</span><br><span class="line">       - certs:/etc/nginx/certs:ro</span><br><span class="line">       - nginx_conf.d:/etc/nginx/conf.d</span><br><span class="line">       - nginx_vhost.d:/etc/nginx/vhost.d</span><br><span class="line">     depends_on:</span><br><span class="line">       - nginx</span><br><span class="line">     labels:</span><br><span class="line">       - &quot;com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen&quot;</span><br><span class="line"></span><br><span class="line">   nginx-letsencrypt:</span><br><span class="line">     image: jrcs/letsencrypt-nginx-proxy-companion:stable</span><br><span class="line">     restart: always</span><br><span class="line">     volumes:</span><br><span class="line">       - certs:/etc/nginx/certs</span><br><span class="line">       - nginx_vhost.d:/etc/nginx/vhost.d</span><br><span class="line">       - nginx_html:/usr/share/nginx/html</span><br><span class="line">       - /var/run/docker.sock:/var/run/docker.sock:ro</span><br><span class="line">     depends_on:</span><br><span class="line">       - nginx</span><br><span class="line">       - nginx-gen</span><br><span class="line"></span><br><span class="line">   ghost:</span><br><span class="line">     image: ghost:1.24.7-alpine</span><br><span class="line">     restart: always</span><br><span class="line">     volumes:</span><br><span class="line">       - ./data:/var/lib/ghost/content</span><br><span class="line">       - ./files/config.production.json:/var/lib/ghost/config.production.json</span><br><span class="line">     environment:</span><br><span class="line">       - VIRTUAL_HOST=&lt;YOUR_DOMAIN&gt;, www.&lt;YOUR_DOMAIN&gt;</span><br><span class="line">       - LETSENCRYPT_HOST=&lt;YOUR_DOMAIN&gt;, www.&lt;YOUR_DOMAIN&gt;</span><br><span class="line">       - LETSENCRYPT_EMAIL=&lt;YOUR_EMAIL&gt;</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  nginx_vhost.d:</span><br><span class="line">  nginx_conf.d:</span><br><span class="line">  nginx_html:</span><br><span class="line">  certs:</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
 <p>在使用此文件之前，你需要准备好域名并执行一些准备步骤：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">⚡ mkdir files</span><br><span class="line"></span><br><span class="line">⚡ curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl &gt; files/nginx.tmpl</span><br><span class="line"></span><br><span class="line">⚡ cat &gt; files/config.production.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;url&quot;: &quot;http://&lt;YOUR_DOMAIN&gt;/&quot;,</span><br><span class="line">  &quot;server&quot;: &#123;</span><br><span class="line">    &quot;port&quot;: 2368,</span><br><span class="line">    &quot;host&quot;: &quot;0.0.0.0&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;database&quot;: &#123;</span><br><span class="line">    &quot;client&quot;: &quot;sqlite3&quot;,</span><br><span class="line">    &quot;connection&quot;: &#123;</span><br><span class="line">      &quot;filename&quot;: &quot;/var/lib/ghost/content/data/ghost.db&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;mail&quot;: &#123;</span><br><span class="line">    &quot;transport&quot;: &quot;Direct&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;logging&quot;: &#123;</span><br><span class="line">    &quot;transports&quot;: [</span><br><span class="line">      &quot;file&quot;,</span><br><span class="line">      &quot;stdout&quot;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;process&quot;: &quot;systemd&quot;,</span><br><span class="line">  &quot;paths&quot;: &#123;</span><br><span class="line">    &quot;contentPath&quot;: &quot;/var/lib/ghost/content&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">⚡ docker-compose.yml up -d</span><br></pre></td></tr></table></figure>
+
 <p>这就是我在这个博客中使用的内容，也是我未婚妻的博客<a href="https://gattabrava.com/" target="_blank" rel="noopener">Gatta Brava</a>在Terraform的帮助下也做了同样的事情。</p>
 <p>对于这两个博客，我付出了比想象中更多的努力。我买了一个自定义主题并做了一些定制。我不知道我在CSS方面做了什么，但我尝试过，我对最终结果感到满意。你可以使用默认的Ghost Casper主题来进行写作。你可以随时更改它，所以不用担心。</p>
 <p>我博客的所有访问量中有90％来自自然搜索。在搜索引擎优化和营销方面，我学到了很多东西。所有这些事情都无法在一夜之间学会，所以请写下并学习如何宣传您的内容。有时你会得到很好的反馈，这会增强你的信心。<strong>博客是你的个人项目。</strong>你做出的所有决策，将它将绽放光芒。</p>
 <p>我建议观看Troy Hunt关于如何破解你的职业生涯的演讲（ hack your career）。</p>
-
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2018/12/14/程序员的简历之道/">程序员的简历就该这样写</a></li><li><a href="chunlife.top/2018/08/26/组件与语言特性的学习/">组件与语言特性的学习</a></li><li><a href="https://lianzhaowen.github.io/p/1901963984.html">架设博客流程</a></li></ul></div>
       
 
       
@@ -358,7 +371,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要开始写博客？"><span class="toc-number">1.</span> <span class="toc-text">为什么要开始写博客？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从哪儿开始？"><span class="toc-number">2.</span> <span class="toc-text">从哪儿开始？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术资料"><span class="toc-number">3.</span> <span class="toc-text">技术资料</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要开始写博客？"><span class="toc-number">1.</span> <span class="toc-text">为什么要开始写博客？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从哪儿开始？"><span class="toc-number">2.</span> <span class="toc-text">从哪儿开始？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术资料"><span class="toc-number">3.</span> <span class="toc-text">技术资料</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -489,11 +502,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -505,6 +518,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -513,7 +542,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -525,15 +554,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -541,7 +562,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -549,15 +570,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -565,19 +578,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -597,11 +606,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -617,14 +634,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -633,11 +642,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -645,15 +654,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -689,6 +718,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -698,6 +739,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -729,19 +774,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -757,11 +802,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -781,11 +830,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -793,7 +846,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -802,34 +891,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

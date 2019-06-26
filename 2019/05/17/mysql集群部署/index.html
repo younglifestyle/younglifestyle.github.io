@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>mysql集群部署 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -38,9 +38,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -171,28 +181,42 @@
       
         <p>在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。</p>
 <a id="more"></a>
+
 <p>Replication方案，配置比较简单，采用主从的方式，内部机理为二进制日志进行同步，但不具备强一致性，从节点不可以作为读写节点，得不到实际保障，多用于数据备份的环境。</p>
 <p>PXC任意一个节点都可以存在读写的方案，也就是任意一个节点都可以当读或者当写。同步复制。保证强一致性。同步复制，事务在所有节点要提交都提交。要么都不提交。</p>
 <h2 id="Replication"><a href="#Replication" class="headerlink" title="Replication"></a>Replication</h2><h3 id="安装mysql"><a href="#安装mysql" class="headerlink" title="安装mysql"></a>安装mysql</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> apt-get install mysql-server -y</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><h4 id="编辑和修改MySql-Server的配置文件"><a href="#编辑和修改MySql-Server的配置文件" class="headerlink" title="编辑和修改MySql Server的配置文件"></a>编辑和修改MySql Server的配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vim /etc/mysql/mysql.conf.d/mysqld.cnf</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 注释这句， server可以用其他网卡IP进行访问</span><br><span class="line"># bind-address = 127.0.0.1</span><br></pre></td></tr></table></figure>
+
 <p>在文件末尾添加以下行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server-id = 1   # 不与其他地方相同</span><br><span class="line">log_bin = /var/log/mysql/mysql-bin.log</span><br><span class="line">log_bin_index =/var/log/mysql/mysql-bin.log.index</span><br><span class="line">relay_log = /var/log/mysql/mysql-relay-bin</span><br><span class="line">relay_log_index = /var/log/mysql/mysql-relay-bin.index</span><br></pre></td></tr></table></figure>
+
 <h4 id="重启mysql"><a href="#重启mysql" class="headerlink" title="重启mysql"></a>重启mysql</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># service mysql restart</span><br></pre></td></tr></table></figure>
+
 <h4 id="登录mysql，创建用于集群的账号"><a href="#登录mysql，创建用于集群的账号" class="headerlink" title="登录mysql，创建用于集群的账号"></a>登录mysql，创建用于集群的账号</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; create user &apos;replica&apos;@&apos;%&apos; identified by &apos;password&apos;;</span><br><span class="line">mysql &gt; GRANT REPLICATION SLAVE ON *.* TO &apos;replica&apos;@&apos;%&apos;;</span><br><span class="line">mysql &gt; FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
 <p>执行命令查看服务器状态</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; show master status;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>图中是我后来截的图，参数和你不一致很正常</p>
 </blockquote>
 <p><img src="1558098597813.png" alt="1558098597813"></p>
 <h3 id="Slave"><a href="#Slave" class="headerlink" title="Slave"></a><strong>Slave</strong></h3><h4 id="编辑和修改MySql-Server的配置文件-1"><a href="#编辑和修改MySql-Server的配置文件-1" class="headerlink" title="编辑和修改MySql Server的配置文件"></a>编辑和修改MySql Server的配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vim /etc/mysql/mysql.conf.d/mysqld.cnf</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 注释这句， server可以用其他网卡IP进行访问</span><br><span class="line"># bind-address = 127.0.0.1</span><br></pre></td></tr></table></figure>
+
 <p>在文件末尾添加以下行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server-id = 2  // 节点这里需要不同</span><br><span class="line">log_bin = /var/log/mysql/mysql-bin.log</span><br><span class="line">log_bin_index =/var/log/mysql/mysql-bin.log.index</span><br><span class="line">relay_log = /var/log/mysql/mysql-relay-bin</span><br><span class="line">relay_log_index = /var/log/mysql/mysql-relay-bin.index</span><br></pre></td></tr></table></figure>
+
 <h4 id="重启mysql-1"><a href="#重启mysql-1" class="headerlink" title="重启mysql"></a>重启mysql</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># service mysql restart</span><br></pre></td></tr></table></figure>
+
 <h4 id="登录mysql，配置从节点"><a href="#登录mysql，配置从节点" class="headerlink" title="登录mysql，配置从节点"></a>登录mysql，配置从节点</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; stop slave; </span><br><span class="line">mysql &gt; CHANGE MASTER TO MASTER_HOST = &apos;master-ip&apos;, MASTER_USER = &apos;replica&apos;, MASTER_PASSWORD = &apos;password&apos;, MASTER_LOG_FILE = &apos;mysql-bin.000001&apos;, MASTER_LOG_POS = 753; </span><br><span class="line">mysql &gt; start slave;</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MASTER_HOST：主服务器的IP地址 </span><br><span class="line">MASTER_USER：我们在之前步骤中创建的主服务器的复制用户。 </span><br><span class="line">MASTER_PASSWORD：我们在之前步骤中创建的主服务器的复制用户密码。 </span><br><span class="line">MASTER_LOG_FILE：主服务器主日志文件的值。 </span><br><span class="line">MASTER_LOG_POS：主服务器的主日志位置的值。</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>主从节点的配置都完成，此时即可插入一些数据去查看是否配置成功了。</p>
 <h2 id="PXC"><a href="#PXC" class="headerlink" title="PXC"></a>PXC</h2><p>这里推荐一个YouTube的视频进行观看，<a href="https://www.youtube.com/watch?v=wIEj3FLAX8M" target="_blank" rel="noopener">Install Percona XtraDB Cluster on CentOS 7 in simple easy steps</a>。</p>
@@ -201,10 +225,13 @@
 <p>这里简略说一下Ubuntu PXC的安装。</p>
 <p>以前装过mysql需要卸载干净，然后将<code>apparmor</code>也一并卸载。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get remove apparmor</span><br></pre></td></tr></table></figure>
+
 <p>获取仓库包：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://repo.percona.com/apt/percona-release_latest.generic_all.deb</span><br></pre></td></tr></table></figure>
+
 <p><code>dpkg</code>安装最新的仓库，更新。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i percona-release_latest.generic_all.deb</span><br><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install percona-xtradb-cluster-5.6</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>以下均为转载自仓库。</p>
 </blockquote>
@@ -218,8 +245,7 @@
 <th>Operating System</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>master node 1</td>
 <td>ubuntuvm01</td>
 <td>172.42.42.101</td>
@@ -233,18 +259,26 @@
 <td>1G</td>
 <td>Ubuntu 18</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h3 id="On-First-node"><a href="#On-First-node" class="headerlink" title="On First node"></a>On First node</h3><h5 id="Add-Percona-Repository"><a href="#Add-Percona-Repository" class="headerlink" title="Add Percona Repository"></a>Add Percona Repository</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.percona.com/apt/percona-release_0.1-6.$(lsb_release -sc)_all.deb</span><br><span class="line">dpkg -i percona-release_0.1-6.$(lsb_release -sc)_all.deb</span><br></pre></td></tr></table></figure>
+
 <h5 id="Install-Percona-XtraDB-Cluster"><a href="#Install-Percona-XtraDB-Cluster" class="headerlink" title="Install Percona-XtraDB-Cluster"></a>Install Percona-XtraDB-Cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install -y percona-xtradb-cluster-57</span><br><span class="line">systemctl stop mysql</span><br></pre></td></tr></table></figure>
+
 <h5 id="Configure-Replication-Settings"><a href="#Configure-Replication-Settings" class="headerlink" title="Configure Replication Settings"></a>Configure Replication Settings</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/mysql/my.cnf&lt;&lt;EOF</span><br><span class="line">[mysqld]</span><br><span class="line">wsrep_provider=/usr/lib/libgalera_smm.so</span><br><span class="line">wsrep_cluster_name=democluster</span><br><span class="line">wsrep_cluster_address=gcomm://</span><br><span class="line">wsrep_node_name=centosvm01</span><br><span class="line">wsrep_node_address=172.42.42.101</span><br><span class="line">wsrep_sst_method=xtrabackup-v2</span><br><span class="line">wsrep_sst_auth=repuser:reppassword</span><br><span class="line">pxc_strict_mode=ENFORCING</span><br><span class="line">binlog_format=ROW</span><br><span class="line">default_storage_engine=InnoDB</span><br><span class="line">innodb_autoinc_lock_mode=2</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
 <h5 id="Bootstrap-Initialize-the-Cluster"><a href="#Bootstrap-Initialize-the-Cluster" class="headerlink" title="Bootstrap/Initialize the Cluster"></a>Bootstrap/Initialize the Cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysql</span><br></pre></td></tr></table></figure>
+
 <h5 id="Create-Replication-User"><a href="#Create-Replication-User" class="headerlink" title="Create Replication User"></a>Create Replication User</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p -e &quot;create user repuser@localhost identified by &apos;reppassword&apos;&quot;</span><br><span class="line">mysql -uroot -p -e &quot;grant reload, replication client, process, lock tables on *.* to repuser@localhost&quot;</span><br><span class="line">mysql -uroot -p -e &quot;flush privileges&quot;</span><br></pre></td></tr></table></figure>
+
 <h5 id="Update-Replication-configuration"><a href="#Update-Replication-configuration" class="headerlink" title="Update Replication configuration"></a>Update Replication configuration</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i &apos;s/^wsrep_cluster_address=.*/wsrep_cluster_address=gcomm:\/\/172.42.42.101,172.42.42.102/&apos; /etc/mysql/my.cnf</span><br></pre></td></tr></table></figure>
+
 <h3 id="On-Second-node"><a href="#On-Second-node" class="headerlink" title="On Second node"></a>On Second node</h3><h5 id="Add-Percona-Repository-1"><a href="#Add-Percona-Repository-1" class="headerlink" title="Add Percona Repository"></a>Add Percona Repository</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.percona.com/apt/percona-release_0.1-6.$(lsb_release -sc)_all.deb</span><br><span class="line">dpkg -i percona-release_0.1-6.$(lsb_release -sc)_all.deb</span><br></pre></td></tr></table></figure>
+
 <h5 id="Install-Percona-XtraDB-Cluster-1"><a href="#Install-Percona-XtraDB-Cluster-1" class="headerlink" title="Install Percona-XtraDB-Cluster"></a>Install Percona-XtraDB-Cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install -y percona-xtradb-cluster-57</span><br><span class="line">systemctl stop mysql</span><br></pre></td></tr></table></figure>
+
 <h5 id="Configure-Replication-Settings-1"><a href="#Configure-Replication-Settings-1" class="headerlink" title="Configure Replication Settings"></a>Configure Replication Settings</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt;/etc/mysql/my.cnf&lt;&lt;EOF</span><br><span class="line">[mysqld]</span><br><span class="line">wsrep_provider=/usr/lib/libgalera_smm.so</span><br><span class="line">wsrep_cluster_name=democluster</span><br><span class="line">wsrep_cluster_address=gcomm://172.42.42.101,172.42.42.102</span><br><span class="line">wsrep_node_name=centosvm02</span><br><span class="line">wsrep_node_address=172.42.42.102</span><br><span class="line">wsrep_sst_method=xtrabackup-v2</span><br><span class="line">wsrep_sst_auth=repuser:reppassword</span><br><span class="line">pxc_strict_mode=ENFORCING</span><br><span class="line">binlog_format=ROW</span><br><span class="line">default_storage_engine=InnoDB</span><br><span class="line">innodb_autoinc_lock_mode=2</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<h5 id="Start-mysql-to-join-the-cluster"><a href="#Start-mysql-to-join-the-cluster" class="headerlink" title="Start mysql to join the cluster"></a>Start mysql to join the cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysql</span><br></pre></td></tr></table></figure>
+
+<h5 id="Start-mysql-to-join-the-cluster"><a href="#Start-mysql-to-join-the-cluster" class="headerlink" title="Start mysql to join the cluster"></a>Start mysql to join the cluster</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysql</span><br></pre></td></tr></table></figure><div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/05/21/docker-pxc部署/">docker pxc部署</a></li><li><a href="chunlife.top/2019/02/21/mysql并发操作/">mysql并发操作</a></li><li><a href="www.chunlife.top/2019/05/21/docker-pxc部署/">docker pxc部署</a></li></ul></div>
       
 
       
@@ -414,7 +448,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Replication"><span class="toc-number">1.</span> <span class="toc-text">Replication</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装mysql"><span class="toc-number">1.1.</span> <span class="toc-text">安装mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-number">1.2.</span> <span class="toc-text">master</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件"><span class="toc-number">1.2.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql"><span class="toc-number">1.2.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，创建用于集群的账号"><span class="toc-number">1.2.3.</span> <span class="toc-text">登录mysql，创建用于集群的账号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Slave"><span class="toc-number">1.3.</span> <span class="toc-text">Slave</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，配置从节点"><span class="toc-number">1.3.3.</span> <span class="toc-text">登录mysql，配置从节点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PXC"><span class="toc-number">2.</span> <span class="toc-text">PXC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Install-instructions-for-Ubuntu-18"><span class="toc-number">2.1.</span> <span class="toc-text">Install instructions for Ubuntu 18</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Assumptions"><span class="toc-number">2.2.</span> <span class="toc-text">Assumptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-First-node"><span class="toc-number">2.3.</span> <span class="toc-text">On First node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository"><span class="toc-number">2.3.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster"><span class="toc-number">2.3.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings"><span class="toc-number">2.3.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Bootstrap-Initialize-the-Cluster"><span class="toc-number">2.3.0.4.</span> <span class="toc-text">Bootstrap/Initialize the Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Create-Replication-User"><span class="toc-number">2.3.0.5.</span> <span class="toc-text">Create Replication User</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Update-Replication-configuration"><span class="toc-number">2.3.0.6.</span> <span class="toc-text">Update Replication configuration</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-Second-node"><span class="toc-number">2.4.</span> <span class="toc-text">On Second node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository-1"><span class="toc-number">2.4.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster-1"><span class="toc-number">2.4.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings-1"><span class="toc-number">2.4.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Start-mysql-to-join-the-cluster"><span class="toc-number">2.4.0.4.</span> <span class="toc-text">Start mysql to join the cluster</span></a></li></ol></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Replication"><span class="toc-number">1.</span> <span class="toc-text">Replication</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装mysql"><span class="toc-number">1.1.</span> <span class="toc-text">安装mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#master"><span class="toc-number">1.2.</span> <span class="toc-text">master</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件"><span class="toc-number">1.2.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql"><span class="toc-number">1.2.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，创建用于集群的账号"><span class="toc-number">1.2.3.</span> <span class="toc-text">登录mysql，创建用于集群的账号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Slave"><span class="toc-number">1.3.</span> <span class="toc-text">Slave</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编辑和修改MySql-Server的配置文件-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">编辑和修改MySql Server的配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启mysql-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql，配置从节点"><span class="toc-number">1.3.3.</span> <span class="toc-text">登录mysql，配置从节点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PXC"><span class="toc-number">2.</span> <span class="toc-text">PXC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Install-instructions-for-Ubuntu-18"><span class="toc-number">2.1.</span> <span class="toc-text">Install instructions for Ubuntu 18</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Assumptions"><span class="toc-number">2.2.</span> <span class="toc-text">Assumptions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-First-node"><span class="toc-number">2.3.</span> <span class="toc-text">On First node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository"><span class="toc-number">2.3.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster"><span class="toc-number">2.3.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings"><span class="toc-number">2.3.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Bootstrap-Initialize-the-Cluster"><span class="toc-number">2.3.0.4.</span> <span class="toc-text">Bootstrap/Initialize the Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Create-Replication-User"><span class="toc-number">2.3.0.5.</span> <span class="toc-text">Create Replication User</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Update-Replication-configuration"><span class="toc-number">2.3.0.6.</span> <span class="toc-text">Update Replication configuration</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-Second-node"><span class="toc-number">2.4.</span> <span class="toc-text">On Second node</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Add-Percona-Repository-1"><span class="toc-number">2.4.0.1.</span> <span class="toc-text">Add Percona Repository</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Install-Percona-XtraDB-Cluster-1"><span class="toc-number">2.4.0.2.</span> <span class="toc-text">Install Percona-XtraDB-Cluster</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Configure-Replication-Settings-1"><span class="toc-number">2.4.0.3.</span> <span class="toc-text">Configure Replication Settings</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Start-mysql-to-join-the-cluster"><span class="toc-number">2.4.0.4.</span> <span class="toc-text">Start mysql to join the cluster</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -545,11 +579,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -561,6 +595,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -569,7 +619,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -581,15 +631,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -597,7 +639,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -605,15 +647,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -621,19 +655,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -653,11 +683,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -673,14 +711,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -689,11 +719,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -701,15 +731,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -745,6 +795,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -754,6 +816,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -785,19 +851,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -813,11 +879,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -837,11 +907,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -849,7 +923,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -858,34 +968,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

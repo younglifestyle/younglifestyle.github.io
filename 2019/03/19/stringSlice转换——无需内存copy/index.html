@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>stringSlice转换——无需内存copy | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="摘取自gateway，作者提到过这种方式，也是来源于另一个开源项目，操作方式极其硬核，故收藏了。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="chunlife.top/2019/03/19/stringSlice转换——无需内存copy/sort接口的使用.png">
+<meta property="og:image" content="chunlife.top/2019/03/19/stringSlice转换——无需内存copy/sort%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8.png">
 <meta property="og:updated_time" content="2019-04-28T14:10:12.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="stringSlice转换——无需内存copy">
 <meta name="twitter:description" content="摘取自gateway，作者提到过这种方式，也是来源于另一个开源项目，操作方式极其硬核，故收藏了。">
-<meta name="twitter:image" content="chunlife.top/2019/03/19/stringSlice转换——无需内存copy/sort接口的使用.png">
+<meta name="twitter:image" content="chunlife.top/2019/03/19/stringSlice转换——无需内存copy/sort%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -38,9 +38,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -171,21 +181,28 @@
       
         <p>摘取自<a href="https://github.com/fagongzi/gateway" target="_blank" rel="noopener"><strong>gateway</strong></a>，作者提到过这种方式，也是来源于另一个开源项目，操作方式极其硬核，故收藏了。</p>
 <a id="more"></a>
+
 <h3 id="String与Slice互转"><a href="#String与Slice互转" class="headerlink" title="String与Slice互转"></a>String与Slice互转</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> hack</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"reflect"</span></span><br><span class="line">   <span class="string">"unsafe"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceToString slice to string with out data copy</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceToString</span><span class="params">(b []<span class="keyword">byte</span>)</span> <span class="params">(s <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">   pbytes := (*reflect.SliceHeader)(unsafe.Pointer(&amp;b))</span><br><span class="line">   pstring := (*reflect.StringHeader)(unsafe.Pointer(&amp;s))</span><br><span class="line">   pstring.Data = pbytes.Data</span><br><span class="line">   pstring.Len = pbytes.Len</span><br><span class="line">   <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// StringToSlice string to slice with out data copy</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">StringToSlice</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(b []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">   pbytes := (*reflect.SliceHeader)(unsafe.Pointer(&amp;b))</span><br><span class="line">   pstring := (*reflect.StringHeader)(unsafe.Pointer(&amp;s))</span><br><span class="line">   pbytes.Data = pstring.Data</span><br><span class="line">   pbytes.Len = pstring.Len</span><br><span class="line">   pbytes.Cap = pstring.Len</span><br><span class="line">   <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这里使用到了slice与string关键字在Go中的本质，直接对关键字的核心构造进行一系列操作，根本不讲Go语言的规矩，算是一种<code>黑魔法</code>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">string的本质：reflect.StringHeader&#123;&#125;</span><br><span class="line">slice的本质：reflect.SliceHeader&#123;&#125;</span><br><span class="line">go指针的本质：unsafe.Pointer&#123;&#125;、uintptr&#123;&#125;</span><br></pre></td></tr></table></figure>
+
 <p>查看源码，可以找到Go编译器对slice与string的具体解释，均保留有一个指针，用于指向数据真正的地址。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">type SliceHeader struct &#123;</span><br><span class="line">    Data uintptr</span><br><span class="line">    Len  int</span><br><span class="line">    Cap  int</span><br><span class="line">&#125;</span><br><span class="line">SliceHeader是切片的运行时表示。它不能被安全或便携地使用，其表示可能会在以后的版本中更改。此外，数据字段不足以保证它引用的数据不会被垃圾收集，因此程序必须保留一个单独的，正确键入的指向底层数据的指针。</span><br><span class="line"></span><br><span class="line">type StringHeader struct &#123;</span><br><span class="line">    Data uintptr</span><br><span class="line">    Len  int</span><br><span class="line">&#125;</span><br><span class="line">StringHeader是字符串的运行时表示形式。</span><br></pre></td></tr></table></figure>
+
 <p><strong>另外</strong>，我们看到这俩结构体类似，内存布局也是类似的，只是<code>StringHeader</code>少了一个字段，但至少内存是对其的，那么？（C语言又在发威了~）</p>
 <p>注意：反过来转换不行，<code>StringHeader</code>对比<code>SliceHeader</code>少了一个字段</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">byteString</span><span class="params">(b []<span class="keyword">byte</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> *(*<span class="keyword">string</span>)(unsafe.Pointer(&amp;b))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="结构体与-byte"><a href="#结构体与-byte" class="headerlink" title="结构体与[]byte"></a>结构体与[]byte</h3><p>同理，结构体与[]byte也是可以互相转换的，可以用于优化<code>encoding/binady</code>的性能。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyStruct <span class="keyword">struct</span> &#123;</span><br><span class="line">    A <span class="keyword">int</span></span><br><span class="line">    B <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取结构体真实数据的大小</span></span><br><span class="line"><span class="keyword">var</span> sizeOfMyStruct = <span class="keyword">int</span>(unsafe.Sizeof(MyStruct&#123;&#125;))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填充[]byte的数据结构</span></span><br><span class="line"><span class="comment">// 结构体的数据指针也就是一个4字节的int类型（c基础知识！）</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MyStructToBytes</span><span class="params">(s *MyStruct)</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> x reflect.SliceHeader</span><br><span class="line">    x.Len = sizeOfMyStruct</span><br><span class="line">    x.Cap = sizeOfMyStruct</span><br><span class="line">    x.Data = <span class="keyword">uintptr</span>(unsafe.Pointer(s))</span><br><span class="line">    <span class="keyword">return</span> *(*[]<span class="keyword">byte</span>)(unsafe.Pointer(&amp;x))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// unsafe.Pointer(&amp;b)：取[]byte首地址</span></span><br><span class="line"><span class="comment">// (*reflect.SliceHeader)(unsafe.Pointer(&amp;b)) ： 强制转换其为reflect.SliceHeader指针</span></span><br><span class="line"><span class="comment">// (*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data ： 将slice的数据指针取出来</span></span><br><span class="line"><span class="comment">// unsafe.Pointer((*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data) : 将uint指针转成任意指针</span></span><br><span class="line"><span class="comment">// (*MyStruct)(unsafe.Pointer((*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data))：成功转换</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BytesToMyStruct</span><span class="params">(b []<span class="keyword">byte</span>)</span> *<span class="title">MyStruct</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (*MyStruct)(unsafe.Pointer(</span><br><span class="line">        (*reflect.SliceHeader)(unsafe.Pointer(&amp;b)).Data))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="写在后头"><a href="#写在后头" class="headerlink" title="写在后头"></a>写在后头</h3><p>上头写的东西，感觉有些突破语言既定的规范了，当然我这么想是有根据的，从源码注释上来看，显然，这个语言特性是不稳定的，指不定哪天Go开发人员觉着这个<code>黑魔法</code>不够魔性，直接不允许你这么做了。</p>
 <p><code>黑魔法</code>，也是被一些人诟病的地方吧，有好有坏，不了解也可以，了解了也不是不可。</p>
-<p><strong>注意</strong>：使用这种方式去转换，是无法对数据进行修改的。意思是，调用了<code>ToBytes</code>后得到的<code>[]byte</code>是没有办法改变的，一旦修改即会出现<code>unexpected fault address xxxxx</code>，<strong>只可读，而没有写操作的能力，切记切记</strong>，<img src="sort接口的使用.png" alt="img">。</p>
+<p><strong>注意</strong>：使用这种方式去转换，是无法对数据进行修改的。意思是，调用了<code>ToBytes</code>后得到的<code>[]byte</code>是没有办法改变的，一旦修改即会出现<code>unexpected fault address xxxxx</code>，<strong>只可读，而没有写操作的能力，切记切记</strong>，<img src="sort%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8.png" alt="img">。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ToString unsafe 转换, 将 []byte 转换为 string</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ToString</span><span class="params">(p []<span class="keyword">byte</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> *(*<span class="keyword">string</span>)(unsafe.Pointer(&amp;p))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ToBytes unsafe 转换, 将 string 转换为 []byte</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ToBytes</span><span class="params">(str <span class="keyword">string</span>)</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> *(*[]<span class="keyword">byte</span>)(unsafe.Pointer(&amp;str))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// IntToBool int 类型转换为 bool</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">IntToBool</span><span class="params">(i <span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> i != <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceInt64ToString []int64 转换为 []string</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceInt64ToString</span><span class="params">(si []<span class="keyword">int64</span>)</span> <span class="params">(ss []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	ss = <span class="built_in">make</span>([]<span class="keyword">string</span>, <span class="number">0</span>, <span class="built_in">len</span>(si))</span><br><span class="line">	<span class="keyword">for</span> k := <span class="keyword">range</span> si &#123;</span><br><span class="line">		ss = <span class="built_in">append</span>(ss, strconv.FormatInt(si[k], <span class="number">10</span>))</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ss</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceStringToInt64 []string 转换为 []int64</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceStringToInt64</span><span class="params">(ss []<span class="keyword">string</span>)</span> <span class="params">(si []<span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">	si = <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>, <span class="built_in">len</span>(ss))</span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		i   <span class="keyword">int64</span></span><br><span class="line">		err error</span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">for</span> k := <span class="keyword">range</span> ss &#123;</span><br><span class="line">		i, err = strconv.ParseInt(ss[k], <span class="number">10</span>, <span class="number">64</span>)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		si = <span class="built_in">append</span>(si, i)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceStringToInt []string 转换为 []int</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceStringToInt</span><span class="params">(ss []<span class="keyword">string</span>)</span> <span class="params">(si []<span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	si = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="built_in">len</span>(ss))</span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		i   <span class="keyword">int</span></span><br><span class="line">		err error</span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">for</span> k := <span class="keyword">range</span> ss &#123;</span><br><span class="line">		i, err = strconv.Atoi(ss[k])</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		si = <span class="built_in">append</span>(si, i)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MustInt 将string转换为int, 忽略错误</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MustInt</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	n, _ = strconv.Atoi(s)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MustInt64 将string转换为int64, 忽略错误</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MustInt64</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(i <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">	i, _ = strconv.ParseInt(s, <span class="number">10</span>, <span class="number">64</span>)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/07/MongoDB命令一览/">MongoDB命令一览</a></li><li><a href="chunlife.top/2019/05/26/检查回文数/">检查回文数</a></li><li><a href="chunlife.top/2019/05/05/分布式定时任务之强杀任务/">分布式定时任务之强杀任务</a></li><li><a href="www.chunlife.top/2019/06/07/MongoDB命令一览/">MongoDB命令一览</a></li></ul></div>
       
 
       
@@ -347,7 +364,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#String与Slice互转"><span class="toc-number">1.</span> <span class="toc-text">String与Slice互转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构体与-byte"><span class="toc-number">2.</span> <span class="toc-text">结构体与[]byte</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写在后头"><span class="toc-number">3.</span> <span class="toc-text">写在后头</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#String与Slice互转"><span class="toc-number">1.</span> <span class="toc-text">String与Slice互转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构体与-byte"><span class="toc-number">2.</span> <span class="toc-text">结构体与[]byte</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写在后头"><span class="toc-number">3.</span> <span class="toc-text">写在后头</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -478,11 +495,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -494,6 +511,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -502,7 +535,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -514,15 +547,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -530,7 +555,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -538,15 +563,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -554,19 +571,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -586,11 +599,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -606,14 +627,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -622,11 +635,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,15 +647,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -678,6 +711,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -687,6 +732,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -718,19 +767,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -746,11 +795,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -770,11 +823,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -782,7 +839,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -791,34 +884,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

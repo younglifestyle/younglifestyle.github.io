@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>服务器上传下载问题之分块上传（断点续传） | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -36,9 +36,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -170,6 +180,7 @@
         <p>在之前的博客中，对服务器的上传下载就写过一些备忘，当时项目是对文件进行操作，涉及到一些网络文件的基础操作，由于没得网络存储，也就是依靠云的磁盘来存储数据文件。</p>
 <p>这里记录一下分块上传，也就是断点续传的实现。</p>
 <a id="more"></a>
+
 <p>大概可以分为三个步骤：</p>
 <ol>
 <li>尝试秒传接口；</li>
@@ -180,15 +191,20 @@
 <h1 id="分块上传"><a href="#分块上传" class="headerlink" title="分块上传"></a>分块上传</h1><h2 id="1、尝试秒传"><a href="#1、尝试秒传" class="headerlink" title="1、尝试秒传"></a>1、尝试秒传</h2><p>秒传是利用文件的哈希值，来对文件进行唯一值匹配，若能够匹配成功，则说明文件已被上传，只需要插入下mysql里面的数据即可，这也就是秒传的意思。</p>
 <p>这里在实现秒传时，在开源项目<code>BaiduPCS-Go</code>中，是需要：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>&#123;</span><br><span class="line">		<span class="string">"path"</span>:           targetPath,                    <span class="comment">// 上传文件的全路径名</span></span><br><span class="line">		<span class="string">"content-length"</span>: strconv.FormatInt(length, <span class="number">10</span>), <span class="comment">// 待秒传的文件长度</span></span><br><span class="line">		<span class="string">"content-md5"</span>:    contentMD5,                    <span class="comment">// 待秒传的文件的MD5</span></span><br><span class="line">		<span class="string">"slice-md5"</span>:      sliceMD5,                      <span class="comment">// 待秒传的文件前256kb的MD5</span></span><br><span class="line">		<span class="string">"content-crc32"</span>:  crc32,                         <span class="comment">// 待秒传文件CRC32</span></span><br><span class="line">		<span class="string">"ondup"</span>:          <span class="string">"overwrite"</span>,                   <span class="comment">// overwrite: 表示覆盖同名文件; newcopy: 表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>不过在<code>github.com/iikira/BaiduPCS-Go/blob/master/pcsutil/checksum/checksum.go</code>文件中：</p>
 <p>作者表示，这个<code>前256kb的MD5</code>和<code>CRC32</code>不是必须。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 314行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 文件大于256kb, 应该要检测秒传, 反之则不应检测秒传</span></span><br><span class="line"><span class="comment">// 经测试, 秒传文件并非一定要大于256KB</span></span><br><span class="line"><span class="keyword">if</span> task.uploadInfo.Length &gt;= requiredSliceSize &#123;</span><br><span class="line">	<span class="comment">// do nothing</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 经过测试, 秒传文件并非需要前256kb切片的md5值, 只需格式符合即可</span></span><br><span class="line">task.uploadInfo.SliceMD5Sum()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 经测试, 文件的 crc32 值并非秒传文件所必需</span></span><br><span class="line"><span class="comment">// task.uploadInfo.Crc32Sum()</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="2、初始化分块上传信息"><a href="#2、初始化分块上传信息" class="headerlink" title="2、初始化分块上传信息"></a>2、初始化分块上传信息</h2><p>当客户端需要上传文件时，首先会向服务端一个接口传递文件信息，这里我们可以获取：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">* @apiParam filehash  string	文件计算的哈希计算值</span><br><span class="line">* @apiParam filesize  int	    文件大小</span><br></pre></td></tr></table></figure>
+
 <p>在这步操作中，我们需要填充这个结构体。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MultipleUploadInfo <span class="keyword">struct</span> &#123;</span><br><span class="line">	FileHash   <span class="keyword">string</span></span><br><span class="line">	FileSize   <span class="keyword">int</span></span><br><span class="line">	UploadID   <span class="keyword">string</span></span><br><span class="line">	ChunkSize  <span class="keyword">int</span></span><br><span class="line">	ChunkCount <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>例如：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">upInfo := &amp;MultipartUploadInfo&#123;</span><br><span class="line">    FileHash:   filehash,</span><br><span class="line">    FileSize:   filesize,</span><br><span class="line">    <span class="comment">// UploadID，我在代码里面是使用的函数NewObjectId()，也就是MongoDB的ID生成方式，这个我在之前的博客中也做了备忘。</span></span><br><span class="line">    UploadID:   username + fmt.Sprintf(<span class="string">"%x"</span>, time.Now().UnixNano()),</span><br><span class="line">    ChunkSize:  <span class="number">5</span> &lt;&lt; <span class="number">10</span> &lt;&lt; <span class="number">10</span>, <span class="comment">// 5MB</span></span><br><span class="line">    <span class="comment">// 5MB 为一个分块，可以根据服务器性能适当调整</span></span><br><span class="line">    ChunkCount: <span class="keyword">int</span>(math.Ceil(<span class="keyword">float64</span>(filesize) / (<span class="number">5</span> &lt;&lt; <span class="number">10</span> &lt;&lt; <span class="number">10</span>))),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>然后需要将这个数据保存下来，因为在后面的使用中需要使用到。</p>
 <p>可以存储在内存中，使用<code>map</code>进行管理（我之前是使用这种方式，所以<code>UploadID</code>我得保持唯一），同样的也可以使用<code>Redis</code>、<code>Memcached</code>，我这里使用到了<code>Map</code>，项目里头有变化。</p>
 <p>此结构体需要返回给客户端。</p>
@@ -198,13 +214,16 @@
 <p>服务器同时也需要记录该<code>UploadID</code>上传的<code>Chunk</code>次数</p>
 <h2 id="4、合并"><a href="#4、合并" class="headerlink" title="4、合并"></a>4、合并</h2><p>客户端上传完成后，请求该接口（当然，也可以服务器每次接受分块都去检查分块是否已经上传完了，或者是客户端在最后一次上传时，告知服务器这是最后一次上传，这里为了拆开逻辑，故分开接口）。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、验证ChunkCount是否匹配；</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、验证分块文件是否对的上ChunkCount；</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3、新建一个文件，将各个分块文件，以追加的方式写入文件，不需要一次性读取到内存，使用io.copy()；</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 4、上传都完成后，将文件信息保存到MySQL中。</span></span><br></pre></td></tr></table></figure>
+
 <h1 id="断点续传-断点下载"><a href="#断点续传-断点下载" class="headerlink" title="断点续传/断点下载"></a>断点续传/断点下载</h1><p>这两者可以说都是上面那个过程，操作都是类似的，没有什么不一样，同样是控制分块信息，控制分块上传与下载，即使中间终端，也可以重新确认信息后接上上一次中断的过程继续开始操作。</p>
 <p>这里我偷懒没有将代码拿出来进行展示，这里仅展示逻辑了。</p>
 <h1 id="记录代码"><a href="#记录代码" class="headerlink" title="记录代码"></a>记录代码</h1><p><code>github.com/iikira/BaiduPCS-Go/blob/master/pcsutil/checksum/checksum.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Package checksum 校验本地文件包</span></span><br><span class="line"><span class="keyword">package</span> checksum</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/md5"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"github.com/iikira/BaiduPCS-Go/pcsutil/converter"</span></span><br><span class="line">	<span class="string">"hash"</span></span><br><span class="line">	<span class="string">"hash/crc32"</span></span><br><span class="line">	<span class="string">"io"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	defaultBufSize = <span class="number">256</span> * converter.KB</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	<span class="comment">// LocalFileMeta 本地文件元信息</span></span><br><span class="line">	LocalFileMeta <span class="keyword">struct</span> &#123;</span><br><span class="line">		Path     <span class="keyword">string</span> <span class="string">`json:"path"`</span>     <span class="comment">// 本地路径</span></span><br><span class="line">		Length   <span class="keyword">int64</span>  <span class="string">`json:"length"`</span>   <span class="comment">// 文件大小</span></span><br><span class="line">		SliceMD5 []<span class="keyword">byte</span> <span class="string">`json:"slicemd5"`</span> <span class="comment">// 文件前 requiredSliceLen (256KB) 切片的 md5 值</span></span><br><span class="line">		MD5      []<span class="keyword">byte</span> <span class="string">`json:"md5"`</span>      <span class="comment">// 文件的 md5</span></span><br><span class="line">		CRC32    <span class="keyword">uint32</span> <span class="string">`json:"crc32"`</span>    <span class="comment">// 文件的 crc32</span></span><br><span class="line">		ModTime  <span class="keyword">int64</span>  <span class="string">`json:"modtime"`</span>  <span class="comment">// 修改日期</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// LocalFileInfo LocalFile</span></span><br><span class="line">	LocalFile <span class="keyword">struct</span> &#123;</span><br><span class="line">		LocalFileMeta</span><br><span class="line"></span><br><span class="line">		bufSize <span class="keyword">int</span></span><br><span class="line">		buf     []<span class="keyword">byte</span></span><br><span class="line">		File    *os.File <span class="comment">// 文件</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// SumConfig 计算文件摘要值配置</span></span><br><span class="line">	SumConfig <span class="keyword">struct</span> &#123;</span><br><span class="line">		IsMD5Sum      <span class="keyword">bool</span></span><br><span class="line">		IsSliceMD5Sum <span class="keyword">bool</span></span><br><span class="line">		IsCRC32Sum    <span class="keyword">bool</span></span><br><span class="line">	&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLocalFileInfo</span><span class="params">(localPath <span class="keyword">string</span>, bufSize <span class="keyword">int</span>)</span> *<span class="title">LocalFile</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;LocalFile&#123;</span><br><span class="line">		LocalFileMeta: LocalFileMeta&#123;</span><br><span class="line">			Path: localPath,</span><br><span class="line">		&#125;,</span><br><span class="line">		bufSize: bufSize,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// OpenPath 检查文件状态并获取文件的大小 (Length)</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">OpenPath</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> lf.File != <span class="literal">nil</span> &#123;</span><br><span class="line">		lf.File.Close()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> err error</span><br><span class="line">	lf.File, err = os.Open(lf.Path)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	info, err := lf.File.Stat()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lf.Length = info.Size()</span><br><span class="line">	lf.ModTime = info.ModTime().Unix()</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Close 关闭文件</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">Close</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> lf.File == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> fmt.Errorf(<span class="string">"file is nil"</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> lf.File.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">initBuf</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> lf.buf == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> lf.bufSize != <span class="number">0</span> &#123;</span><br><span class="line">			lf.buf = <span class="built_in">make</span>([]<span class="keyword">byte</span>, lf.bufSize)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		lf.buf = <span class="built_in">make</span>([]<span class="keyword">byte</span>, defaultBufSize)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">repeatRead</span><span class="params">(ws ...io.Writer)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> lf.File == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lf.initBuf()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		begin <span class="keyword">int64</span></span><br><span class="line">		n     <span class="keyword">int</span></span><br><span class="line">		err   error</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	handle := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		begin += <span class="keyword">int64</span>(n)</span><br><span class="line">		<span class="keyword">for</span> k := <span class="keyword">range</span> ws &#123;</span><br><span class="line">			ws[k].Write(lf.buf[:n])</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 读文件</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		n, err = lf.File.ReadAt(lf.buf, begin)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">				handle()</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				fmt.Printf(<span class="string">"%s\n"</span>, err)</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		handle()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Sum 计算文件摘要值</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">Sum</span><span class="params">(cfg SumConfig)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		md5w   hash.Hash</span><br><span class="line">		crc32w hash.Hash32</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	ws := <span class="built_in">make</span>([]io.Writer, <span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">	<span class="keyword">if</span> cfg.IsMD5Sum &#123;</span><br><span class="line">		md5w = md5.New()</span><br><span class="line">		ws = <span class="built_in">append</span>(ws, md5w)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> cfg.IsCRC32Sum &#123;</span><br><span class="line">		crc32w = crc32.NewIEEE()</span><br><span class="line">		ws = <span class="built_in">append</span>(ws, crc32w)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> cfg.IsSliceMD5Sum &#123;</span><br><span class="line">		lf.SliceMD5Sum()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lf.repeatRead(ws...)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> cfg.IsMD5Sum &#123;</span><br><span class="line">		lf.MD5 = md5w.Sum(<span class="literal">nil</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> cfg.IsCRC32Sum &#123;</span><br><span class="line">		lf.CRC32 = crc32w.Sum32()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Md5Sum 获取文件的 md5 值</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">Md5Sum</span><span class="params">()</span></span> &#123;</span><br><span class="line">	lf.Sum(SumConfig&#123;</span><br><span class="line">		IsMD5Sum: <span class="literal">true</span>,</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SliceMD5Sum 获取文件前 requiredSliceLen (256KB) 切片的 md5 值</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">SliceMD5Sum</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> lf.File == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 获取前 256KB 文件切片的 md5</span></span><br><span class="line">	lf.initBuf()</span><br><span class="line"></span><br><span class="line">	m := md5.New()</span><br><span class="line">	n, err := lf.File.ReadAt(lf.buf, <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">			<span class="keyword">goto</span> md5sum</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			fmt.Printf(<span class="string">"SliceMD5Sum: %s\n"</span>, err)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">md5sum:</span><br><span class="line">	m.Write(lf.buf[:n])</span><br><span class="line">	lf.SliceMD5 = m.Sum(<span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Crc32Sum 获取文件的 crc32 值</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lf *LocalFile)</span> <span class="title">Crc32Sum</span><span class="params">()</span></span> &#123;</span><br><span class="line">	lf.Sum(SumConfig&#123;</span><br><span class="line">		IsCRC32Sum: <span class="literal">true</span>,</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p><code>github.com/iikira/BaiduPCS-Go/blob/master/pcsutil/checksum/file.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> checksum</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"bytes"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">	<span class="string">"path/filepath"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// EqualLengthMD5 检测md5和大小是否相同</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lfm *LocalFileMeta)</span> <span class="title">EqualLengthMD5</span><span class="params">(m *LocalFileMeta)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> lfm.Length != m.Length &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> bytes.Compare(lfm.MD5, m.MD5) != <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// CompleteAbsPath 补齐绝对路径</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(lfm *LocalFileMeta)</span> <span class="title">CompleteAbsPath</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> filepath.IsAbs(lfm.Path) &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	absPath, err := filepath.Abs(lfm.Path)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lfm.Path = absPath</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GetFileSum 获取文件的大小, md5, 前256KB切片的 md5, crc32</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetFileSum</span><span class="params">(localPath <span class="keyword">string</span>, cfg *SumConfig)</span> <span class="params">(lf *LocalFile, err error)</span></span> &#123;</span><br><span class="line">	file, err := os.Open(localPath)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> file.Close()</span><br><span class="line"></span><br><span class="line">	fileStat, err := file.Stat()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> fileStat.IsDir() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, fmt.Errorf(<span class="string">"sum %s: is a directory"</span>, localPath)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lf = &amp;LocalFile&#123;</span><br><span class="line">		File: file,</span><br><span class="line">		LocalFileMeta: LocalFileMeta&#123;</span><br><span class="line">			Path:   localPath,</span><br><span class="line">			Length: fileStat.Size(),</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	lf.Sum(*cfg)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> lf, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li><li><a href="chunlife.top/2019/06/19/转载《解剖Go语言map底层实现》/">转载《解剖Go语言map底层实现》</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="www.chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li></ul></div>
       
 
       
@@ -370,7 +389,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分块上传"><span class="toc-number">1.</span> <span class="toc-text">分块上传</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、尝试秒传"><span class="toc-number">1.1.</span> <span class="toc-text">1、尝试秒传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、初始化分块上传信息"><span class="toc-number">1.2.</span> <span class="toc-text">2、初始化分块上传信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、分块上传"><span class="toc-number">1.3.</span> <span class="toc-text">3、分块上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、合并"><span class="toc-number">1.4.</span> <span class="toc-text">4、合并</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#断点续传-断点下载"><span class="toc-number">2.</span> <span class="toc-text">断点续传/断点下载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#记录代码"><span class="toc-number">3.</span> <span class="toc-text">记录代码</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分块上传"><span class="toc-number">1.</span> <span class="toc-text">分块上传</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、尝试秒传"><span class="toc-number">1.1.</span> <span class="toc-text">1、尝试秒传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、初始化分块上传信息"><span class="toc-number">1.2.</span> <span class="toc-text">2、初始化分块上传信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、分块上传"><span class="toc-number">1.3.</span> <span class="toc-text">3、分块上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、合并"><span class="toc-number">1.4.</span> <span class="toc-text">4、合并</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#断点续传-断点下载"><span class="toc-number">2.</span> <span class="toc-text">断点续传/断点下载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#记录代码"><span class="toc-number">3.</span> <span class="toc-text">记录代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -501,11 +520,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -517,6 +536,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -525,7 +560,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -537,15 +572,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -553,7 +580,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -561,15 +588,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -577,19 +596,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -609,11 +624,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -629,14 +652,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -645,11 +660,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -657,15 +672,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -701,6 +736,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -710,6 +757,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -741,19 +792,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -769,11 +820,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -793,11 +848,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -805,7 +864,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -814,34 +909,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

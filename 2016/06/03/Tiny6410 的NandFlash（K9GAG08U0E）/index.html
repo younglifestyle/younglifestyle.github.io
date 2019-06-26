@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>Tiny6410 的NandFlash（K9GAG08U0E） | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -39,9 +39,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -172,6 +182,7 @@
       
         <p>学的实在是揪心，一开始以为的8K每页读，才发现前4页为2K，但当以前4页2K读，后面8K读，又发现坑爹的来了，这个问题的引出主要是我读取内核并启动没有成功，然后基于这样的一个考虑，我以2K每页读取NandFlash，代码运行成功，我以8K每页读取NandFlash，代码运行一样成功，问题就在这里，如果这样考虑，代码到底是每页多少被写到NandFlash的？事实证明的是，这篇文章给了我答案，看来还真是。</p>
 <a id="more"></a>
+
 <p>以下文章转载自：<strong><a href="http://blog.csdn.net/o0Avalon0o/article/details/49644553" target="_blank" rel="noopener">Tiny6410+K9GAG08U0E</a></strong> </p>
 <h3 id="Tiny6410-K9GAG08U0E-使用小记"><a href="#Tiny6410-K9GAG08U0E-使用小记" class="headerlink" title="Tiny6410(K9GAG08U0E)使用小记"></a>Tiny6410(K9GAG08U0E)使用小记</h3><p>友善采用这颗8K Page的Nand，在6410上面搭配使用，确实给用户添加了不少麻烦，再加上ecc部分使用软件实现，代码不开源，学到块驱动的时候确实揪心啊~~</p>
 <h3 id="内部SRAM的大小"><a href="#内部SRAM的大小" class="headerlink" title="内部SRAM的大小"></a>内部SRAM的大小</h3><p>先从启动说起，Tiny6410启动选用的是用户手册里面屏蔽掉的一种直接Nand启动方式，如下图，根据友善原理图的OM[4:0]电平，对应表中的RESERVED，这种启动方式就是上电后直接将Nand的前面一部分代码映射到片内SRAM中，开始启动。</p>
@@ -184,15 +195,17 @@
 <p>所以在开始的8K SRAM代码拷贝中需要注意，系统只会拷贝每个8K页中的前2K数据，而友善配套提供的superboot升级程序在烧写U-boot镜像的时候都只是操作每页中前2K空间。 </p>
 <p>而对应的在U-Boot源码中也可以看到拷贝U-boot到SDRAM中运行的函数，仅操作了前2K数据：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">nandll_read_blocks</span> <span class="params">(ulong dst_addr, ulong size, <span class="keyword">int</span> large_block)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        uchar *buf = (uchar *)dst_addr;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">    	uint page_shift = <span class="number">9</span>;</span><br><span class="line">		<span class="keyword">if</span> (large_block)</span><br><span class="line">        	page_shift = <span class="number">11</span>;</span><br><span class="line">		<span class="comment">/* Read pages */</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; (<span class="number">0x3c000</span>&gt;&gt;page_shift); i++, buf+=(<span class="number">1</span>&lt;&lt;page_shift)) &#123;</span><br><span class="line">                nandll_read_page(buf, i, large_block);</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>可以看到在整个启动到U-boot代码搬运过程中，都没有启动ecc，所以在这个过程中数据都是不可靠的，而在友善的论坛里面也看到过他们承认，有掉U-boot固件的可能性。这也不能全怪人家，硬件决定6410拷贝8K代码的时候已经不安全了，那么后面Uboot重定向的时候做不做ecc都不是太重要了。。。</p>
 <p>在进入U-boot第二阶段start_armboot中之后，通过调用nand_scan()跟友善不开源的NAND_Init()，从这里之后即对K9GAG08U0E完成初始化，开启软件ECC，此后对Kernel、Rootfs的数据操作都是变为可靠了。 </p>
 <p>这里再吐槽一下，调用NAND_Init()竟然会改变U-Boot的环境变量，搞的我每次通过mini6410.h文件设置的环境变量都无效，这也是醉了。。。P.S.经过验证，友善应该是在Nand上面开辟了一段空间用于保存环境变量，调用NAND_Init之后，系统将直接从Nand的这段地址中还原环境参数，也就是说修改/include/configs/mini6410.h下面的环境变量屁用都没有，对于一块全新的开发板只要在Uboot中调用一次setenv、saveenv，保存到Nand中，下次如果仅更新Uboot固件时，则不需要再重新设置环境变量了(确保你用的Uboot是最新版，旧版本Uboot命令行下不支持saveenv保存参数)。 </p>
-<p>推荐解决方法可以在NAND_Init()后面使用void setenv (char <em>varname, char </em>varvalue)重新设置。</p>
+<p>推荐解决方法可以在NAND_Init()后面使用void setenv (char *varname, char *varvalue)重新设置。</p>
 <h3 id="Tiny6410中的nand命令"><a href="#Tiny6410中的nand命令" class="headerlink" title="Tiny6410中的nand命令"></a>Tiny6410中的nand命令</h3><p>友善提供的最新U-Boot终于支持对K9GAG08U0E进行写入操作了，分析cmd_nand.c中的do_nand()：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* read write */</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strncmp</span>(cmd, <span class="string">"read"</span>, <span class="number">4</span>) == <span class="number">0</span> || <span class="built_in">strncmp</span>(cmd, <span class="string">"write"</span>, <span class="number">5</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> read;</span><br><span class="line">	<span class="keyword">if</span> (argc &lt; <span class="number">4</span>)</span><br><span class="line">            <span class="keyword">goto</span> usage;</span><br><span class="line">	addr = (ulong)simple_strtoul(argv[<span class="number">2</span>], <span class="literal">NULL</span>, <span class="number">16</span>);</span><br><span class="line">	read = <span class="built_in">strncmp</span>(cmd, <span class="string">"read"</span>, <span class="number">4</span>) == <span class="number">0</span>; <span class="comment">/* 1 = read, 0 = write */</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\nNAND %s: "</span>, read ? <span class="string">"read"</span> : <span class="string">"write"</span>);</span><br><span class="line">   <span class="keyword">if</span> (arg_off_size(argc - <span class="number">3</span>, argv + <span class="number">3</span>, nand, &amp;off, &amp;size) != <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	s = <span class="built_in">strchr</span>(cmd, <span class="string">'.'</span>);</span><br><span class="line">        <span class="keyword">if</span> (s != <span class="literal">NULL</span> &amp;&amp;</span><br><span class="line">            (!<span class="built_in">strcmp</span>(s, <span class="string">".jffs2"</span>) || !<span class="built_in">strcmp</span>(s, <span class="string">".e"</span>) || !<span class="built_in">strcmp</span>(s, <span class="string">".i"</span>))) &#123;</span><br><span class="line">            <span class="keyword">if</span> (read) &#123;</span><br><span class="line">                ret = FriendlyARMReadNand( (u_char*)addr, size, off);</span><br><span class="line">                <span class="keyword">if</span> (ret == <span class="number">-1</span>) &#123;</span><br><span class="line">                    <span class="built_in">puts</span>(<span class="string">"offset should be multiple of page size\n"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">/* write */</span></span><br><span class="line">                <span class="keyword">nand_write_options_t</span> opts;</span><br><span class="line">                <span class="built_in">memset</span>(&amp;opts, <span class="number">0</span>, <span class="keyword">sizeof</span>(opts));</span><br><span class="line">                opts.buffer = (u_char*) addr;</span><br><span class="line">                opts.length = size;</span><br><span class="line">                opts.offset = off;</span><br><span class="line">                <span class="comment">/* opts.forcejffs2 = 1; */</span></span><br><span class="line">                opts.pad    = <span class="number">1</span>;</span><br><span class="line">                opts.blockalign = <span class="number">1</span>;</span><br><span class="line">                opts.quiet      = quiet;</span><br><span class="line">                <span class="keyword">if</span> (NandIsMlc()) &#123;</span><br><span class="line">                    ret = <span class="number">-1</span>;</span><br><span class="line">                    <span class="built_in">puts</span>(<span class="string">"write.jffs2/write.e/write.i is not supported\n"</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span></span><br><span class="line">                    ret = nand_write_opts(nand, &amp;opts);</span><br><span class="line">            &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CFG_NAND_YAFFS_WRITE</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!read &amp;&amp; s != <span class="literal">NULL</span> &amp;&amp; + (!<span class="built_in">strcmp</span>(s, <span class="string">".yaffs"</span>) || !<span class="built_in">strcmp</span>(s, <span class="string">".yaffs1"</span>))) &#123;</span><br><span class="line">            <span class="keyword">nand_write_options_t</span> opts;</span><br><span class="line">            <span class="built_in">memset</span>(&amp;opts, <span class="number">0</span>, <span class="keyword">sizeof</span>(opts));</span><br><span class="line">            opts.buffer = (u_char*) addr;</span><br><span class="line">            opts.length = size;</span><br><span class="line">            opts.offset = off;</span><br><span class="line">            opts.pad = <span class="number">0</span>;</span><br><span class="line">            opts.blockalign = <span class="number">1</span>;</span><br><span class="line">            opts.quiet = quiet;</span><br><span class="line">            opts.writeoob = <span class="number">1</span>;</span><br><span class="line">            opts.autoplace = <span class="number">1</span>;</span><br><span class="line"><span class="comment">/* jsgood */</span></span><br><span class="line">            <span class="comment">/* if (s[6] == '1')</span></span><br><span class="line"><span class="comment">                opts.forceyaffs = 1; */</span></span><br><span class="line">ret = nand_write_opts(nand, &amp;opts);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (read) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!NandIsMlc()) &#123;</span><br><span class="line">                    ret = nand_read(nand, off, &amp;size, (u_char *)addr);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    ret = FriendlyARMReadNand( (u_char*)addr, size, off);</span><br><span class="line">                    <span class="keyword">if</span> (ret == <span class="number">-1</span>) &#123;</span><br><span class="line">                        <span class="built_in">puts</span>(<span class="string">"offset should be multiple of page size\n"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (NandIsMlc()) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (off % NandBlockSizeInByte != <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="built_in">puts</span>(<span class="string">"offset should be multiple of block size\n"</span>);</span><br><span class="line">                        ret = <span class="number">-1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">unsigned</span> <span class="keyword">int</span> i;</span><br><span class="line">                        ret = <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; size; i += NandBlockSizeInByte) &#123;</span><br><span class="line">                            <span class="keyword">int</span> len = size - i;</span><br><span class="line">                            <span class="keyword">if</span> (len &gt; NandBlockSizeInByte) &#123;</span><br><span class="line">                                len = NandBlockSizeInByte;</span><br><span class="line">                            &#125;</span><br><span class="line">                            FriendlyARMWriteNand(((u_char *)addr) + i, len, off + i, NandBlockSizeInByte);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    ret = nand_write(nand, off, &amp;size, (u_char *)addr);</span><br><span class="line"><span class="keyword">if</span> (ret == <span class="number">0</span>) &#123;</span><br><span class="line">                        uint *magic = (uint*)(PHYS_SDRAM_1);</span><br><span class="line">                        <span class="keyword">if</span> ((<span class="number">0x24564236</span> == magic[<span class="number">0</span>]) &amp;&amp; (<span class="number">0x20764316</span> == magic[<span class="number">1</span>]))</span><br><span class="line">                            magic[<span class="number">0</span>] = <span class="number">0x27051956</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
 <p>从代码可以看到，只有nand read.i == nand read可以完成K9GAG08U0E的读操作，且它们都要求操作地址必须是page对齐； </p>
 <p>而nand write可以完成K9GAG08U0E的写操作，同样，操作地址需要page对齐(8K)，且暂时还不支持带oob数据的文件系统镜像的烧写(yaffs)！！</p>
-
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2016/06/07/听韦东山老师公开课的理解/">听韦东山老师公开课的理解</a></li><li><a href="www.chunlife.top/2016/06/07/听韦东山老师公开课的理解/">听韦东山老师公开课的理解</a></li></ul></div>
       
 
       
@@ -316,11 +329,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/06/07/听韦东山老师公开课的理解/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/06/07/strcat函数引起的血案/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          听韦东山老师公开课的理解
+          strcat函数引起的血案
         
       </div>
     </a>
@@ -354,7 +367,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tiny6410-K9GAG08U0E-使用小记"><span class="toc-number">1.</span> <span class="toc-text">Tiny6410(K9GAG08U0E)使用小记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内部SRAM的大小"><span class="toc-number">2.</span> <span class="toc-text">内部SRAM的大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8K页大小问题"><span class="toc-number">3.</span> <span class="toc-text">8K页大小问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tiny6410中的nand命令"><span class="toc-number">4.</span> <span class="toc-text">Tiny6410中的nand命令</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tiny6410-K9GAG08U0E-使用小记"><span class="toc-number">1.</span> <span class="toc-text">Tiny6410(K9GAG08U0E)使用小记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内部SRAM的大小"><span class="toc-number">2.</span> <span class="toc-text">内部SRAM的大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8K页大小问题"><span class="toc-number">3.</span> <span class="toc-text">8K页大小问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tiny6410中的nand命令"><span class="toc-number">4.</span> <span class="toc-text">Tiny6410中的nand命令</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -485,11 +498,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -501,6 +514,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -509,7 +538,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -521,15 +550,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -537,7 +558,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -545,15 +566,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -561,19 +574,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -593,11 +602,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -613,14 +630,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -629,11 +638,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -641,15 +650,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -685,6 +714,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -694,6 +735,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -725,19 +770,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -753,11 +798,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -777,11 +826,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -789,7 +842,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -798,34 +887,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

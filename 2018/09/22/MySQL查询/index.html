@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>MySQL查询 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -41,9 +41,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -174,10 +184,11 @@
       
         <h2 id="问题的出现"><a href="#问题的出现" class="headerlink" title="问题的出现"></a>问题的出现</h2><p>分页查询，其中数据量变大后导致查询速度变慢。</p>
 <a id="more"></a>
+
 <h2 id="分页查询"><a href="#分页查询" class="headerlink" title="分页查询"></a>分页查询</h2><p>在查询操作能够做到优化的地方，也是效果最明显的地方应该就是索引的优化，建立好索引能够有效的提高数据查询的速度。</p>
 <p>首先，了解下一个比较有意思的讨论：<a href="https://www.v2ex.com/t/443491" target="_blank" rel="noopener">分页查询，查个 total 很难吗？</a></p>
 <p>通过链接能够看到不同的开发者对分页的理解和提供的解决问题的方法，对了解这个问题的具体含义很有帮助。单单的分页查询其实是涉及到了数据库的一些优化问题，并非表面上看起来那么简单。</p>
-<h2 id="分页方式"><a href="#分页方式" class="headerlink" title="分页方式"></a>分页方式</h2><p>参考链接：<a href="https://blog.csdn.net/SpeedMe/article/details/45690027" target="_blank" rel="noopener">分页性能探索-mysql</a></p>
+<h2 id="分页方式"><a href="#分页方式" class="headerlink" title="分页方式"></a>分页方式</h2><p>参考链接：<a href="https://blog.csdn.net/SpeedMe/article/details/45690027>" target="_blank" rel="noopener">分页性能探索-mysql</a></p>
 <p>1、扶梯分页法：</p>
 <p><img src="20150512171006.png" alt="扶梯方式"></p>
 <p>扶梯分页方式实现简单，操作高效，以当前页为起始页预取下一页。</p>
@@ -187,26 +198,32 @@
 <h2 id="电梯分页优化"><a href="#电梯分页优化" class="headerlink" title="电梯分页优化"></a>电梯分页优化</h2><p>博文中提到了一种常见的优化方式，可以说一种”万金油”优化方式，也就是常见的“查两次”：</p>
 <p>先查找出主键ID，利用ID去查询数据（“查两次”）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from production_recorder.6 inner join (select id from production_recorder.6 WHERE errcode like &apos;86:54:37:00:00:%&apos; LIMIT 150000,10) as ids using(id);</span><br></pre></td></tr></table></figure>
+
 <p>先使用较少IO查找来拿到主键id，然后利用主键id即可超快的获取数据了。</p>
 <p>但是这种方式还是会受到数据库数据持续变大带来的查询效率变低的影响。我们可以使用explain来对mysql语句进行分析：对explain的参数的了解参考链接<a href="https://www.cnblogs.com/zhanjindong/p/3439042.html" target="_blank" rel="noopener">MySQL优化—工欲善其事，必先利其器之EXPLAIN</a>，</p>
 <p>explain分析结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: PRIMARY</span><br><span class="line">        table: &lt;derived2&gt;</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 10</span><br><span class="line">        Extra: </span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: PRIMARY</span><br><span class="line">        table: 6</span><br><span class="line">         type: eq_ref</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: id.id</span><br><span class="line">         rows: 1</span><br><span class="line">        Extra: </span><br><span class="line">*************************** 3. row ***************************</span><br><span class="line">           id: 2</span><br><span class="line">  select_type: DERIVED</span><br><span class="line">        table: 6</span><br><span class="line">         type: range</span><br><span class="line">possible_keys: idx_6_errcode</span><br><span class="line">          key: idx_6_errcode</span><br><span class="line">      key_len: 768</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 518056</span><br><span class="line">        Extra: Using where; Using index</span><br><span class="line">3 rows in set (0.10 sec)</span><br></pre></td></tr></table></figure>
+
 <p>对电梯分页的性能下降，经过百度与Google的查找，一个疑似的答案是，当数据库偏移一个相对于表数据量来说也是比较大的数据时，那么mysql优化器可能就会不选择走索引，而是走全表扫描，这相当于是mysql优化器在权衡索引与全表扫描后的做出的选择。</p>
 <h2 id="扶梯分页的优化"><a href="#扶梯分页的优化" class="headerlink" title="扶梯分页的优化"></a>扶梯分页的优化</h2><p>参考链接：<a href="https://blog.jamespan.me/2015/01/22/trick-of-paging-query" target="_blank" rel="noopener">分页查询的那些坑和各种技巧</a></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from product.record WHERE errcode in (&quot;2134&quot;,&quot;13253&quot;) and id &gt; 10000 LIMIT 10;</span><br></pre></td></tr></table></figure>
+
 <p>这里使用id进行直接跳转，能够非常快速的越过已查询的数据，对未查询的数据进行查询，速度非常稳定。</p>
 <p>为了检测下一页是否有数据，在查询时可以</p>
 <p>查询完成后，计算结果集中ID的最大值，作为下一次id的起始值。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">requiredResultMaxId</span><span class="params">(recordList []models.Record)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	lens := <span class="built_in">len</span>(recordList)</span><br><span class="line">	idArr := <span class="built_in">make</span>([]<span class="keyword">int</span>, lens)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> index, record := <span class="keyword">range</span> recordList &#123;</span><br><span class="line">		idArr[index] = <span class="keyword">int</span>(record.Id)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> !sort.IntsAreSorted(idArr) &#123;</span><br><span class="line">		sort.Ints(idArr)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> idArr[lens<span class="number">-1</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="总数"><a href="#总数" class="headerlink" title="总数"></a>总数</h2><p>除了获取具体的数量，分页还有一个就是获取查询的总数，这样前端才能很好的进行渲染工作。</p>
 <p>这里也是有几种方法：</p>
 <p>1、若取全表，则可以直接取自增主键的最大值（数据不会变化，且ID为自增主键）。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select max(id) from tablename</span><br></pre></td></tr></table></figure>
+
 <p>2、使用explain获取近似主键。</p>
 <p>3、在另外一张表中维护一个总数，插入一个加1。</p>
 <h2 id="选择"><a href="#选择" class="headerlink" title="选择"></a>选择</h2><p>就像参考博客中说的，根据业务对分页方式进行选择。当然作为开发者那得根据整体的设计来进行选择，有时候也会身不由己。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于分页好像没有想象中那么简单，分页具体到细节其实是查询，对于查询有分区，分库分表，这样的操作，这些东西现在还不太了解，借此机会还是需要去好好了解了解的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">分表以后只有一种查询方式会效率高，那就是根据分表键查。其他查询条件相反会慢于没分表前的正表查询。 所以能不分尽量不要分表。大数据量的查询可以使用读写分离，旧数据归档。（取自某一篇博客）</span><br></pre></td></tr></table></figure>
+
 <p>上述中，参考的博客都写得非常不错，具有可观的参考价值，感谢这些前辈的意见。</p>
 <p>如果有相关信息违反任何版权，请直接联系我进行删除。</p>
 <h2 id="2018年11月20日"><a href="#2018年11月20日" class="headerlink" title="2018年11月20日"></a>2018年11月20日</h2><p>分页中其实可以采取一种取巧的方式：</p>
@@ -217,10 +234,11 @@
 <p><img src="clip_image004.jpg" alt="img"></p>
 <p>等于说，在当前页，用户最多能看见第一页和最后一页，以及当前页的前两页和后两页数据，那么也就可以将查询范围给控制在7页的范围内。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> current_id; <span class="comment">// id of first record on current page.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// go to page current+N</span></span><br><span class="line">db.collection.find(&#123;_id: &#123;$gte: current_id&#125;&#125;).</span><br><span class="line">              skip(N * page_size).</span><br><span class="line">              limit(page_size).</span><br><span class="line">              sort(&#123;_id: <span class="number">1</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// go to page current-N</span></span><br><span class="line"><span class="comment">// note that due to the nature of skipping back,</span></span><br><span class="line"><span class="comment">// this query will get you records in reverse order </span></span><br><span class="line"><span class="comment">// (last records on the page being first in the resultset)</span></span><br><span class="line"><span class="comment">// You should reverse them in the app.</span></span><br><span class="line">db.collection.find(&#123;_id: &#123;$lt: current_id&#125;&#125;).</span><br><span class="line">              skip((N<span class="number">-1</span>)*page_size).</span><br><span class="line">              limit(page_size).</span><br><span class="line">              sort(&#123;_id: <span class="number">-1</span>&#125;);</span><br></pre></td></tr></table></figure>
+
 <p><a href="https://stackoverflow.com/questions/9703319/mongodb-ranged-pagination" target="_blank" rel="noopener">https://stackoverflow.com/questions/9703319/mongodb-ranged-pagination</a></p>
 <p>MySQL同样可以使用这种方式进行分页，分页效率非常稳定可靠。</p>
 <p>而对总数信息的获取，则可以使用：SHOW TABLE STATUS或者是explain。</p>
-
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li><li><a href="chunlife.top/2019/06/19/转载《解剖Go语言map底层实现》/">转载《解剖Go语言map底层实现》</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="www.chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li></ul></div>
       
 
       
@@ -382,7 +400,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题的出现"><span class="toc-number">1.</span> <span class="toc-text">问题的出现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页查询"><span class="toc-number">2.</span> <span class="toc-text">分页查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页方式"><span class="toc-number">3.</span> <span class="toc-text">分页方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电梯分页优化"><span class="toc-number">4.</span> <span class="toc-text">电梯分页优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扶梯分页的优化"><span class="toc-number">5.</span> <span class="toc-text">扶梯分页的优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总数"><span class="toc-number">6.</span> <span class="toc-text">总数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择"><span class="toc-number">7.</span> <span class="toc-text">选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018年11月20日"><span class="toc-number">9.</span> <span class="toc-text">2018年11月20日</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题的出现"><span class="toc-number">1.</span> <span class="toc-text">问题的出现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页查询"><span class="toc-number">2.</span> <span class="toc-text">分页查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页方式"><span class="toc-number">3.</span> <span class="toc-text">分页方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电梯分页优化"><span class="toc-number">4.</span> <span class="toc-text">电梯分页优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扶梯分页的优化"><span class="toc-number">5.</span> <span class="toc-text">扶梯分页的优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总数"><span class="toc-number">6.</span> <span class="toc-text">总数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择"><span class="toc-number">7.</span> <span class="toc-text">选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018年11月20日"><span class="toc-number">9.</span> <span class="toc-text">2018年11月20日</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -513,11 +531,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -529,6 +547,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -537,7 +571,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -549,15 +583,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -565,7 +591,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -573,15 +599,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -589,19 +607,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -621,11 +635,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -641,14 +663,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -657,11 +671,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -669,15 +683,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -713,6 +747,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -722,6 +768,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -753,19 +803,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -781,11 +831,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -805,11 +859,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -817,7 +875,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -826,34 +920,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>

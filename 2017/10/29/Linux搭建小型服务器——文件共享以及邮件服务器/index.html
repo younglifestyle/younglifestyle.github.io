@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
   <title>Linux搭建小型服务器——文件共享以及邮件服务器 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -40,9 +40,19 @@
   
 
   
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?e155b64355fa51e2e8a4ca9edc59e825";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 
 </head>
-
+</html>
 <body>
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
@@ -173,6 +183,7 @@
       
         <p>因为公司搬家，之前后又采用了新的服务器，所以之前的服务器的东西需要移动到新的服务器上，而且趁着这次机会，搭建了一个局域网使用的邮件服务器使用，虽然不知道别人怎么搭建的，但是把自己的经验记录下来，因为这个邮件服务器确实花了我不少时间去琢磨，因为它这玩意可能还会干扰我的文件共享功能。</p>
 <a id="more"></a>
+
 <p>邮件服务器是IRedMail，文件共享服务是Samba，环境是centos。</p>
 <h3 id="IRedMail安装："><a href="#IRedMail安装：" class="headerlink" title="IRedMail安装："></a>IRedMail安装：</h3><p>网上搜索很容易搜索到使用Postfix+Dovecot搭建邮件服务器，不过我没有搭建成功，很遗憾，所以我找到了使用IRedMail去搭建这个服务器，比之前的操作简单多了。</p>
 <p>搭建的步骤主要是参考了这个：<a href="https://www.tecmint.com/install-iredmail-on-centos-7-for-samba4-ad-integration/" target="_blank" rel="noopener">How to Install iRedMail on CentOS 7 for Samba4 AD Integration – Part 10</a></p>
@@ -185,23 +196,28 @@
 </li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 mail.demo.com mail localhost localhost.localdomain</span><br></pre></td></tr></table></figure>
+
 <p>先后格式错误的话，IRedMail在安装时也会提醒安装错误的。</p>
 <ol start="3">
-<li>在我参考的那个英文文章里说，需要关闭<a href="https://www.baidu.com/s?wd=selinux&amp;tn=24004469_oem_dg&amp;rsv_dl=gh_pl_sl_csd" target="_blank" rel="noopener">selinux</a>，我试了下，不关闭也是照样好使的，不过别人的说的是推荐，不是强制。vim /etc/selinux/config。</li>
+<li>在我参考的那个英文文章里说，需要关闭<a href="https://www.baidu.com/s?wd=selinux&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd" target="_blank" rel="noopener">selinux</a>，我试了下，不关闭也是照样好使的，不过别人的说的是推荐，不是强制。vim /etc/selinux/config。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELINUX=disabled</span><br><span class="line"># setenforce 0</span><br></pre></td></tr></table></figure>
+
 <ol start="4">
 <li>接下来需要安装些必要的Linux工具了，使用yum命令。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install bzip2 net-tools bash-completion wget</span><br></pre></td></tr></table></figure>
+
 <ol start="5">
 <li>获取IRedMail的安装包，并解压。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># wget https://bitbucket.org/zhb/iredmail/downloads/iRedMail-0.9.6.tar.bz2</span><br><span class="line"></span><br><span class="line"># tar xjf iRedMail-0.9.6.tar.bz2</span><br></pre></td></tr></table></figure>
+
 <ol start="6">
 <li>接下来就可以运行IRedMail里面的脚本了，并不需要认为设置，很是方便。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># IREDMAIL_MIRROR=&apos;http://106.187.51.47&apos; bash iRedMail.sh</span><br></pre></td></tr></table></figure>
+
 <p>如果你直接运行bash iRedMail.sh，是没啥结果的，查了下，好像是因为其下载地址被强了吧，所以需要加入前面的环境设置。</p>
 <ol start="7">
 <li>安装过程基本上选择默认，除了在选择web server上选择Apache，后端选择OpenLDAP外（我之前选择了MariaDB，Samba就死活通不了了，OpenLDAP我实验成功），其他基本上是默认的。</li>
@@ -216,43 +232,55 @@
 <li><p>在软件目录的下的iRedMail.tips，其保存了很多服务器设置的内容，包括邮件服务器里面的管理员密码，所以，需要保管好。iRedMail-0.9.6/iRedMail.tips</p>
 </li>
 <li><p>在同一局域网的浏览器上，输入<a href="https://192.168.0.254，此处的IP是服务器IP，这样即可连接到邮件服务器了，注意：浏览器可能静止访问，或者兼容模式访问起来有些问题，这个时候需要测试者多整整浏览器的问题，以免误认为安装失败。" target="_blank" rel="noopener">https://192.168.0.254，此处的IP是服务器IP，这样即可连接到邮件服务器了，注意：浏览器可能静止访问，或者兼容模式访问起来有些问题，这个时候需要测试者多整整浏览器的问题，以免误认为安装失败。</a></p>
-<p>httpS://192.168.0.254/mail/ 邮箱登录</p>
-<p>httpS://192.168.0.254/iredadmin/ 管理邮箱账户，添加邮箱</p>
+<p><a href="httpS://192.168.0.254/mail/" target="_blank" rel="noopener">httpS://192.168.0.254/mail/</a> 邮箱登录</p>
+<p><a href="httpS://192.168.0.254/iredadmin/" target="_blank" rel="noopener">httpS://192.168.0.254/iredadmin/</a> 管理邮箱账户，添加邮箱</p>
 </li>
 </ol>
 <h3 id="Samba安装"><a href="#Samba安装" class="headerlink" title="Samba安装"></a>Samba安装</h3><p>这个Samba我主要是参考了：<a href="http://www.cnblogs.com/linuxprobe/p/5658735.html" target="_blank" rel="noopener">http://www.cnblogs.com/linuxprobe/p/5658735.html</a></p>
 <h4 id="步骤1：在Fedora和CentOS上安装Samba"><a href="#步骤1：在Fedora和CentOS上安装Samba" class="headerlink" title="步骤1：在Fedora和CentOS上安装Samba"></a><strong>步骤1：在Fedora和CentOS上安装Samba</strong></h4><p>首先，安装Samba以及进行一些基本的配置。</p>
 <p>检验Samba是否已经安装在您的系统中：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -q samba samba-common samba-client</span><br></pre></td></tr></table></figure>
+
 <p>如果上面的命令没有任何输出，这意味着Samba并未安装。这时，应使用下面的命令来安装Samba。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install samba samba-common samba-client</span><br></pre></td></tr></table></figure>
+
 <p>接下来，创建一个用于在网络中共享的本地文件夹。这个文件夹应该以Samba共享的方式导出到远程的用户。在这个指南中，我们会在顶层文件夹’/‘中创建这个文件夹，因此，请确保您有相应的权限。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir /shared</span><br></pre></td></tr></table></figure>
+
 <p>如果您想在您的home文件夹内创建共享文件夹（例如，~/shared），您必须激活SELinux中Samba的home文件夹共享选项，具体将在后面提到。</p>
 <p>在创建/shared文件夹后，设置文件夹权限以保证其余用户可以访问它。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod o+rw /shared</span><br></pre></td></tr></table></figure>
+
 <p>如果您不想其他用户对该文件夹拥有写权限，您需要移除命令中的’w’选项。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod o+r /shared</span><br></pre></td></tr></table></figure>
+
 <p>接下来，创建一个空文件来测试。这个文件可以被用来验证Samba的共享已经被挂载。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo touch /shared/file1</span><br></pre></td></tr></table></figure>
+
 <h4 id="步骤2：为Samba配置防火墙"><a href="#步骤2：为Samba配置防火墙" class="headerlink" title="步骤2：为Samba配置防火墙"></a><strong>步骤2：为Samba配置防火墙</strong></h4><p>下面的命令用来打开防火墙中Samba共享所需的TCP/UDP端口。</p>
 <p>如果您在使用firewalld（例如，在Fedora和CentOS7下），接下来的命令将会永久的修改Samba相关的防火墙规则。</p>
 <h4 id="步骤3：更改Samba配置"><a href="#步骤3：更改Samba配置" class="headerlink" title="步骤3：更改Samba配置"></a><strong>步骤3：更改Samba配置</strong></h4><p>后面的步骤用来配置Samba以将本地文件夹导出为Samba共享文件夹。</p>
 <p>使用文件编辑器打开Samba配置文件，并将下面的行添加到文件的末尾。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nano /etc/samba/smb.conf</span><br><span class="line">[myshare]</span><br><span class="line"></span><br><span class="line">comment=my shared files</span><br><span class="line"></span><br><span class="line">path=/shared</span><br><span class="line"></span><br><span class="line">public=yes</span><br><span class="line"></span><br><span class="line">writeable=yes</span><br></pre></td></tr></table></figure>
+
 <p>上面在括号内的文本（例如，”myshare”）是Samba共享的资源的名字，它被用来从远程主机存取Samba共享。</p>
 <p>创建Samba用户账户，这是挂载和导出Samba文件系统所必须的。我们可以使用smbpasswd工具来创建一个Samba用户。注意，Samba用户帐户必须是已有的Linux用户。如果您尝试使用smbpasswd添加一个不存在的用户，它会返回一个错误的消息。</p>
 <p>如果您不想使用任何已存在的Linux用户作为Samba用户，您可以在您的系统中创建一个新的用户。为安全起见，设置新用户的登录脚本为/sbin/nologin，并且不创建该用户的home文件夹。</p>
 <p>在这个例子中，我们创建了一个名叫”sambaguest”的用户，如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo useradd -M -s /sbin/nologin sambaguest</span><br><span class="line"></span><br><span class="line">$ sudo passwd sambaguest</span><br></pre></td></tr></table></figure>
+
 <p>在创建一个新用户后，使用smbpasswd命令添加Samba用户。当这个命令询问一个密码时，您可以键入一个与其用户密码不同的密码。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo smbpasswd -a sambaguest</span><br></pre></td></tr></table></figure>
+
 <p>激活Samba服务，并检测Samba服务是否在运行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl enable smb.service</span><br><span class="line"></span><br><span class="line">$ sudo systemctl start smb.service</span><br><span class="line"></span><br><span class="line">$ sudo systemctl is-active smb</span><br></pre></td></tr></table></figure>
+
 <p>使用下面的命令来查看Samba中共享的文件夹列表。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ smbclient -U sambaguest -L localhost</span><br></pre></td></tr></table></figure>
+
 <p>Linux之间Samba远程挂载的命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount //192.168.1.58/demo /mnt/ -o username=samba</span><br></pre></td></tr></table></figure>
+
 <p>附在末尾：</p>
 <p>Linux关于权限：例如777，rwx(Owner)  r-x(Group)    r-x(Other)。</p>
 <p><img src="13163019_vmLd.jpg" alt="clip_image002[5]"></p>
@@ -260,12 +288,18 @@
 <p>w 可以查看当前活跃的用户列表</p>
 <p>cat /etc/group 查看用户组</p>
 <h5 id="1-建工作组"><a href="#1-建工作组" class="headerlink" title="1. 建工作组"></a>1. 建工作组</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groupadd test //新建test工作组</span><br></pre></td></tr></table></figure>
+
 <h5 id="2-新建用户同时增加工作组"><a href="#2-新建用户同时增加工作组" class="headerlink" title="2. 新建用户同时增加工作组"></a>2. 新建用户同时增加工作组</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -g test one //新建one用户并增加到test工作组</span><br></pre></td></tr></table></figure>
+
 <h5 id="3-给已有的用户增加工作组"><a href="#3-给已有的用户增加工作组" class="headerlink" title="3. 给已有的用户增加工作组"></a>3. 给已有的用户增加工作组</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usermod -G groupname username</span><br><span class="line"></span><br><span class="line">或者：gpasswd -a user group</span><br></pre></td></tr></table></figure>
+
 <h5 id="4-将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。"><a href="#4-将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。" class="headerlink" title="4. 将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。"></a>4. 将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">usermod -a -G groupname username</span><br><span class="line"></span><br><span class="line">若需要顺便改变主要用户组，则可以使用：</span><br><span class="line"></span><br><span class="line">usermod -g groupname username</span><br></pre></td></tr></table></figure>
+
 <h5 id="5-修改文件或目录所属的用户。"><a href="#5-修改文件或目录所属的用户。" class="headerlink" title="5. 修改文件或目录所属的用户。"></a>5. 修改文件或目录所属的用户。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown one /home/one （把home目录下的one目录的有者改为one用户）</span><br></pre></td></tr></table></figure>
+
 <h5 id="6-修改文件或目录所属的组。"><a href="#6-修改文件或目录所属的组。" class="headerlink" title="6. 修改文件或目录所属的组。"></a>6. 修改文件或目录所属的组。</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chgrp one /home/one （把home目录下的one目录的有者改为one组）</span><br></pre></td></tr></table></figure>
 
+<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2016/11/17/磁盘组RAID 5/">磁盘组RAID 5</a></li><li><a href="chunlife.top/2016/06/28/矢量字体字形分布图/">矢量字体字形分布图</a></li><li><a href="chunlife.top/2016/06/07/听韦东山老师公开课的理解/">听韦东山老师公开课的理解</a></li><li><a href="www.chunlife.top/2017/10/29/Linux搭建小型服务器——文件共享以及邮件服务器/">Linux搭建小型服务器——文件共享以及邮件服务器</a></li></ul></div>
       
 
       
@@ -427,7 +461,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#IRedMail安装："><span class="toc-number">1.</span> <span class="toc-text">IRedMail安装：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Samba安装"><span class="toc-number">2.</span> <span class="toc-text">Samba安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤1：在Fedora和CentOS上安装Samba"><span class="toc-number">2.1.</span> <span class="toc-text">步骤1：在Fedora和CentOS上安装Samba</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤2：为Samba配置防火墙"><span class="toc-number">2.2.</span> <span class="toc-text">步骤2：为Samba配置防火墙</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤3：更改Samba配置"><span class="toc-number">2.3.</span> <span class="toc-text">步骤3：更改Samba配置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-建工作组"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. 建工作组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-新建用户同时增加工作组"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. 新建用户同时增加工作组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-给已有的用户增加工作组"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. 给已有的用户增加工作组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。"><span class="toc-number">2.3.4.</span> <span class="toc-text">4. 将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-修改文件或目录所属的用户。"><span class="toc-number">2.3.5.</span> <span class="toc-text">5. 修改文件或目录所属的用户。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-修改文件或目录所属的组。"><span class="toc-number">2.3.6.</span> <span class="toc-text">6. 修改文件或目录所属的组。</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#IRedMail安装："><span class="toc-number">1.</span> <span class="toc-text">IRedMail安装：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Samba安装"><span class="toc-number">2.</span> <span class="toc-text">Samba安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤1：在Fedora和CentOS上安装Samba"><span class="toc-number">2.1.</span> <span class="toc-text">步骤1：在Fedora和CentOS上安装Samba</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤2：为Samba配置防火墙"><span class="toc-number">2.2.</span> <span class="toc-text">步骤2：为Samba配置防火墙</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#步骤3：更改Samba配置"><span class="toc-number">2.3.</span> <span class="toc-text">步骤3：更改Samba配置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-建工作组"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. 建工作组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-新建用户同时增加工作组"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. 新建用户同时增加工作组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-给已有的用户增加工作组"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. 给已有的用户增加工作组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。"><span class="toc-number">2.3.4.</span> <span class="toc-text">4. 将一个已有用户添加到一个已有的工作组中，可以使用带-a参数的指令。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-修改文件或目录所属的用户。"><span class="toc-number">2.3.5.</span> <span class="toc-text">5. 修改文件或目录所属的用户。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-修改文件或目录所属的组。"><span class="toc-number">2.3.6.</span> <span class="toc-text">6. 修改文件或目录所属的组。</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
                     </div>
                 </span>
             </div>
@@ -558,11 +592,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -574,6 +608,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
@@ -582,7 +632,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -594,15 +644,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -610,7 +652,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -618,15 +660,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">串口</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,19 +668,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -666,11 +696,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -686,14 +724,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
@@ -702,11 +732,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -714,15 +744,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -758,6 +808,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MD5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">salt</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">加盐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -767,6 +829,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -798,19 +864,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -826,11 +892,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -850,11 +920,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
+                <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">手机</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -862,7 +936,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">串口</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PCI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -871,34 +981,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">fibonacci</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">斐波那契数列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">bucket token</a>
               </li>
             
             <div class="clearfix"></div>
