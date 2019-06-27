@@ -6,15 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>Archives | Pure Life</title>
+  <title>根据业务改造ops-update——添加跳板机 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Pure Life">
-<meta property="og:url" content="chunlife.top/archives/page/2/index.html">
+  <meta name="description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="根据业务改造ops-update——添加跳板机">
+<meta property="og:url" content="chunlife.top/2019/06/27/根据业务改造ops-update/index.html">
 <meta property="og:site_name" content="Pure Life">
+<meta property="og:description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="chunlife.top/2019/06/27/根据业务改造ops-update/1561624471274.png">
+<meta property="og:updated_time" content="2019-06-27T13:37:16.446Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pure Life">
+<meta name="twitter:title" content="根据业务改造ops-update——添加跳板机">
+<meta name="twitter:description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；">
+<meta name="twitter:image" content="chunlife.top/2019/06/27/根据业务改造ops-update/1561624471274.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -152,560 +158,220 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-根据业务改造ops-update" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      根据业务改造ops-update——添加跳板机
+    </h1>
+  
+
+        
+        <a href="/2019/06/27/根据业务改造ops-update/" class="archive-article-date">
+  	<time datetime="2019-06-27T07:30:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-27</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先，这里面包含两个模块<a href="https://github.com/Cepave/ops-meta" target="_blank" rel="noopener">meta</a>，<a href="https://github.com/open-falcon/ops-updater" target="_blank" rel="noopener">updater</a>。</p>
+<p>meta负责接收<code>updater</code>上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；</p>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;name&quot;: &quot;falcon-agent&quot;,</span><br><span class="line">        &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">        &quot;tarball&quot;: &quot;http://11.11.11.11:8888/falcon&quot;,</span><br><span class="line">        &quot;md5&quot;: &quot;http://11.11.11.11:8888/falcon&quot;,</span><br><span class="line">        &quot;cmd&quot;: &quot;start&quot;    // 运行参数</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;name&quot;: &quot;dinp-agent&quot;,</span><br><span class="line">        &quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">        &quot;tarball&quot;: &quot;http://11.11.11.11:8888/dinp&quot;,</span><br><span class="line">        &quot;md5&quot;: &quot;&quot;,</span><br><span class="line">        &quot;cmd&quot;: &quot;stop&quot; </span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><code>updater</code>则被用来下载软件，以及上报软件运行状态信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;name&quot;: &quot;falcon-agent&quot;,</span><br><span class="line">        &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">        &quot;status&quot;: &quot;started&quot; </span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;name&quot;: &quot;dinp-agent&quot;,</span><br><span class="line">        &quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">        &quot;status&quot;: &quot;stoped&quot; </span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="流程简述"><a href="#流程简述" class="headerlink" title="流程简述"></a>流程简述</h2><p>两个模块都比较简单，不过也是由于简单它们也就被我看上了，在我的项目中，<code>meta</code>是需要和服务器通信的，但服务器不需要<code>meta</code>将数据发送给服务器进行保存（可以指定其监听相应的<code>hostname</code>），<code>updater</code>基本是4min向<code>meta</code>心跳一次。</p>
+<p><img src="1561624471274.png" alt="信息流动"></p>
+<p>服务器在得到更新或添加软件的信后，主动向<code>meta</code>下发下载软件的地址指令，<code>meta</code>附加上用户信息、PC信息等其他信息进行下载请求（这里可以交由其他模块进行下载操作，下载完成后通知到<code>meta</code>模块即可）。</p>
+<h2 id="新增功能"><a href="#新增功能" class="headerlink" title="新增功能"></a>新增功能</h2><h3 id="bash指令控制"><a href="#bash指令控制" class="headerlink" title="bash指令控制"></a>bash指令控制</h3><p>下发的指令多添加一些bash指令，主要是为了给出一些自定义的操作，对于这个操作一般也只会针对一两个设备先进行测试，测试没发现问题后，再逐步将这些指令更新入<code>control</code>文件，当然，这是长期的过程。</p>
+<p>防止<code>cmd</code>出问题，协程无法退出的问题，当然也是可以利用<code>contorl</code>文件中的方法的，利用linux命令来kill掉这个卡住的命令。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">   ctx, cancelFunc := context.WithCancel(context.TODO())</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;  <span class="comment">// 会阻塞，开个协程</span></span><br><span class="line">    	</span><br><span class="line">       cmd := exec.CommandContext(ctx, <span class="string">`sh`</span>, <span class="string">"-c"</span>, <span class="string">"sleep 2;echo hello;"</span>)</span><br><span class="line">       <span class="comment">// 执行任务, 捕获输出</span></span><br><span class="line">       output, err := cmd.CombinedOutput()  </span><br><span class="line">       </span><br><span class="line">       <span class="keyword">chan</span> &lt;- output  <span class="comment">// 抛出结果</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// select等待时间，等不到就调用cancelFunc	</span></span><br><span class="line"><span class="comment">// 取消上下文</span></span><br><span class="line">cancelFunc()</span><br></pre></td></tr></table></figure>
+
+<h3 id="跳板机的操作"><a href="#跳板机的操作" class="headerlink" title="跳板机的操作"></a>跳板机的操作</h3><p>在实际的应用中，设备都处于内网环境下，当我们需要对设备进行操作时，就需要跳板机了，这里不需要太过于复杂的跳板机操作，不过这里需要对接自家的后台用户的验证，刚好网上有一些简单的跳板机server，这里的实现，多是参考网上代码。</p>
+<p>可以通过<code>control</code>脚本来控制跳板机服务的起停，跳板机的状态和重启操作这里是直接塞给了<code>meta</code>，毕竟算起来，没有违背<code>meta</code>设计简单的初衷。</p>
+<blockquote>
+<p>参考：<a href="https://blog.yumaojun.net/2017/02/23/go-ssh-server/" target="_blank" rel="noopener">https://blog.yumaojun.net/2017/02/23/go-ssh-server/</a>   服务端</p>
+<p>参考：<a href="https://mritd.me/2018/11/09/go-interactive-shell/" target="_blank" rel="noopener">https://mritd.me/2018/11/09/go-interactive-shell/</a>   客户端</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"encoding/binary"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"io"</span></span><br><span class="line">	<span class="string">"io/ioutil"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">	<span class="string">"net"</span></span><br><span class="line">	<span class="string">"os/exec"</span></span><br><span class="line">	<span class="string">"sync"</span></span><br><span class="line">	<span class="string">"syscall"</span></span><br><span class="line">	<span class="string">"unsafe"</span></span><br><span class="line"></span><br><span class="line">	<span class="string">"github.com/kr/pty"</span></span><br><span class="line">	<span class="string">"golang.org/x/crypto/ssh"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// In the latest version of crypto/ssh (after Go 1.3), the SSH server type has been removed</span></span><br><span class="line">	<span class="comment">// in favour of an SSH connection type. A ssh.ServerConn is created by passing an existing</span></span><br><span class="line">	<span class="comment">// net.Conn and a ssh.ServerConfig to ssh.NewServerConn, in effect, upgrading the net.Conn</span></span><br><span class="line">	<span class="comment">// into an ssh.ServerConn</span></span><br><span class="line">	config := &amp;ssh.ServerConfig&#123;</span><br><span class="line">		<span class="comment">//Define a function to run when a client attempts a password login</span></span><br><span class="line">		PasswordCallback: <span class="function"><span class="keyword">func</span><span class="params">(c ssh.ConnMetadata, pass []<span class="keyword">byte</span>)</span> <span class="params">(*ssh.Permissions, error)</span></span> &#123;</span><br><span class="line">			<span class="comment">// Should use constant-time compare (or better, salt+hash) in a production setting.</span></span><br><span class="line">			<span class="keyword">if</span> c.User() == <span class="string">"foo"</span> &amp;&amp; <span class="keyword">string</span>(pass) == <span class="string">"bar"</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, fmt.Errorf(<span class="string">"password rejected for %q"</span>, c.User())</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="comment">// You may also explicitly allow anonymous client authentication, though anon bash</span></span><br><span class="line">		<span class="comment">// sessions may not be a wise idea</span></span><br><span class="line">		<span class="comment">// NoClientAuth: true,</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// You can generate a keypair with 'ssh-keygen -t rsa'</span></span><br><span class="line">	privateBytes, err := ioutil.ReadFile(<span class="string">"id_rsa"</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"Failed to load private key (./id_rsa)"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	private, err := ssh.ParsePrivateKey(privateBytes)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"Failed to parse private key"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	config.AddHostKey(private)</span><br><span class="line">	<span class="comment">// Once a ServerConfig has been configured, connections can be accepted.</span></span><br><span class="line">	listener, err := net.Listen(<span class="string">"tcp"</span>, <span class="string">"0.0.0.0:2200"</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatalf(<span class="string">"Failed to listen on 2200 (%s)"</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// Accept all connections</span></span><br><span class="line">	log.Print(<span class="string">"Listening on 2200..."</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		tcpConn, err := listener.Accept()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Printf(<span class="string">"Failed to accept incoming connection (%s)"</span>, err)</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// Before use, a handshake must be performed on the incoming net.Conn.</span></span><br><span class="line">		sshConn, chans, reqs, err := ssh.NewServerConn(tcpConn, config)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Printf(<span class="string">"Failed to handshake (%s)"</span>, err)</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		log.Printf(<span class="string">"New SSH connection from %s (%s)"</span>, sshConn.RemoteAddr(), sshConn.ClientVersion())</span><br><span class="line">		<span class="comment">// Discard all global out-of-band Requests</span></span><br><span class="line">		<span class="keyword">go</span> ssh.DiscardRequests(reqs)</span><br><span class="line">		<span class="comment">// Accept all channels</span></span><br><span class="line">		<span class="keyword">go</span> handleChannels(chans)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleChannels</span><span class="params">(chans &lt;-<span class="keyword">chan</span> ssh.NewChannel)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Service the incoming Channel channel in go routine</span></span><br><span class="line">	<span class="keyword">for</span> newChannel := <span class="keyword">range</span> chans &#123;</span><br><span class="line">		<span class="keyword">go</span> handleChannel(newChannel)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleChannel</span><span class="params">(newChannel ssh.NewChannel)</span></span> &#123;</span><br><span class="line">	<span class="comment">// Since we're handling a shell, we expect a</span></span><br><span class="line">	<span class="comment">// channel type of "session". The also describes</span></span><br><span class="line">	<span class="comment">// "x11", "direct-tcpip" and "forwarded-tcpip"</span></span><br><span class="line">	<span class="comment">// channel types.</span></span><br><span class="line">	<span class="keyword">if</span> t := newChannel.ChannelType(); t != <span class="string">"session"</span> &#123;</span><br><span class="line">		newChannel.Reject(ssh.UnknownChannelType, fmt.Sprintf(<span class="string">"unknown channel type: %s"</span>, t))</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// At this point, we have the opportunity to reject the client's</span></span><br><span class="line">	<span class="comment">// request for another logical connection</span></span><br><span class="line">	connection, requests, err := newChannel.Accept()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Printf(<span class="string">"Could not accept channel (%s)"</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// Fire up bash for this session</span></span><br><span class="line">	bash := exec.Command(<span class="string">"bash"</span>)</span><br><span class="line">	<span class="comment">// Prepare teardown function</span></span><br><span class="line">	<span class="built_in">close</span> := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		connection.Close()</span><br><span class="line">		_, err := bash.Process.Wait()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Printf(<span class="string">"Failed to exit bash (%s)"</span>, err)</span><br><span class="line">		&#125;</span><br><span class="line">		log.Printf(<span class="string">"Session closed"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// Allocate a terminal for this channel</span></span><br><span class="line">	log.Print(<span class="string">"Creating pty..."</span>)</span><br><span class="line">	bashf, err := pty.Start(bash)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Printf(<span class="string">"Could not start pty (%s)"</span>, err)</span><br><span class="line">		<span class="built_in">close</span>()</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//pipe session to bash and visa-versa</span></span><br><span class="line">	<span class="keyword">var</span> once sync.Once</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		io.Copy(connection, bashf)</span><br><span class="line">		once.Do(<span class="built_in">close</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		io.Copy(bashf, connection)</span><br><span class="line">		once.Do(<span class="built_in">close</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="comment">// Sessions have out-of-band requests such as "shell", "pty-req" and "env"</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> req := <span class="keyword">range</span> requests &#123;</span><br><span class="line">			<span class="keyword">switch</span> req.Type &#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">"shell"</span>:</span><br><span class="line">				<span class="comment">// We only accept the default shell</span></span><br><span class="line">				<span class="comment">// (i.e. no command in the Payload)</span></span><br><span class="line">				<span class="keyword">if</span> <span class="built_in">len</span>(req.Payload) == <span class="number">0</span> &#123;</span><br><span class="line">					req.Reply(<span class="literal">true</span>, <span class="literal">nil</span>)</span><br><span class="line">				&#125;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">"pty-req"</span>:</span><br><span class="line">				termLen := req.Payload[<span class="number">3</span>]</span><br><span class="line">				w, h := parseDims(req.Payload[termLen+<span class="number">4</span>:])</span><br><span class="line">				SetWinsize(bashf.Fd(), w, h)</span><br><span class="line">				<span class="comment">// Responding true (OK) here will let the client</span></span><br><span class="line">				<span class="comment">// know we have a pty ready for input</span></span><br><span class="line">				req.Reply(<span class="literal">true</span>, <span class="literal">nil</span>)</span><br><span class="line">			<span class="keyword">case</span> <span class="string">"window-change"</span>:</span><br><span class="line">				w, h := parseDims(req.Payload)</span><br><span class="line">				SetWinsize(bashf.Fd(), w, h)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// parseDims extracts terminal dimensions (width x height) from the provided buffer.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseDims</span><span class="params">(b []<span class="keyword">byte</span>)</span> <span class="params">(<span class="keyword">uint32</span>, <span class="keyword">uint32</span>)</span></span> &#123;</span><br><span class="line">	w := binary.BigEndian.Uint32(b)</span><br><span class="line">	h := binary.BigEndian.Uint32(b[<span class="number">4</span>:])</span><br><span class="line">	<span class="keyword">return</span> w, h</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Winsize stores the Height and Width of a terminal.</span></span><br><span class="line"><span class="keyword">type</span> Winsize <span class="keyword">struct</span> &#123;</span><br><span class="line">	Height <span class="keyword">uint16</span></span><br><span class="line">	Width  <span class="keyword">uint16</span></span><br><span class="line">	x      <span class="keyword">uint16</span> <span class="comment">// unused</span></span><br><span class="line">	y      <span class="keyword">uint16</span> <span class="comment">// unused</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SetWinsize sets the size of the given pty.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SetWinsize</span><span class="params">(fd <span class="keyword">uintptr</span>, w, h <span class="keyword">uint32</span>)</span></span> &#123;</span><br><span class="line">	ws := &amp;Winsize&#123;Width: <span class="keyword">uint16</span>(w), Height: <span class="keyword">uint16</span>(h)&#125;</span><br><span class="line">	syscall.Syscall(syscall.SYS_IOCTL, fd, <span class="keyword">uintptr</span>(syscall.TIOCSWINSZ), <span class="keyword">uintptr</span>(unsafe.Pointer(ws)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i><i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/weixin.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/10/TCP状态转换/" class="archive-article-date">
-  	<time datetime="2019-06-10T06:12:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/10/TCP状态转换/">TCP状态转换</a>
-    </h1>
-  
+      </div>
+    </span>
+  </div>
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">UDP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
-        		</li>
-      		
-		</ul>
-	</div>
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:chunlife.top/2019/06/27/根据业务改造ops-update/" alt="微信分享二维码">
+    </div>
+</div>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络//" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/07/MongoDB命令一览/" class="archive-article-date">
-  	<time datetime="2019-06-07T06:21:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-07</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/27/设计小册——序/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">设计小册——序</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/07/MongoDB命令一览/">MongoDB命令一览</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">go</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">MongoDB</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/MongoDB//" class="article-tag-list-link color3">MongoDB</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#流程简述"><span class="toc-number">1.</span> <span class="toc-text">流程简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新增功能"><span class="toc-number">2.</span> <span class="toc-text">新增功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bash指令控制"><span class="toc-number">2.1.</span> <span class="toc-text">bash指令控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跳板机的操作"><span class="toc-number">2.2.</span> <span class="toc-text">跳板机的操作</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/06/funny-link-TCP库的使用和bug-fix/" class="archive-article-date">
-  	<time datetime="2019-06-06T02:55:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">funny/link</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Go//" class="article-tag-list-link color3">Go</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/04/斐波那契数列——Golang/" class="archive-article-date">
-  	<time datetime="2019-06-04T07:08:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/04/斐波那契数列——Golang/">斐波那契数列——Go</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">fibonacci</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">斐波那契数列</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法//" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/30/Google浏览器翻墙工具/" class="archive-article-date">
-  	<time datetime="2019-05-30T01:39:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/30/Google浏览器翻墙工具/">Google浏览器翻墙工具（持续更新）</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Google</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">lantern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">chromium 谷歌访问助手</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/实用工具//" class="article-tag-list-link color5">实用工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/29/Jetbrains系列产品最新激活方法/" class="archive-article-date">
-  	<time datetime="2019-05-29T03:23:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/29/Jetbrains系列产品最新激活方法/">Jetbrains系列产品最新激活方法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Jetbrains</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/实用工具//" class="article-tag-list-link color5">实用工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/28/解析Content-Disposition，获取文件名/" class="archive-article-date">
-  	<time datetime="2019-05-28T01:52:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/28/解析Content-Disposition，获取文件名/">解析Content-Disposition，获取文件名</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">http</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/HTTP//" class="article-tag-list-link color5">HTTP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/26/检查回文数/" class="archive-article-date">
-  	<time datetime="2019-05-26T07:55:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/26/检查回文数/">检查回文数</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">go</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法//" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/23/小工具（windows-便笺）/" class="archive-article-date">
-  	<time datetime="2019-05-23T05:50:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/23/小工具（windows-便笺）/">小工具（windows 便笺）</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">便笺</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Sticky Notes</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/实用工具//" class="article-tag-list-link color5">实用工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/21/docker-pxc部署/" class="archive-article-date">
-  	<time datetime="2019-05-21T05:55:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/21/docker-pxc部署/">docker pxc部署</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">pxc</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Percona XtraDB Cluster</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/docker//" class="article-tag-list-link color2">docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/13/">13</a><a class="extend next" rel="next" href="/archives/page/3/">Next &raquo;</a>
-    </nav>
   
+
+  
+
+  
+  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div> 
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+
+if(true){
+	var gitalk = new Gitalk({
+  	clientID: '01eb77bfd18de524243f',
+  	clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
+  	repo: 'younglifestyle.github.io',
+  	owner: 'younglifestyle',
+  	admin: ['younglifestyle'],
+  	id: 'Thu Jun 27 2019 15:30:58 GMT+0800',
+  	distractionFreeMode: 'true'
+})
+gitalk.render('gitalk-container') 
+}
+</script>
+  
+
+  
+
 
 
           </div>
@@ -728,8 +394,8 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
