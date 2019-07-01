@@ -1,5 +1,5 @@
+chunlife.top/2019/07/01/CSDN自动展开chorme插件/
+chunlife.top/2019/07/01/一致性hash/
+chunlife.top/2019/06/28/小工具CSDN自动点击插件和GitHub在线代码阅读/
 chunlife.top/2019/06/27/根据业务改造ops-update/
 chunlife.top/2019/06/27/设计小册——序/
-chunlife.top/2019/06/24/中小型公司如何保存密码？/
-chunlife.top/2019/06/23/go实现stack/
-chunlife.top/2019/06/23/go实现队列/
