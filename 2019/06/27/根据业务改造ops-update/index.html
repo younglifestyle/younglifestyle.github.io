@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>根据业务改造ops-update——添加跳板机 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数； 12345678910111213141516[    &amp;#123;        &amp;quot;name&amp;quot;: &amp;quot;falcon-agent&amp;quot;,        &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;q">
+  <meta name="description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；">
 <meta property="og:type" content="article">
 <meta property="og:title" content="根据业务改造ops-update——添加跳板机">
 <meta property="og:url" content="chunlife.top/2019/06/27/根据业务改造ops-update/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数； 12345678910111213141516[    &amp;#123;        &amp;quot;name&amp;quot;: &amp;quot;falcon-agent&amp;quot;,        &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;q">
+<meta property="og:description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/06/27/根据业务改造ops-update/1561624471274.png">
-<meta property="og:updated_time" content="2019-07-01T01:29:53.532Z">
+<meta property="og:updated_time" content="2019-07-02T10:15:08.980Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="根据业务改造ops-update——添加跳板机">
-<meta name="twitter:description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数； 12345678910111213141516[    &amp;#123;        &amp;quot;name&amp;quot;: &amp;quot;falcon-agent&amp;quot;,        &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;q">
+<meta name="twitter:description" content="首先，这里面包含两个模块meta，updater。 meta负责接收updater上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；">
 <meta name="twitter:image" content="chunlife.top/2019/06/27/根据业务改造ops-update/1561624471274.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
@@ -180,6 +180,8 @@ var _hmt = _hmt || [];
       
         <p>首先，这里面包含两个模块<a href="https://github.com/Cepave/ops-meta" target="_blank" rel="noopener">meta</a>，<a href="https://github.com/open-falcon/ops-updater" target="_blank" rel="noopener">updater</a>。</p>
 <p>meta负责接收<code>updater</code>上传上来的设备软件运行信息，以及下发运行软件的地址等相关参数；</p>
+<a id="more"></a>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;name&quot;: &quot;falcon-agent&quot;,</span><br><span class="line">        &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">        &quot;tarball&quot;: &quot;http://11.11.11.11:8888/falcon&quot;,</span><br><span class="line">        &quot;md5&quot;: &quot;http://11.11.11.11:8888/falcon&quot;,</span><br><span class="line">        &quot;cmd&quot;: &quot;start&quot;    // 运行参数</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;name&quot;: &quot;dinp-agent&quot;,</span><br><span class="line">        &quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">        &quot;tarball&quot;: &quot;http://11.11.11.11:8888/dinp&quot;,</span><br><span class="line">        &quot;md5&quot;: &quot;&quot;,</span><br><span class="line">        &quot;cmd&quot;: &quot;stop&quot; </span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
 <p><code>updater</code>则被用来下载软件，以及上报软件运行状态信息。</p>
