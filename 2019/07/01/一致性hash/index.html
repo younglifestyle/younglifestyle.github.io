@@ -18,7 +18,9 @@
 <meta property="og:image" content="chunlife.top/2019/07/01/一致性hash/1561981837185.png">
 <meta property="og:image" content="chunlife.top/2019/07/01/一致性hash/fe155f98-3a5e-11e6-834d-193e6f85afcd.png">
 <meta property="og:image" content="chunlife.top/2019/07/01/一致性hash/hash-3.png">
-<meta property="og:updated_time" content="2019-07-01T15:38:57.192Z">
+<meta property="og:image" content="chunlife.top/2019/07/01/一致性hash/8c9e6caa-3a5f-11e6-87ad-fdb462b76aef.png">
+<meta property="og:image" content="chunlife.top/2019/07/01/一致性hash/hash-model.png">
+<meta property="og:updated_time" content="2019-07-21T08:44:35.145Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一致性hash">
 <meta name="twitter:description" content="在分布式应用中，我们希望服务器能够分担整体框架的缓冲压力，希望存储请求能够均匀的分散在已有的服务器中，足够平均，也就能最大化的使用服务器，比如falcon的transfer模块，经过一致性哈希算法，对数据的发送目的地进行均匀分布后，有效进行存储，而其中的关键即是均匀，当然后面还会将会提到节点变化引发的映射变化。">
@@ -85,6 +87,8 @@ var _hmt = _hmt || [];
     			<a q-on="click: openSlider(e, 'innerArchive')" href="javascript:void(0)">所有文章</a>
     			
             
+    			
+    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
     			
             
     			
@@ -187,10 +191,11 @@ var _hmt = _hmt || [];
 <p><img src="1561981837185.png" alt="图片来自《算法图解》"></p>
 <p>鉴于此，假如我们有100台服务器作为服务节点<code>nodes</code>，将1000W个数据分布到这100台数据节点上，使用普通哈希算法进行计算，然后以服务节点取模，算出落到服务器节点上的数量。</p>
 <p><img src="fe155f98-3a5e-11e6-834d-193e6f85afcd.png" alt="normal_hash"></p>
-<p>大致代码（Go）：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	ITEMS = <span class="number">10000000</span></span><br><span class="line">	NODES = <span class="number">100</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建节点数据</span></span><br><span class="line">	nodeStat := <span class="built_in">make</span>(byInt, NODES)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ITEMS; i++ &#123;</span><br><span class="line">		md5Byte := MD5(strconv.Itoa(i))</span><br><span class="line">		value := genValue(md5Byte[<span class="number">6</span>:<span class="number">10</span>])</span><br><span class="line">		n := value % NODES</span><br><span class="line">		nodeStat[n] += <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	sort.Sort(nodeStat)</span><br><span class="line"></span><br><span class="line">	ave := ITEMS / NODES</span><br><span class="line">	min := <span class="keyword">float64</span>(nodeStat[<span class="number">0</span>]) / <span class="keyword">float64</span>(ITEMS)</span><br><span class="line">	max := <span class="keyword">float64</span>(nodeStat[<span class="built_in">len</span>(nodeStat)<span class="number">-1</span>]) / <span class="keyword">float64</span>(ITEMS)</span><br><span class="line"></span><br><span class="line">	fmt.Println(ave, max, min)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  其中一次运行的数据</span></span><br><span class="line"><span class="comment">//  0.01 0.0100656 0.0099188</span></span><br></pre></td></tr></table></figure>
+<p>大致<a href="https://github.com/younglifestyle/hash_test/blob/master/%E6%99%AE%E9%80%9A%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0.go" target="_blank" rel="noopener">代码（Go）</a>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	ITEMS = <span class="number">10000000</span></span><br><span class="line">	NODES = <span class="number">100</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 创建节点数据</span></span><br><span class="line">	nodeStat := <span class="built_in">make</span>(byInt, NODES)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ITEMS; i++ &#123;</span><br><span class="line">		md5Byte := MD5(strconv.Itoa(i))</span><br><span class="line">		value := genValue(md5Byte[<span class="number">6</span>:<span class="number">10</span>])</span><br><span class="line">		n := value % NODES</span><br><span class="line">		nodeStat[n] += <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	sort.Sort(nodeStat)</span><br><span class="line"></span><br><span class="line">	ave := ITEMS / NODES</span><br><span class="line">	Max := nodeStat[<span class="built_in">len</span>(nodeStat)<span class="number">-1</span>]</span><br><span class="line">	Min := nodeStat[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Ave: %d \n"</span>, ave)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Max: %d\t(%0.2f%%) \n"</span>, Max,</span><br><span class="line">		<span class="keyword">float64</span>(Max-ave)*<span class="number">100.0</span>/<span class="keyword">float64</span>(ave))</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Min: %d\t(%0.2f%%) \n"</span>, Min,</span><br><span class="line">		<span class="keyword">float64</span>(ave-Min)*<span class="number">100.0</span>/<span class="keyword">float64</span>(ave))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  其中一次运行的数据</span></span><br><span class="line"><span class="comment">//  Ave: 100000 </span></span><br><span class="line"><span class="comment">//  Max: 100656	(0.66%) </span></span><br><span class="line"><span class="comment">//  Min: 99188	(0.81%)</span></span><br></pre></td></tr></table></figure>
 
 <p>均匀分布后，就需要考虑另一个显著的问题，例如在分布式场景中，有服务器节点掉线或增加节点后，哈希分布就会重新变化，原有的节点映射将发生变化，这是因为普通哈希算法依赖于节点的数量（<code>node</code>），当节点数量变化后，数据项也将发生变化。</p>
+<p><a href="https://github.com/younglifestyle/hash_test/blob/master/%E6%99%AE%E9%80%9A%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0%E4%B9%8B%E8%8A%82%E7%82%B9%E5%8F%98%E5%8C%96.go" target="_blank" rel="noopener">代码</a>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	change := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ITEMS; i++ &#123;</span><br><span class="line">		md5Byte := MD5(strconv.Itoa(i))</span><br><span class="line">		value := genValue(md5Byte[<span class="number">6</span>:<span class="number">10</span>])</span><br><span class="line">		<span class="comment">// 原映射结果</span></span><br><span class="line">		n := value % NODES</span><br><span class="line"></span><br><span class="line">		<span class="comment">//现映射结果</span></span><br><span class="line">		nNew := value % NEW_NODES</span><br><span class="line">		<span class="keyword">if</span> n != nNew &#123;</span><br><span class="line">			change += <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="keyword">float64</span>(change) / <span class="keyword">float64</span>(ITEMS))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 0.9799679</span></span><br></pre></td></tr></table></figure>
 
 <p>结果上可以看出，变化率极高，在分布式场景中，这显然是不适用的。</p>
@@ -211,13 +216,33 @@ var _hmt = _hmt || [];
 <p>当删除一台节点机器时，这台机器上保存的所有对象都要移动到下一台机器。添加一台机器到圆环边上某个点时，这个点的下一台机器需要将这个节点前对应的对象移动到新机器上。 </p>
 <p>更改对象在节点机器上的分布可以通过调整节点机器的位置来实现。</p>
 </blockquote>
+<p>服务器三个节点：node 1~3，四个数据，a、b、c、d。<br>将服务器节点经过哈希计算后，写入哈希环中。数据在决定被写入服务器时，由数据经过哈希计算后，其与服务器节点的值经过比较（<code>找到第一个大于其哈希值的服务器节点</code>），得到其哈希值就可以将哈希值发送给该服务器节点。<br>若该服务器节点失效，则需要再向下遍历出一个大于数据哈希值的节点，将数据重新发送给该服务器节点即可，而其他服务器节点数据不受影响，也就摆脱了第一种普通哈希算法对服务器节点<code>node</code>的依赖。</p>
 <p><img src="hash-3.png" alt="hash"></p>
+<p>直接上<a href="https://github.com/younglifestyle/hash_test/blob/master/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C_%E4%B8%8D%E5%B8%A6%E8%99%9A%E6%8B%9F%E8%8A%82%E7%82%B9.go" target="_blank" rel="noopener">代码</a>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	hashMap := New(<span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">	nodes := <span class="built_in">make</span>(UInt32Slice, NODES)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; NODES; i++ &#123;</span><br><span class="line">		hashMap.Add(strconv.Itoa(i))</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ITEMS; i++ &#123;</span><br><span class="line">		key := hashMap.Get(strconv.Itoa(i))</span><br><span class="line">		inter, _ := strconv.Atoi(key)</span><br><span class="line">		nodes[inter] += <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">	sort.Sort(nodes)</span><br><span class="line"></span><br><span class="line">	ave := <span class="keyword">uint32</span>(ITEMS / NODES)</span><br><span class="line">	Max := nodes[<span class="built_in">len</span>(nodes)<span class="number">-1</span>]</span><br><span class="line">	Min := nodes[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Ave: %d \n"</span>, ave)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Max: %d\t(%0.2f%%) \n"</span>, Max,</span><br><span class="line">		<span class="keyword">float64</span>(Max-ave)*<span class="number">100.0</span>/<span class="keyword">float64</span>(ave))</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"Min: %d\t(%0.2f%%) \n"</span>, Min,</span><br><span class="line">		<span class="keyword">float64</span>(ave-Min)*<span class="number">100.0</span>/<span class="keyword">float64</span>(ave))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ave: 100000 </span></span><br><span class="line"><span class="comment">// Max: 497263	(397.26%) </span></span><br><span class="line"><span class="comment">// Min: 781	(99.22%)</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到实际结果和理论上需要达到的效果有所不同，甚至区别相差很大，<strong>数据本身的hash值未发生变化，但服务器节点本身就在环上分布不均匀，导致了每个节点实际占据环上的区间大小就不一样</strong> ，这种情况下，会出现某一节点可能有着巨大的负载。</p>
+<p><img src="8c9e6caa-3a5f-11e6-87ad-fdb462b76aef.png" alt="consist_hash_1"></p>
+<p>该现象被称作<code>Hash环</code>倾斜问题，于是针对这个问题引出了下一个概念。</p>
+<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>针对上述的问题，由于服务器节点分布不均匀，导致数据分布不均匀。而节点分布不均，可以看做是环上节点填充不够充分。当我们将环都填充满时，近似的可以看做这样的分布式均匀的，数据可以均匀的分布在每一个节点上。</p>
+<p>根据这个想法，引入虚拟节点的操作。那么我们可以以现有节点为基数来增加虚节点，对每一个节点进行扩充。这样就既保证了在节点变化时，尽可能小的影响数据分布的变化，而同时又保证了数据分布的均匀。也就是靠增加“节点数量”加强管辖区间的均匀。</p>
+<p><img src="hash-model.png" alt="hash-model"></p>
+<p>通过<a href="https://github.com/younglifestyle/hash_test/blob/master/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C_%E5%B8%A6%E8%99%9A%E6%8B%9F%E8%8A%82%E7%82%B9_crc32.go" target="_blank" rel="noopener">代码</a>可以实际看到结果，均匀度相较于之前提升了不少。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Ave: 100000 </span><br><span class="line">Max: 156298	(56.30%) </span><br><span class="line">Min: 9109	(90.89%)</span><br></pre></td></tr></table></figure>
+
+<h2 id="哈希的优化"><a href="#哈希的优化" class="headerlink" title="哈希的优化"></a>哈希的优化</h2><p>这个优化不是我做的，我是直接使用别人的结果，做了后期的验证，在文章<a href="https://n4mine.github.io/post/optimize-falcon-graph/" target="_blank" rel="noopener">Falcon存储做过的那些优化</a>，博主在使用原仓库的哈希函数进行部署falcon，但实际使用中还是出现了流量不均的问题，于是对哈希的各类算法实际表现进行了评估，得出了在哈希函数算法的速度与均匀性上，各类算法的差距是明显的，我在之后的实际验证中也验证了博主的观点，所以在看到文章后，我是直接对falcon这出位置进行了改造（falcon仓库现在还是使用的<code>crc32</code>）。</p>
+<p><a href="https://github.com/younglifestyle/hash_test/blob/master/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C_%E5%B8%A6%E8%99%9A%E6%8B%9F%E8%8A%82%E7%82%B9_md5.go" target="_blank" rel="noopener">例如</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MD5 哈希：</span><br><span class="line">Ave: 100000 </span><br><span class="line">Max: 124240	(24.24%) </span><br><span class="line">Min: 11585	(88.42%) </span><br><span class="line"></span><br><span class="line">CRC32 ：</span><br><span class="line">Ave: 100000 </span><br><span class="line">Max: 156298	(56.30%) </span><br><span class="line">Min: 9109	(90.89%)</span><br></pre></td></tr></table></figure>
+
+<p>对比的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">murmur32 &gt; fnv1 &gt; fnv1a &gt; xxHash &gt; crc32</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>参考：</p>
-<p><a href="https://zh.wikipedia.org/wiki/%E4%B8%80%E8%87%B4%E5%93%88%E5%B8%8C" target="_blank" rel="noopener">一致哈希</a></p>
+<p>维基百科的解释：<a href="https://zh.wikipedia.org/wiki/%E4%B8%80%E8%87%B4%E5%93%88%E5%B8%8C" target="_blank" rel="noopener">一致哈希</a></p>
 <p><a href="http://vitoliu.top/2018/03/14/%E4%B8%80%E8%87%B4%E6%80%A7hash/" target="_blank" rel="noopener">分布式系统下一致性hash的作用及实现原理</a></p>
 <p><a href="https://yikun.github.io/2016/06/09/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E8%B7%B5/" target="_blank" rel="noopener">一致性哈希算法的理解与实践</a></p>
-<p><a href="https://github.com/g4zhuj/hashring" target="_blank" rel="noopener">一致性哈希Go实现代码</a></p>
+<p><a href="https://github.com/g4zhuj/hashring" target="_blank" rel="noopener">一致性哈希Go实现代码</a>和falcon使用的<a href="https://github.com/toolkits/consistent" target="_blank" rel="noopener">代码</a></p>
 </blockquote>
 
       
@@ -355,7 +380,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">1.</span> <span class="toc-text">解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一致性哈希"><span class="toc-number">2.</span> <span class="toc-text">一致性哈希</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">1.</span> <span class="toc-text">解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一致性哈希"><span class="toc-number">2.</span> <span class="toc-text">一致性哈希</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟节点"><span class="toc-number">3.</span> <span class="toc-text">虚拟节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希的优化"><span class="toc-number">4.</span> <span class="toc-text">哈希的优化</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -448,6 +473,8 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
       
     
       
+      
+      
     
       
       
@@ -459,13 +486,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
+      
         
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -486,11 +515,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,14 +563,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
@@ -542,7 +579,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -550,27 +587,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -579,6 +608,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">pxc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -594,11 +639,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">pxc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -606,31 +647,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -646,6 +663,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
@@ -654,7 +675,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -662,27 +699,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">slice</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -694,11 +715,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -714,7 +747,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Functional Options Patter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">函数选择模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -742,23 +791,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">简历</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -794,15 +831,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">比特币</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -815,6 +852,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -920,6 +961,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     	</section>
     
 
+    
+    	<section class="tools-section tools-section-friends" q-show="friends">
+  		
+        <ul class="search-ul">
+          
+            <li class="search-li">
+              <a href="https://masuit.com" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>懒得勤快的博客</a>
+            </li>
+          
+        </ul>
+  		
+    	</section>
     
 
     

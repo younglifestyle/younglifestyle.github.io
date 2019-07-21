@@ -86,6 +86,8 @@ var _hmt = _hmt || [];
     			
             
     			
+    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
+    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -250,7 +252,7 @@ var _hmt = _hmt || [];
 <h3 id="用objectID查询某一时间段内数据"><a href="#用objectID查询某一时间段内数据" class="headerlink" title="用objectID查询某一时间段内数据"></a>用objectID查询某一时间段内数据</h3><p>ObjectID是由精确到秒的时间戳再加上机器标识等信息组成的，并且建有索引，因此ObjectID本身就可以用于按时间范围查询数据，而不用专门另建时间戳字段和索引。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">timeToObjId</span><span class="params">(t <span class="keyword">int64</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="comment">//var t = time.Now().Unix()</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 转换成16进制的字符串，再加补齐16个0</span></span><br><span class="line">	<span class="keyword">return</span> fmt.Sprintf(<span class="string">"%x0000000000000000"</span>, t)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//往前多少天时间戳</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetUnixToOldTimeDay</span><span class="params">(i <span class="keyword">int</span>)</span> <span class="title">int64</span></span> &#123;</span><br><span class="line">	day := time.Now().Day()</span><br><span class="line">	oldMonth := day - i</span><br><span class="line">	t := time.Date(time.Now().Year(), time.Now().Month(), oldMonth, time.Now().Hour(), time.Now().Minute(), time.Now().Second(), time.Now().Nanosecond(), time.Local)</span><br><span class="line">	<span class="keyword">return</span> t.Unix()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">objIdOneMonth</span><span class="params">()</span> <span class="params">(oldMonthId <span class="keyword">string</span>, nowId <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	timeUinx := GetUnixToOldTimeDay(<span class="number">30</span>)</span><br><span class="line"></span><br><span class="line">	oldMonthId = timeToObjId(timeUinx)</span><br><span class="line">	nowId = timeToObjId(time.Now().Unix())</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">db.C(DbSysMsg).Pipe([]bson.M&#123;</span><br><span class="line">			&#123;<span class="string">"$match"</span>: bson.M&#123;<span class="string">"_id"</span>: bson.M&#123;<span class="string">"$lte"</span>: bson.ObjectIdHex(nowId),</span><br><span class="line">                                           <span class="string">"$gt"</span>: bson.ObjectIdHex(oldMonthId)&#125;&#125;&#125;,</span><br><span class="line">			&#123;<span class="string">"$limit"</span>: <span class="number">200</span>&#125;, <span class="comment">//每个月1号都清除当前时间的前200条已经空了的消息连接关系</span></span><br><span class="line">			&#123;<span class="string">"$project"</span>: bson.M&#123;<span class="string">"count"</span>: bson.M&#123;<span class="string">"$size"</span>: <span class="string">"user_list_status"</span>&#125;&#125;&#125;,</span><br><span class="line">		&#125;)</span><br></pre></td></tr></table></figure>
 
-<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li><li><a href="chunlife.top/2019/06/19/转载《解剖Go语言map底层实现》/">转载《解剖Go语言map底层实现》</a></li><li><a href="chunlife.top/2019/06/07/MongoDB命令一览/">MongoDB命令一览</a></li><li><a href="www.chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li></ul></div>
+
       
 
       
@@ -384,8 +386,8 @@ var _hmt = _hmt || [];
     </a>
   
   
-    <a href="/2018/10/22/我收藏的博客/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">我收藏的博客</div>
+    <a href="/2018/10/22/slice理解/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">slice理解</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -412,7 +414,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单了解"><span class="toc-number">1.</span> <span class="toc-text">简单了解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础操作"><span class="toc-number">2.</span> <span class="toc-text">基础操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#连接serve"><span class="toc-number">2.1.</span> <span class="toc-text">连接serve</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询"><span class="toc-number">2.2.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除"><span class="toc-number">2.3.</span> <span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他操作"><span class="toc-number">3.</span> <span class="toc-text">其他操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#计算数组大小"><span class="toc-number">3.1.</span> <span class="toc-text">计算数组大小</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#addToSet"><span class="toc-number">3.1.1.</span> <span class="toc-text">$addToSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加一个size字段"><span class="toc-number">3.1.2.</span> <span class="toc-text">加一个size字段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MongoDB数组操作"><span class="toc-number">3.2.</span> <span class="toc-text">MongoDB数组操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mgo查找单层数组"><span class="toc-number">3.2.1.</span> <span class="toc-text">mgo查找单层数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mgo查找多层数组"><span class="toc-number">3.2.2.</span> <span class="toc-text">mgo查找多层数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mgo删除数组元素"><span class="toc-number">3.2.3.</span> <span class="toc-text">mgo删除数组元素</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#删除单层数组"><span class="toc-number">3.2.3.1.</span> <span class="toc-text">删除单层数组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#删除两层数组"><span class="toc-number">3.2.3.2.</span> <span class="toc-text">删除两层数组</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#聚合操作：Aggregation"><span class="toc-number">3.2.4.</span> <span class="toc-text">聚合操作：Aggregation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用objectID查询某一时间段内数据"><span class="toc-number">3.3.</span> <span class="toc-text">用objectID查询某一时间段内数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单了解"><span class="toc-number">1.</span> <span class="toc-text">简单了解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础操作"><span class="toc-number">2.</span> <span class="toc-text">基础操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#连接serve"><span class="toc-number">2.1.</span> <span class="toc-text">连接serve</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询"><span class="toc-number">2.2.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除"><span class="toc-number">2.3.</span> <span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他操作"><span class="toc-number">3.</span> <span class="toc-text">其他操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#计算数组大小"><span class="toc-number">3.1.</span> <span class="toc-text">计算数组大小</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#addToSet"><span class="toc-number">3.1.1.</span> <span class="toc-text">$addToSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加一个size字段"><span class="toc-number">3.1.2.</span> <span class="toc-text">加一个size字段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MongoDB数组操作"><span class="toc-number">3.2.</span> <span class="toc-text">MongoDB数组操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mgo查找单层数组"><span class="toc-number">3.2.1.</span> <span class="toc-text">mgo查找单层数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mgo查找多层数组"><span class="toc-number">3.2.2.</span> <span class="toc-text">mgo查找多层数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mgo删除数组元素"><span class="toc-number">3.2.3.</span> <span class="toc-text">mgo删除数组元素</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#删除单层数组"><span class="toc-number">3.2.3.1.</span> <span class="toc-text">删除单层数组</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#删除两层数组"><span class="toc-number">3.2.3.2.</span> <span class="toc-text">删除两层数组</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#聚合操作：Aggregation"><span class="toc-number">3.2.4.</span> <span class="toc-text">聚合操作：Aggregation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用objectID查询某一时间段内数据"><span class="toc-number">3.3.</span> <span class="toc-text">用objectID查询某一时间段内数据</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -505,6 +507,8 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
       
     
       
+      
+      
     
       
       
@@ -516,13 +520,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
+      
         
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -543,11 +549,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -575,14 +597,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
@@ -599,7 +613,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -607,27 +621,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -636,6 +642,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">pxc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -651,11 +673,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">pxc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -663,31 +681,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -703,6 +697,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
@@ -711,7 +709,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -719,27 +733,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">slice</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -751,11 +749,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -771,7 +781,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Functional Options Patter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">函数选择模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -799,23 +825,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">简历</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -851,15 +865,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">比特币</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -872,6 +886,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -977,6 +995,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     	</section>
     
 
+    
+    	<section class="tools-section tools-section-friends" q-show="friends">
+  		
+        <ul class="search-ul">
+          
+            <li class="search-li">
+              <a href="https://masuit.com" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>懒得勤快的博客</a>
+            </li>
+          
+        </ul>
+  		
+    	</section>
     
 
     

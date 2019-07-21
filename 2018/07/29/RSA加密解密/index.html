@@ -94,6 +94,8 @@ var _hmt = _hmt || [];
     			
             
     			
+    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
+    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -294,7 +296,7 @@ var _hmt = _hmt || [];
 <p>① 在任何公钥加密场合，当明文具有低熵（低混乱度）时，它是不安全的。</p>
 <p>② 短明文易受到攻击。</p>
 <p>其中，作者还建议为了保证算法的加密性，那么就应该保护算法的随机性，加密的数据不应该太多，2048bit key，最好只加密0-190字节的数据，如果不能满足，应该考虑使用混合加密算法。</p>
-<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li><li><a href="chunlife.top/2019/06/19/转载《解剖Go语言map底层实现》/">转载《解剖Go语言map底层实现》</a></li><li><a href="chunlife.top/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a></li><li><a href="www.chunlife.top/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a></li></ul></div>
+
       
 
       
@@ -460,7 +462,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、概要"><span class="toc-number">1.</span> <span class="toc-text">一、概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、RSA一些名词的解释"><span class="toc-number">2.</span> <span class="toc-text">三、RSA一些名词的解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、Go中的RSA加密解密"><span class="toc-number">3.</span> <span class="toc-text">二、Go中的RSA加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、Go-RSA库的使用"><span class="toc-number">4.</span> <span class="toc-text">四、Go RSA库的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、项目中的问题"><span class="toc-number">5.</span> <span class="toc-text">五、项目中的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、AES加密解密"><span class="toc-number">6.</span> <span class="toc-text">六、AES加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、使用的方法"><span class="toc-number">7.</span> <span class="toc-text">七、使用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bytes-Join将byte数组的数组进行组合"><span class="toc-number">7.1.</span> <span class="toc-text">bytes.Join将byte数组的数组进行组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将一个大数按大小端转换为byte数组模式"><span class="toc-number">7.2.</span> <span class="toc-text">将一个大数按大小端转换为byte数组模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#返回子串在字符串中的索引"><span class="toc-number">7.3.</span> <span class="toc-text">返回子串在字符串中的索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将数组转换为以“-”分割的字符串"><span class="toc-number">7.4.</span> <span class="toc-text">将数组转换为以“,”分割的字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将十六进制的字符，转换为整数"><span class="toc-number">7.5.</span> <span class="toc-text">将十六进制的字符，转换为整数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018年8月22日17-38-32"><span class="toc-number">8.</span> <span class="toc-text">2018年8月22日17:38:32</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Golang实现Nopadding模式"><span class="toc-number">8.1.</span> <span class="toc-text">Golang实现Nopadding模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、概要"><span class="toc-number">1.</span> <span class="toc-text">一、概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、RSA一些名词的解释"><span class="toc-number">2.</span> <span class="toc-text">三、RSA一些名词的解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、Go中的RSA加密解密"><span class="toc-number">3.</span> <span class="toc-text">二、Go中的RSA加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、Go-RSA库的使用"><span class="toc-number">4.</span> <span class="toc-text">四、Go RSA库的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、项目中的问题"><span class="toc-number">5.</span> <span class="toc-text">五、项目中的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、AES加密解密"><span class="toc-number">6.</span> <span class="toc-text">六、AES加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、使用的方法"><span class="toc-number">7.</span> <span class="toc-text">七、使用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bytes-Join将byte数组的数组进行组合"><span class="toc-number">7.1.</span> <span class="toc-text">bytes.Join将byte数组的数组进行组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将一个大数按大小端转换为byte数组模式"><span class="toc-number">7.2.</span> <span class="toc-text">将一个大数按大小端转换为byte数组模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#返回子串在字符串中的索引"><span class="toc-number">7.3.</span> <span class="toc-text">返回子串在字符串中的索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将数组转换为以“-”分割的字符串"><span class="toc-number">7.4.</span> <span class="toc-text">将数组转换为以“,”分割的字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将十六进制的字符，转换为整数"><span class="toc-number">7.5.</span> <span class="toc-text">将十六进制的字符，转换为整数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018年8月22日17-38-32"><span class="toc-number">8.</span> <span class="toc-text">2018年8月22日17:38:32</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Golang实现Nopadding模式"><span class="toc-number">8.1.</span> <span class="toc-text">Golang实现Nopadding模式</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -553,6 +555,8 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
       
     
       
+      
+      
     
       
       
@@ -564,13 +568,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
+      
         
       
-      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -591,11 +597,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -623,14 +645,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
@@ -647,7 +661,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -655,27 +669,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -684,6 +690,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">pxc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -699,11 +721,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">pxc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Percona XtraDB Cluster</a>
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -711,31 +729,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+                <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -751,6 +745,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
@@ -759,7 +757,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">enum</a>
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -767,27 +781,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">slice</a>
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -799,11 +797,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -819,7 +829,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Functional Options Patter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">函数选择模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -847,23 +873,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">简历</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -899,15 +913,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">区块链</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">比特币</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -920,6 +934,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1025,6 +1043,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     	</section>
     
 
+    
+    	<section class="tools-section tools-section-friends" q-show="friends">
+  		
+        <ul class="search-ul">
+          
+            <li class="search-li">
+              <a href="https://masuit.com" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>懒得勤快的博客</a>
+            </li>
+          
+        </ul>
+  		
+    	</section>
     
 
     
