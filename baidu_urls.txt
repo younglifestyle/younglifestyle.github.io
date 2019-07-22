@@ -1,5 +1,5 @@
-chunlife.top/2019/07/21/函数选择模式-Functional-Options-Patter/
-chunlife.top/2019/07/21/go操作usb/
+chunlife.top/2019/07/22/存储-文件系统的选择/
 chunlife.top/2019/07/21/为图片加上水印或文字-使用Go/
+chunlife.top/2019/07/17/函数选择模式-Functional-Options-Patter/
+chunlife.top/2019/07/17/go操作usb/
 chunlife.top/2019/07/01/CSDN自动展开chorme插件/
-chunlife.top/2019/07/01/一致性hash/
