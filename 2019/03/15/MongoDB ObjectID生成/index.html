@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="在项目中需要用到一个随机数，将其作为唯一且无法重复，第一个想到的就是MongoDB里面的objectID，将其作为一个唯一且不重复的键值。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-10T13:26:20.905Z">
+<meta property="og:updated_time" content="2019-08-03T02:46:49.324Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MongoDB ObjectID生成">
 <meta name="twitter:description" content="在项目中需要用到一个随机数，将其作为唯一且无法重复，第一个想到的就是MongoDB里面的objectID，将其作为一个唯一且不重复的键值。">
@@ -191,6 +191,27 @@ var _hmt = _hmt || [];
 </ul>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// machineId stores machine id generated once and used in subsequent calls</span></span><br><span class="line"><span class="comment">// to NewObjectId function.</span></span><br><span class="line"><span class="keyword">var</span> machineId = readMachineId()</span><br><span class="line"><span class="keyword">var</span> processId = os.Getpid()</span><br><span class="line"><span class="comment">// objectIdCounter is atomically incremented when generating a new ObjectId</span></span><br><span class="line"><span class="comment">// using NewObjectId() function. It's used as a counter part of an id.</span></span><br><span class="line"><span class="keyword">var</span> objectIdCounter = readRandomUint32()</span><br><span class="line"></span><br><span class="line"><span class="comment">// readRandomUint32 returns a random objectIdCounter.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">readRandomUint32</span><span class="params">()</span> <span class="title">uint32</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> b [<span class="number">4</span>]<span class="keyword">byte</span></span><br><span class="line">	_, err := io.ReadFull(rand.Reader, b[:])</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(fmt.Errorf(<span class="string">"cannot read random object id: %v"</span>, err))</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">uint32</span>((<span class="keyword">uint32</span>(b[<span class="number">0</span>]) &lt;&lt; <span class="number">0</span>) | (<span class="keyword">uint32</span>(b[<span class="number">1</span>]) &lt;&lt; <span class="number">8</span>) | (<span class="keyword">uint32</span>(b[<span class="number">2</span>]) &lt;&lt; <span class="number">16</span>) | (<span class="keyword">uint32</span>(b[<span class="number">3</span>]) &lt;&lt; <span class="number">24</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// readMachineId generates and returns a machine id.</span></span><br><span class="line"><span class="comment">// If this function fails to get the hostname it will cause a runtime error.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">readMachineId</span><span class="params">()</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> sum [<span class="number">3</span>]<span class="keyword">byte</span></span><br><span class="line">	id := sum[:]</span><br><span class="line">	hostname, err1 := os.Hostname()</span><br><span class="line">	<span class="keyword">if</span> err1 != <span class="literal">nil</span> &#123;</span><br><span class="line">		_, err2 := io.ReadFull(rand.Reader, id)</span><br><span class="line">		<span class="keyword">if</span> err2 != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="built_in">panic</span>(fmt.Errorf(<span class="string">"cannot get hostname: %v; %v"</span>, err1, err2))</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> id</span><br><span class="line">	&#125;</span><br><span class="line">	hw := md5.New()</span><br><span class="line">	hw.Write([]<span class="keyword">byte</span>(hostname))</span><br><span class="line">	<span class="built_in">copy</span>(id, hw.Sum(<span class="literal">nil</span>))</span><br><span class="line">	<span class="keyword">return</span> id</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewObjectId returns a new unique ObjectId.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewObjectId</span><span class="params">()</span> <span class="title">ObjectId</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> b [<span class="number">12</span>]<span class="keyword">byte</span></span><br><span class="line">	<span class="comment">// Timestamp, 4 bytes, big endian</span></span><br><span class="line">	binary.BigEndian.PutUint32(b[:], <span class="keyword">uint32</span>(time.Now().Unix()))</span><br><span class="line">	<span class="comment">// Machine, first 3 bytes of md5(hostname)</span></span><br><span class="line">	b[<span class="number">4</span>] = machineId[<span class="number">0</span>]</span><br><span class="line">	b[<span class="number">5</span>] = machineId[<span class="number">1</span>]</span><br><span class="line">	b[<span class="number">6</span>] = machineId[<span class="number">2</span>]</span><br><span class="line">	<span class="comment">// Pid, 2 bytes, specs don't specify endianness, but we use big endian.</span></span><br><span class="line">	b[<span class="number">7</span>] = <span class="keyword">byte</span>(processId &gt;&gt; <span class="number">8</span>)</span><br><span class="line">	b[<span class="number">8</span>] = <span class="keyword">byte</span>(processId)</span><br><span class="line">	<span class="comment">// Increment, 3 bytes, big endian</span></span><br><span class="line">	i := atomic.AddUint32(&amp;objectIdCounter, <span class="number">1</span>)</span><br><span class="line">	b[<span class="number">9</span>] = <span class="keyword">byte</span>(i &gt;&gt; <span class="number">16</span>)</span><br><span class="line">	b[<span class="number">10</span>] = <span class="keyword">byte</span>(i &gt;&gt; <span class="number">8</span>)</span><br><span class="line">	b[<span class="number">11</span>] = <span class="keyword">byte</span>(i)</span><br><span class="line">	<span class="keyword">return</span> ObjectId(b[:])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="MongoDB-objectID改变"><a href="#MongoDB-objectID改变" class="headerlink" title="MongoDB objectID改变"></a>MongoDB objectID改变</h2><p>在golang的MongoDB官方库中，objectID的生成方式发生了改变。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// "go.mongodb.org/mongo-driver/bson/primitive"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> objectIDCounter = readRandomUint32()</span><br><span class="line"><span class="keyword">var</span> processUnique = processUniqueBytes()</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewObjectID generates a new ObjectID.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewObjectID</span><span class="params">()</span> <span class="title">ObjectID</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> b [<span class="number">12</span>]<span class="keyword">byte</span></span><br><span class="line"></span><br><span class="line">	binary.BigEndian.PutUint32(b[<span class="number">0</span>:<span class="number">4</span>], <span class="keyword">uint32</span>(time.Now().Unix()))</span><br><span class="line">	<span class="built_in">copy</span>(b[<span class="number">4</span>:<span class="number">9</span>], processUnique[:])</span><br><span class="line">	putUint24(b[<span class="number">9</span>:<span class="number">12</span>], atomic.AddUint32(&amp;objectIDCounter, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这12字节，已改为，4字节unix时间戳+5字节随机值+随机值加上1。</p>
+<p>查看<a href="https://docs.mongodb.com/manual/reference/method/ObjectId/#objectid" target="_blank" rel="noopener">官方文档</a>也可以发现，其对objectID的定义已经更改。</p>
+<ul>
+<li>a 4-byte value representing the seconds since the Unix epoch,</li>
+<li>a 5-byte random value, and</li>
+<li>a 3-byte counter, starting with a random value.</li>
+</ul>
+<p>只找到一篇博客对这个修改的推测，我也确实没有找到确切的修改理由，我认为博主说的有些道理。</p>
+<blockquote>
+<p>引用自：<a href="https://blog.wolfogre.com/posts/mongo-objectid-design/" target="_blank" rel="noopener">Mongo ObjectId 早就不用机器标识和进程号了</a></p>
+<p> mongo 的 C++ 源码中，设置 ObjectId 中间 5 个字节的函数叫 <code>setInstanceUnique</code>，而在官方 golang 驱动中叫 <code>processUnique</code>，字面意思相近，都是说明这个值的作用是“区分不同进程实例”，而这个值具体怎么实现并没有什么要求，所以，使用“机器标识+进程号”来拿区分不同进程实例是可以的，使用互无关联的随机数来拿区分不同进程实例也是可以的。</p>
+<p>可想而知，“在同一秒内，两个进程实例产生了相同的 5 字节随机数，且刚巧这时候两个进程的自增计数器的值也是相同的”——这种情况发生的概率实在太低了，完全可以认为不可能发生，所以使用互无关联的随机数来拿区分不同进程实例是完全合乎需求的。</p>
+<p>那问题来了，为什么不继续使用“机器标识+进程号”呢？主观臆测开始。</p>
+<p>问题就在于，机器标识和进程号一定就那么可靠吗，尤其在这个物理机鲜见，虚拟机、云主机、容器横行的时代？</p>
+<p>先说机器标识码，ObjectId 的机器标识码是取系统 hostname 哈希值的前几位，问题来了，想必在座的各位都有干过吧：准备了几台虚拟机，hostname 都是默认的 localhost，谁都想着这玩意儿能有什么用，还得刻意给不同机器起不同的 hostname？此外，hostname 在容器、云主机里一般默认就是随机数，也不会检查同一集群里是否有 hostname 重名。</p>
+<p>再说进程号，这个问题就更大了，要知道，容器内的进程拥有自己独立的进程空间，在这个空间里只用它自己这一个进程（以及它的子进程），所以它的进程号永远都是 1。也就是说，如果某个服务（既可以是 mongo 实例也可以是 mongo 客户端）是使用容器部署的，无论部署多少个实例，在这个服务上生成的 ObjectId，第八第九个字节恒为 <code>0000 0001</code>，相当于说这两个字节废了。</p>
+<p>综上，与其使用一个固定值来“区分不同进程实例”，且这个固定值还是人类随意设置或随机生成的 hostname 加上一个可能恒为 1 的进程号，倒不如每次都随机生成一个新值。</p>
+</blockquote>
 
       
 
@@ -353,7 +374,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB-objectID改变"><span class="toc-number">1.</span> <span class="toc-text">MongoDB objectID改变</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -488,22 +509,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
@@ -512,11 +517,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Gateway</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -532,11 +545,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+                <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -548,7 +565,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Goland</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -557,6 +578,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C语言</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -576,6 +601,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">函数</a>
               </li>
              
@@ -592,22 +625,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">etcd备份</a>
               </li>
              
@@ -616,7 +633,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -636,10 +661,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">file</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
@@ -648,11 +669,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Glide</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">json</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -668,15 +705,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">interface</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">json</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">slice</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -688,23 +729,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">slice</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -720,10 +745,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
@@ -732,11 +753,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Functional Options Patter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">函数选择模式</a>
+                <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -748,7 +765,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Functional Options Patter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">函数选择模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">fastdfs</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">file system</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">go-fastdfs</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -792,6 +829,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">限流</a>
               </li>
              
@@ -800,7 +841,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -809,10 +850,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">比特币</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -825,10 +862,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -848,6 +881,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">文件共享_邮件</a>
               </li>
              
@@ -864,15 +901,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -889,18 +926,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">fastdfs</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">file system</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">go-fastdfs</a>
               </li>
             
             <div class="clearfix"></div>
