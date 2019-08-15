@@ -19,7 +19,7 @@
 <meta property="og:image" content="chunlife.top/2019/08/15/usUSBMS大容量存储设备数据通信/1565836401981.png">
 <meta property="og:image" content="chunlife.top/2019/08/15/usUSBMS大容量存储设备数据通信/20160524224201663.png">
 <meta property="og:image" content="chunlife.top/2019/08/15/usUSBMS大容量存储设备数据通信/20160524224223818.png">
-<meta property="og:updated_time" content="2019-08-15T02:45:03.887Z">
+<meta property="og:updated_time" content="2019-08-15T02:56:05.372Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="USBMS大容量存储设备数据通信">
 <meta name="twitter:description" content="整理一下在USB通信时所作的相关工作，因为是对USBMS进行相关操作，涉及到了USBMS的传输格式（CBW，CSW），不太熟悉导致前期回补了一下USB的相关知识。 因为在搜索资料的时候，发现市面上貌似这方面编程相关资料比较少，这里我直接写出来记录一下，也是帮助自己记忆。">
@@ -217,6 +217,9 @@ var _hmt = _hmt || [];
 <p> CSW的长度为13个字节，是对应CBW指令的状态返回，它指示了上一条指令执行是否成功。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dCSWSignature: CSW的标识，固定值：53425355h(little endian)。</span><br><span class="line"></span><br><span class="line">dCSWTag: 设置这个标识和CBW中的dCBWTag一致，参照上面关于dCBWTag的解释。</span><br><span class="line"></span><br><span class="line">dCSWDataResidue: 还需要传送的数据，此数据根据dCBWDataTransferLength－本次已经传送的数据得到。</span><br><span class="line"></span><br><span class="line">bCSWStatus: 指示命令的执行状态。如果命令正确执行，bCSWStatus返回0 ，不正确返回1，phase错返回2（当HOST收到此错误时需要对Device复位）。</span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>可以借鉴：<a href="https://github.com/younglifestyle/usbOps/blob/master/usbLib/device.go" target="_blank" rel="noopener">GitHub</a></p>
+</blockquote>
 <h2 id="分析工具"><a href="#分析工具" class="headerlink" title="分析工具"></a>分析工具</h2><p>linux和windows下都通用的是，使用<code>wireshake</code>，抓包工具抓取的包都是一样的，而且都比较好用，算是比较推荐的。</p>
 <p>另外windows下，有<code>Bus Hound</code>，也是非常好用，只是linux没有。</p>
 
