@@ -6,21 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>mysql读写分离以及聚集索引知识解 | Pure Life</title>
+  <title>Tag: 读写分离 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这篇博客算是我欠下来的，放着思维导图上整理的MySQL索引和读写分离相关的点，到现在都难得下手写出来，因为MySQL索引很多知识，有时候忘了又记，记了又忘，所以把这些知识点都提前放在思维导图上，想着啥时候写下来，不过由于个（懒）人（病）原（发）因（作），所以一直给耽搁了。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="mysql读写分离以及聚集索引知识解">
-<meta property="og:url" content="chunlife.top/2019/07/04/mysql索引知识解/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Pure Life">
+<meta property="og:url" content="chunlife.top/tags/读写分离/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="这篇博客算是我欠下来的，放着思维导图上整理的MySQL索引和读写分离相关的点，到现在都难得下手写出来，因为MySQL索引很多知识，有时候忘了又记，记了又忘，所以把这些知识点都提前放在思维导图上，想着啥时候写下来，不过由于个（懒）人（病）原（发）因（作），所以一直给耽搁了。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="chunlife.top/2019/07/04/mysql索引知识解/1566820696501.png">
-<meta property="og:updated_time" content="2019-08-26T12:20:05.713Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql读写分离以及聚集索引知识解">
-<meta name="twitter:description" content="这篇博客算是我欠下来的，放着思维导图上整理的MySQL索引和读写分离相关的点，到现在都难得下手写出来，因为MySQL索引很多知识，有时候忘了又记，记了又忘，所以把这些知识点都提前放在思维导图上，想着啥时候写下来，不过由于个（懒）人（病）原（发）因（作），所以一直给耽搁了。">
-<meta name="twitter:image" content="chunlife.top/2019/07/04/mysql索引知识解/1566820696501.png">
+<meta name="twitter:title" content="Pure Life">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -160,284 +154,83 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mysql索引知识解" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      mysql读写分离以及聚集索引知识解
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/08/26/mysql索引知识解/" class="archive-article-date">
+  	<time datetime="2019-08-26T12:33:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-26</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/08/26/mysql索引知识解/">mysql读写分离以及聚集索引知识解</a>
     </h1>
   
 
-        
-        <a href="/2019/07/04/mysql索引知识解/" class="archive-article-date">
-  	<time datetime="2019-07-04T08:45:52.080Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这篇博客算是我欠下来的，放着思维导图上整理的MySQL索引和读写分离相关的点，到现在都难得下手写出来，因为MySQL索引很多知识，有时候忘了又记，记了又忘，所以把这些知识点都提前放在思维导图上，想着啥时候写下来，不过由于个（懒）人（病）原（发）因（作），所以一直给耽搁了。</p>
-<a id="more"></a>
+        <div class="article-info info-on-right">
+          
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">聚集索引</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">基准测试</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">读写分离</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">主键</a>
+        		</li>
+      		
+		</ul>
+	</div>
 
-<h2 id="1、基准测试"><a href="#1、基准测试" class="headerlink" title="1、基准测试"></a>1、基准测试</h2><p>为啥要先介绍基准测试呢，因为其是忠实反应出mysql在不同系统环境呈现出来的性能差异。</p>
-<p>例如在部署完mysql中间件后可以对性能进行重新评估。</p>
-<p>使用的工具一般有两种，<code>mysqlslap</code>和<code>sysbench</code>，前者是mysql自带的，后者是一款开源的性能测试工具，功能更强一些，给出的信息更多，一般用后者就好了。</p>
-<p>这俩工具使用方法介绍的博客非常多了，这里我就不介绍了，摘出两篇放在这里。</p>
-<p><a href="https://www.cnblogs.com/kismetv/p/7615738.html" target="_blank" rel="noopener">详解MySQL基准测试和sysbench工具</a></p>
-<p><a href="http://seanlook.com/2016/03/28/mysql-sysbench/" target="_blank" rel="noopener">使用sysbench对mysql压力测试</a></p>
-<h2 id="2、读写分离中间件"><a href="#2、读写分离中间件" class="headerlink" title="2、读写分离中间件"></a>2、读写分离中间件</h2><blockquote>
-<p>可能需要一篇更详细的博客：<a href="https://blog.csdn.net/u013421629/article/details/78793966" target="_blank" rel="noopener">【mysql 读写分离】10分钟了解读写分离的作用</a></p>
-</blockquote>
-<p>读写分离，基本的原理是让主数据库处理事务性增、改、删操作（INSERT、UPDATE、DELETE），而从数据库处理SELECT查询操作。数据库复制被用来把事务性操作导致的变更同步到集群中的从数据库。</p>
-<p>充分利用MySQL主从复制架构下，主从机的MySQL资源，提高读写效率。</p>
-<p>一般来说，使用的有<code>mysql-proxy</code>和<code>maxScale</code>，这里我们一般使用后者。</p>
-<p><strong>读写分离的优点：</strong></p>
-<ul>
-<li>由中间件根据查询语法分析，自动完成读写分离；</li>
-<li>对程序透明，已有程序不需要做任何调整。</li>
-</ul>
-<p><strong>缺点：</strong></p>
-<ul>
-<li>由于增加了中间层所以对查询效率有损耗；</li>
-<li>对于延迟敏感业务无法自动在主库执行（实时性要求）。</li>
-</ul>
-<p>中间件主要解决的是两个问题，读写分离，其中又包含了读的负载均衡。</p>
-<p><strong>读写分离要解决的是</strong>，如何在复制集群的不同角色上，去执行不同的SQL语句。</p>
-<p><strong>读的负载均衡主要解决的是</strong>，具有相同角色的数据库，如何共同分担相同的负载。</p>
-<h2 id="3、数据库索引"><a href="#3、数据库索引" class="headerlink" title="3、数据库索引"></a>3、数据库索引</h2><h3 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a>聚集索引</h3><blockquote>
-<p>这里引入一篇博客，他可能说的更好点：<a href="https://www.imooc.com/article/22915" target="_blank" rel="noopener"><strong>聚集索引与非聚集索引的总结</strong></a></p>
-<p>以及<code>stackoverflow</code>上的解答：<a href="https://stackoverflow.com/questions/15051869/relationship-of-primary-key-and-clustered-index" target="_blank" rel="noopener">Relationship of Primary Key and Clustered Index</a></p>
-</blockquote>
-<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>先点一下，数据库索引中的<code>聚集索引</code>和<code>非聚集索引</code>的概念。</p>
-<p>聚集索引的定义：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据行的物理顺序与列值（一般是主键的那一列）的逻辑顺序相同，一个表中只能拥有一个聚集索引。</span><br></pre></td></tr></table></figure>
+          
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/mysql//" class="article-tag-list-link color1">mysql</a>
+        		</li>
+      		
+		</ul>
+	</div>
 
-<p>非聚集索引的定义：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">定义：该索引中索引的逻辑顺序与磁盘上行的物理存储顺序不同，一个表中可以拥有多个非聚集索引。</span><br></pre></td></tr></table></figure>
 
-<p>我们可以这样进行理解，在实际的MySQL中，<code>聚集索引</code>决定表中数据的<strong>物理存储顺序</strong><code>（例如，ID 1 和 2逻辑顺序上邻近，存储位置也是邻近）</code>，那么表中有且只有一个聚集索引（这里应该很好理解，毕竟顺序的定量条件得是唯一）。同时聚集索引可以由多个列组成。</p>
-<p>所以聚集索引上，存储了实际数据的<code>物理地址</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 创建聚集索引</span><br><span class="line">create CLUSTERED INDEX 索引名称 ON 表名(字段名)</span><br></pre></td></tr></table></figure>
-
-<p>对应的也就说明，非聚集索引，逻辑上顺序存储，但在实际的存储上可能会隔得很远。也就是说聚集索引代表着数据的实际<strong>物理地址</strong>，也就是说通过非聚集索引在查找数据时，经历两次查找，一次是查找到非聚集索引自身。然后查找主键（聚集索引）。</p>
-<p>所以在非聚集索引上，其保存的是指向了实际数据物理地址的聚集索引的值。</p>
-<h4 id="更进一步的理解"><a href="#更进一步的理解" class="headerlink" title="更进一步的理解"></a>更进一步的理解</h4><p><img src="1566820696501.png" alt="MySQL聚集索引和非聚集索引"></p>
-<p><strong>翻译：</strong></p>
-<p>主键是逻辑概念——它是表中行的它是表中行的唯一标识符。因此，它有一堆属性——它可能不是null，而且必须是唯一的。当然，由于你可能会通过唯一键搜索记录，因此在主键上拥有索引会非常好。</p>
-<p>聚簇索引是一个<em>物理</em>概念——它是一个影响记录存储在磁盘上的顺序的索引。这使得它在访问数据时成为一个非常快的索引，但如果主键不是<em><code>连续序列数字</code></em>，它可能会减慢写入速度。（我：在实际应用中，为了不影响写入效率，大多还是以使用自增id为主，即使其没有啥语义）</p>
-<p>是的，您可以拥有一个没有聚簇索引的主键——在你可能想要（例如，当你的主键是连接表上的外键组合时，并且你不希望在插入数据时产生磁盘混乱开销）。</p>
-<p>是的，你可以在不是主键的列上创建聚簇索引。</p>
-<h4 id="innodb如何选择聚集索引"><a href="#innodb如何选择聚集索引" class="headerlink" title="innodb如何选择聚集索引"></a>innodb如何选择聚集索引</h4><blockquote>
-<p>引自：<a href="https://www.jianshu.com/p/2879225ba243" target="_blank" rel="noopener">理解InnoDB的聚集索引（译）</a></p>
-</blockquote>
-<p>对于<code>innodb</code>，主键毫无疑问是一个聚集索引。但是当一个表没有主键，或者没有一个索引，<code>innodb</code>会如何处理呢。请看如下规则。</p>
-<ul>
-<li><p>如果一个主键被定义了，那么这个主键就是作为聚集索引</p>
-</li>
-<li><p>如果没有主键被定义，那么该表的第一个唯一非空索引被作为聚集索引</p>
-</li>
-<li><p>如果没有主键也没有合适的唯一索引，那么<code>innodb</code>内部会生成一个隐藏的主键作为聚集索引，这个隐藏的主键是一个6个字节的列，改列的值会随着数据的插入自增。</p>
-</li>
-</ul>
-<blockquote>
-<p>除了Clustered Index之外的索引都是Secondary Index，每一个Secondary Index的记录中除了索引列的值之外，还包含主健值。</p>
-<p>通过二级索引查询首先查到是主键值，然后InnoDB再根据查到的主键值通过主键/聚簇索引找到相应的数据块。</p>
-</blockquote>
-<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create table student (</span><br><span class="line"></span><br><span class="line">`id` INT UNSIGNED AUTO_INCREMENT,</span><br><span class="line"></span><br><span class="line">`name` VARCHAR(255),</span><br><span class="line"></span><br><span class="line">PRIMARY KEY(`id`),</span><br><span class="line"></span><br><span class="line">KEY(`name`)</span><br><span class="line"></span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure>
-
-<p>主键<code>id</code>作为聚集索引，<code>name</code>作为非聚集索引（<strong>secondary index</strong>）。</p>
-<blockquote>
-<p><a href="https://zhuanlan.zhihu.com/p/39293940" target="_blank" rel="noopener">MySQL聚集索引和非聚集索引</a></p>
-</blockquote>
-<p>（1）select * from student where id &gt;5000 and id &lt;20000;</p>
-<p>（2）select * from student where name &gt; ‘Alie’ and name &lt; ‘John’;</p>
-<p>第一条SQL语句根据id进行范围查询，因为(5000, 20000)范围内的记录在磁盘上按顺序存储，顺序读取磁盘很快就能读到这批数据。</p>
-<p>第二条SQL语句查询（’Alie’, ‘John’）范围内的记录，主键id分布可能是离散的1，100，20001，5000…..；</p>
-<p>增加了随机读取数据页几率；所以普通索引的范围查询效率被聚集索引甩开几条街都不止；</p>
-<p>非聚集索引的精确查询效率还是可以的，比聚集索引查询只增加了一次IO开销。</p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i><i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/img/weixin.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
         </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-	< img src="http://b.bshare.cn/barCode?site=weixin&url=http:chunlife.top/2019/07/04/mysql索引知识解/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/07/17/go操作usb/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          go操作usb
-        
-      </div>
-    </a>
   
   
-    <a href="/2019/07/01/CSDN自动展开chorme插件/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">CSDN自动展开chorme插件</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、基准测试"><span class="toc-number">1.</span> <span class="toc-text">1、基准测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、读写分离中间件"><span class="toc-number">2.</span> <span class="toc-text">2、读写分离中间件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、数据库索引"><span class="toc-number">3.</span> <span class="toc-text">3、数据库索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#聚集索引"><span class="toc-number">3.1.</span> <span class="toc-text">聚集索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#概念"><span class="toc-number">3.1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#更进一步的理解"><span class="toc-number">3.1.2.</span> <span class="toc-text">更进一步的理解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#innodb如何选择聚集索引"><span class="toc-number">3.1.3.</span> <span class="toc-text">innodb如何选择聚集索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#例子"><span class="toc-number">3.1.4.</span> <span class="toc-text">例子</span></a></li></ol></li></ol></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
-  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div> 
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-<script type="text/javascript">
-
-if(true){
-	var gitalk = new Gitalk({
-  	clientID: '01eb77bfd18de524243f',
-  	clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
-  	repo: 'younglifestyle.github.io',
-  	owner: 'younglifestyle',
-  	admin: ['younglifestyle'],
-  	id: 'Thu Jul 04 2019 16:45:52 GMT+0800',
-  	distractionFreeMode: 'true'
-})
-gitalk.render('gitalk-container') 
-}
-</script>
-  
-
-  
-
+    
 
 
           </div>
@@ -460,9 +253,9 @@ gitalk.render('gitalk-container')
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
@@ -947,6 +740,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">聚集索引</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">基准测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">主键</a>
               </li>
             
             <div class="clearfix"></div>
