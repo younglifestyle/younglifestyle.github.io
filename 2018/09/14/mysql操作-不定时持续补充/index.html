@@ -21,7 +21,7 @@
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/3.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/count%E8%87%AA%E5%8A%A01.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1538015777465.png">
-<meta property="og:updated_time" content="2019-04-10T13:26:31.070Z">
+<meta property="og:updated_time" content="2019-08-24T09:50:49.779Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql操作(不定时持续补充)">
 <meta name="twitter:description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
@@ -214,6 +214,7 @@ var _hmt = _hmt || [];
 <p><img src="1.png" alt="命令"></p>
 <p><img src="2.png" alt="432"></p>
 <h1 id="mysql隐式转换"><a href="#mysql隐式转换" class="headerlink" title="mysql隐式转换"></a>mysql隐式转换</h1><p>mysql隐式转换，会造成SQL慢查询，因为SQL转化后，即使使用索引查询，SQL也不会认为其是索引。</p>
+<p>也就是说，若字段为字符串数字，则需要使用字符串类型作为<code>where</code>查询条件去查询数据，若使用整型数据，则会发生隐式转换，这相当于在字段前加上了<code>to_int(xxx)</code>，类似于：<code>where to_int(xxx) = xxx</code>，在字段前加函数，其将无法使用索引，这是条准则。</p>
 <p><a href="http://xiaorui.cc/2018/04/13/%e8%ae%b0%e4%b8%80%e6%ac%a1%e9%9a%90%e5%bc%8f%e8%bd%ac%e6%8d%a2%e5%bc%95%e8%b5%b7%e7%9a%84sql%e6%85%a2%e6%9f%a5%e8%af%a2/" target="_blank" rel="noopener">记一次隐式转换引起的sql慢查询</a></p>
 <h1 id="日期索引"><a href="#日期索引" class="headerlink" title="日期索引"></a>日期索引</h1><p><a href="https://blog.csdn.net/spider_zhcl/article/details/53323166" target="_blank" rel="noopener">Mysql 索引问题-日期索引使用</a></p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在查询数据条数约占总条数五分之一以下时能够使用到索引，但超过五分之一时，则使用全表扫描了。</span><br></pre></td></tr></table></figure>
