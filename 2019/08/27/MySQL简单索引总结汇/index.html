@@ -30,7 +30,7 @@
 <meta property="og:image" content="chunlife.top/2019/08/27/MySQL简单索引总结汇/%E5%9B%BE15.png">
 <meta property="og:image" content="chunlife.top/2019/08/27/MySQL简单索引总结汇/%E5%9B%BE16.png">
 <meta property="og:image" content="chunlife.top/2019/08/27/MySQL简单索引总结汇/3575048-b5309bfe660a8ce9.webp">
-<meta property="og:updated_time" content="2019-08-27T07:47:21.028Z">
+<meta property="og:updated_time" content="2019-08-28T07:36:43.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL简单索引总结汇">
 <meta name="twitter:description" content="MySQL中的索引，一般来说，我们使用的比较多的是b+tree，hash索引。 且因为在MySQL中，存在不同的存储引擎，这两种索引存在的形式也有些不大一样。这里我们也只引入MyISAM和Innodb存储引擎。">
@@ -199,7 +199,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 <p>使用到的示例数据：<a href="http://downloads.mysql.com/docs/sakila-db.zip" target="_blank" rel="noopener">sakila-db</a></p>
-<h2 id="索引的好处"><a href="#索引的好处" class="headerlink" title="索引的好处"></a>索引的好处</h2><p>索引的好处指：索引给数据库带来性能损耗<strong>小于</strong>带来的好处，索引即是有利的。</p>
+<h1 id="索引的好处"><a href="#索引的好处" class="headerlink" title="索引的好处"></a>索引的好处</h1><p>索引的好处指：索引给数据库带来性能损耗<strong>小于</strong>带来的好处，索引即是有利的。</p>
 <ul>
 <li>索引大大减少了存储引擎需要扫描的<strong>数据量</strong>；</li>
 <li>索引可以帮助我们进行排序以避免使用临时表；</li>
@@ -209,8 +209,8 @@ var _hmt = _hmt || [];
 <p>不过索引也是会带来一定的损耗的：</p>
 <p>索引的引入会增加写操作的成本。不过<code>Innodb</code>引入了插入缓存解决了这个问题。</p>
 <p>同时，太多索引会增加查询优化器的选择时间。</p>
-<h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><p>MyISAM和Innodb都不支持hash索引，不过Innodb有点不同的是，它不能说完全不支持，它的hash索引的创建由引擎自动优化创建，需要开启这个特性，人为无法干预创建。当我们试图创建时，mysql也不会报错，只不过会自动转化为B树索引。</p>
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>Hash索引是基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列时，才能够使用到hash索引。（故只支持等值比较查询<code>=，in()， &lt;=&gt;</code>，而不包含排序或范围查询的需求）</p>
+<h1 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h1><p>MyISAM和Innodb都不支持hash索引，不过Innodb有点不同的是，它不能说完全不支持，它的hash索引的创建由引擎自动优化创建，需要开启这个特性，人为无法干预创建。当我们试图创建时，mysql也不会报错，只不过会自动转化为B树索引。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>Hash索引是基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列时，才能够使用到hash索引。（故只支持等值比较查询<code>=，in()， &lt;=&gt;</code>，而不包含排序或范围查询的需求）</p>
 <p>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码。（哈希索引包括哈希值，以及行的指针）。</p>
 <p><strong>限制：</strong></p>
 <ul>
@@ -219,8 +219,8 @@ var _hmt = _hmt || [];
 <li>哈希索引也不支持部分索引列匹配查找，因为哈希索引始终是使用索引的全部列值内容来计算哈希值的。如：数据列（a,b）上建立哈希索引，如果只查询数据列a，则无法使用该索引；也不支持范围查找。</li>
 <li>Hash索引中Hash码的计算可能存在Hash冲突。维护成本比较高。</li>
 </ul>
-<p>***** 因此在绝大多数需求为单条记录查询的时候，可以选择哈希索引，查询性能最快；其余大部分场景，建议选择BTree索引。</p>
-<h2 id="B树索引"><a href="#B树索引" class="headerlink" title="B树索引"></a>B树索引</h2><p>MyISAM和InnoDB引擎中，<a href="#B+Tree结构">B树索引</a>可不是相对等的，虽然其可以被称为同一类数据结构——平衡查找树。</p>
+<p>​       <strong>因此</strong>在绝大多数需求为单条记录查询的时候，可以选择哈希索引，查询性能最快；其余大部分场景，建议选择BTree索引。</p>
+<h1 id="B树索引"><a href="#B树索引" class="headerlink" title="B树索引"></a>B树索引</h1><p>MyISAM和InnoDB引擎中，<a href="#B+Tree结构">B树索引</a>可不是相对等的，虽然其可以被称为同一类数据结构——平衡查找树。</p>
 <blockquote>
 <p>平衡查找树——每个叶子到根部的距离都是相同的，并且所有的键值都是按照键值的大小存放在同一层的叶子节点上的，各个叶子节点由指针来进行连接。</p>
 </blockquote>
@@ -230,12 +230,12 @@ var _hmt = _hmt || [];
 <p>叶子节点指向数据的主键。</p>
 <p>主键即为聚集索引，<code>InnoDB</code>数据文件本身即为索引文件。树的叶节点data域保存了完整的数据记录，而这个索引的<code>key</code>是数据表的主键。</p>
 <p>因为InnoDB作为主流，且在实际业务中好像也没什么机会使用到<code>MyISAM</code>引擎，所以接下来的索引各方面都从<code>InnoDB</code>出发。</p>
-<h2 id="MySQL添加索引操作"><a href="#MySQL添加索引操作" class="headerlink" title="MySQL添加索引操作"></a>MySQL添加索引操作</h2><p><img src="1566884936165.png" alt="添加索引"></p>
-<h2 id="使用索引的注意事项"><a href="#使用索引的注意事项" class="headerlink" title="使用索引的注意事项"></a>使用索引的注意事项</h2><p><img src="1566875667532.png" alt="使用索引的注意事项"></p>
-<h3 id="索引列上不能使用表达式或函数"><a href="#索引列上不能使用表达式或函数" class="headerlink" title="索引列上不能使用表达式或函数"></a>索引列上不能使用表达式或函数</h3><p>例如<code>where id = 1</code>，<code>where to_int(id) = 1</code>，在<code>id</code>作为索引的这两条where子句，前者可以使用索引查询，而后者将无法使用索引。</p>
+<h1 id="MySQL添加索引操作"><a href="#MySQL添加索引操作" class="headerlink" title="MySQL添加索引操作"></a>MySQL添加索引操作</h1><p><img src="1566884936165.png" alt="添加索引"></p>
+<h1 id="使用索引的注意事项"><a href="#使用索引的注意事项" class="headerlink" title="使用索引的注意事项"></a>使用索引的注意事项</h1><p><img src="1566875667532.png" alt="使用索引的注意事项"></p>
+<h2 id="索引列上不能使用表达式或函数"><a href="#索引列上不能使用表达式或函数" class="headerlink" title="索引列上不能使用表达式或函数"></a>索引列上不能使用表达式或函数</h2><p>例如<code>where id = 1</code>，<code>where to_int(id) = 1</code>，在<code>id</code>作为索引的这两条where子句，前者可以使用索引查询，而后者将无法使用索引。</p>
 <p>所以尽量在数据上动心思，不要在索引列上进行操作。</p>
 <p><img src="%E5%9B%BE%E5%83%8F3.png" alt=""></p>
-<h3 id="前缀索引和索引列的选择性"><a href="#前缀索引和索引列的选择性" class="headerlink" title="前缀索引和索引列的选择性"></a>前缀索引和索引列的选择性</h3><p>选择性怎么体现，例如，数据库中性别列，只有男女两个选择（一般情况下），那么其可选择性即是极差，数据没有变化性，索引了这一组数据，会从文件中捞出一大堆这样的数据（很好理解，男女都有很多记录），我们要的情况是，索引中数据后，只捞出极少数数据或直接命中数据。</p>
+<h2 id="前缀索引和索引列的选择性"><a href="#前缀索引和索引列的选择性" class="headerlink" title="前缀索引和索引列的选择性"></a>前缀索引和索引列的选择性</h2><p>选择性怎么体现，例如，数据库中性别列，只有男女两个选择（一般情况下），那么其可选择性即是极差，数据没有变化性，索引了这一组数据，会从文件中捞出一大堆这样的数据（很好理解，男女都有很多记录），我们要的情况是，索引中数据后，只捞出极少数数据或直接命中数据。</p>
 <p>所以我们会追求索引列数据的多样性。但有一些列多样性很好，但宽度极大，不利于索引（很好理解，中国少字姓氏总比外国人一批条字的姓氏好认），同时，索引可是有大小限制的（见上图）。</p>
 <p>这里，就有了前缀索引来解决这个问题。</p>
 <p>对于列的值较长，比如BLOB、TEXT、VARCHAR，就必须建立前缀索引，即将值的前一部分作为索引。这样既可以节约空间，又可以提高查询效率。<strong>但无法使用前缀索引做 ORDER BY 和 GROUP BY，也无法使用前缀索引做覆盖扫描</strong>。</p>
@@ -257,14 +257,14 @@ var _hmt = _hmt || [];
 <p>可以看见当索引前缀为6时的基数是0.4267，已经接近完整列选择性0.4283。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter table city_demo add key (city(6));</span><br><span class="line">Query OK, 0 rows affected (0.19 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure>
 
-<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p>可以参考一下原则：</p>
+<h2 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h2><p>可以参考一下原则：</p>
 <ul>
 <li>经常会使用到的列优先</li>
 <li>选择性搞的列优先</li>
 <li>宽度小的列优先 </li>
 </ul>
 <p>同时需要注意索引的注意项，例如索引字段不可施加函数，联合索引依然遵循，最左列不可使用函数，而且联合索引在使用时也不能缺失最左列。</p>
-<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>优点：</p>
+<h2 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h2><p>优点：</p>
 <ul>
 <li>可以优化缓存，减少磁盘IO操作；</li>
 <li>可以减少随机IO，变随机IO操作为顺序IO操作</li>
@@ -291,7 +291,7 @@ var _hmt = _hmt || [];
 <p><strong>操作3：</strong></p>
 <p>Innodb 主键作为聚集索引，数据与索引是存储在一起的，即使使用的是二级索引查询，获取多列数据，但其包含的是主键，所以依然属于覆盖索引。</p>
 <p><img src="%E5%9B%BE4.png" alt="4"></p>
-<h2 id="索引优化查询"><a href="#索引优化查询" class="headerlink" title="索引优化查询"></a>索引优化查询</h2><h3 id="使用索引扫描来优化排序"><a href="#使用索引扫描来优化排序" class="headerlink" title="使用索引扫描来优化排序"></a>使用索引扫描来优化排序</h3><p>按照索引顺序扫描数据。</p>
+<h1 id="索引优化查询"><a href="#索引优化查询" class="headerlink" title="索引优化查询"></a>索引优化查询</h1><h2 id="使用索引扫描来优化排序"><a href="#使用索引扫描来优化排序" class="headerlink" title="使用索引扫描来优化排序"></a>使用索引扫描来优化排序</h2><p>按照索引顺序扫描数据。</p>
 <p>需要的条件：</p>
 <ul>
 <li>索引的列顺序和Order By子句顺序完全一致；</li>
@@ -311,22 +311,22 @@ var _hmt = _hmt || [];
 <p><img src="%E5%9B%BE15.png" alt="123"></p>
 <p>联合索引中最左边的列使用范围查找，则导致右边的索引失效。</p>
 <p><img src="%E5%9B%BE16.png" alt="16"></p>
-<h3 id="模拟Hash索引优化查询"><a href="#模拟Hash索引优化查询" class="headerlink" title="模拟Hash索引优化查询"></a>模拟Hash索引优化查询</h3><p>Innodb是引擎自动管理，而我们可以手动进行创建。</p>
+<h2 id="模拟Hash索引优化查询"><a href="#模拟Hash索引优化查询" class="headerlink" title="模拟Hash索引优化查询"></a>模拟Hash索引优化查询</h2><p>Innodb是引擎自动管理，而我们可以手动进行创建。</p>
 <ul>
 <li>其只能处理键值的全值匹配查找；</li>
 <li>所使用的Hash算法决定索引键的大小。</li>
 </ul>
 <p>可以用于对数据很长的列，计算Hash反而会缩短其长度。添加Hash可以使用MySQL触发器。</p>
-<h3 id="删除重复和冗余的索引"><a href="#删除重复和冗余的索引" class="headerlink" title="删除重复和冗余的索引"></a>删除重复和冗余的索引</h3><h4 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h4><p><code>pt-duplicate-key-checker</code>，可以检查一些重复和冗余的索引。</p>
+<h2 id="删除重复和冗余的索引"><a href="#删除重复和冗余的索引" class="headerlink" title="删除重复和冗余的索引"></a>删除重复和冗余的索引</h2><h3 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h3><p><code>pt-duplicate-key-checker</code>，可以检查一些重复和冗余的索引。</p>
 <blockquote>
 <p>使用的话：<a href="http://www.fordba.com/percona-toolkit-pt-duplicate-key-checker.html" target="_blank" rel="noopener">Percona-Toolkit系列之pt-duplicate-key-checker冗余索引/外键检测利器</a></p>
 </blockquote>
-<h4 id="查找未使用过的索引"><a href="#查找未使用过的索引" class="headerlink" title="查找未使用过的索引"></a>查找未使用过的索引</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select object_schema,object_name,index_name,b.`TABLE_ROWS`</span><br><span class="line">FROM performance_schema.table_io_waits_summary_by_index_usage a</span><br><span class="line">JOIN information_schema.tables b ON</span><br><span class="line">    a.`OBJECT_SCHEMA`=b.`TABLE_SCHEMA` AND</span><br><span class="line">    a.`OBJECT_NAME`=b.`TABLE_NAME`</span><br><span class="line">WHERE index_name IS NOT NULL</span><br><span class="line">AND count_star = 0</span><br><span class="line">ORDER BY object_schema, object_name;</span><br></pre></td></tr></table></figure>
+<h3 id="查找未使用过的索引"><a href="#查找未使用过的索引" class="headerlink" title="查找未使用过的索引"></a>查找未使用过的索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select object_schema,object_name,index_name,b.`TABLE_ROWS`</span><br><span class="line">FROM performance_schema.table_io_waits_summary_by_index_usage a</span><br><span class="line">JOIN information_schema.tables b ON</span><br><span class="line">    a.`OBJECT_SCHEMA`=b.`TABLE_SCHEMA` AND</span><br><span class="line">    a.`OBJECT_NAME`=b.`TABLE_NAME`</span><br><span class="line">WHERE index_name IS NOT NULL</span><br><span class="line">AND count_star = 0</span><br><span class="line">ORDER BY object_schema, object_name;</span><br></pre></td></tr></table></figure>
 
-<h3 id="更新索引统计信息以及减少索引碎片"><a href="#更新索引统计信息以及减少索引碎片" class="headerlink" title="更新索引统计信息以及减少索引碎片"></a>更新索引统计信息以及减少索引碎片</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">analyze talbe table_name</span><br><span class="line"></span><br><span class="line">optimize table table_name  // 使用不当将锁表</span><br></pre></td></tr></table></figure>
+<h2 id="更新索引统计信息以及减少索引碎片"><a href="#更新索引统计信息以及减少索引碎片" class="headerlink" title="更新索引统计信息以及减少索引碎片"></a>更新索引统计信息以及减少索引碎片</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">analyze talbe table_name</span><br><span class="line"></span><br><span class="line">optimize table table_name  // 使用不当将锁表</span><br></pre></td></tr></table></figure>
 
 <p>经常更新数据的磁盘需要整理碎片，数据库也是这样，Optimize Table语句对MyISAM和InnoDB类型的表都有效。</p>
-<h2 id="B-Tree结构"><a href="#B-Tree结构" class="headerlink" title="B+Tree结构"></a>B+Tree结构</h2><blockquote>
+<h1 id="B-Tree结构"><a href="#B-Tree结构" class="headerlink" title="B+Tree结构"></a>B+Tree结构</h1><blockquote>
 <p><a href="https://www.jianshu.com/p/486a514b0ded" target="_blank" rel="noopener">MYSQL-B+TREE索引原理</a></p>
 </blockquote>
 <p>非叶子节点不存储data，只存储索引key；只有叶子节点才存储data。<code>（叶子节点为树中没有子节点的节点）</code>（所以B树索引查找数据是一级一级深入的找）</p>
@@ -489,7 +489,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#索引的好处"><span class="toc-number">1.</span> <span class="toc-text">索引的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash索引"><span class="toc-number">2.</span> <span class="toc-text">Hash索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点"><span class="toc-number">2.1.</span> <span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B树索引"><span class="toc-number">3.</span> <span class="toc-text">B树索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL添加索引操作"><span class="toc-number">4.</span> <span class="toc-text">MySQL添加索引操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用索引的注意事项"><span class="toc-number">5.</span> <span class="toc-text">使用索引的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引列上不能使用表达式或函数"><span class="toc-number">5.1.</span> <span class="toc-text">索引列上不能使用表达式或函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前缀索引和索引列的选择性"><span class="toc-number">5.2.</span> <span class="toc-text">前缀索引和索引列的选择性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#联合索引"><span class="toc-number">5.3.</span> <span class="toc-text">联合索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#覆盖索引"><span class="toc-number">5.4.</span> <span class="toc-text">覆盖索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#索引优化查询"><span class="toc-number">6.</span> <span class="toc-text">索引优化查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用索引扫描来优化排序"><span class="toc-number">6.1.</span> <span class="toc-text">使用索引扫描来优化排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模拟Hash索引优化查询"><span class="toc-number">6.2.</span> <span class="toc-text">模拟Hash索引优化查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除重复和冗余的索引"><span class="toc-number">6.3.</span> <span class="toc-text">删除重复和冗余的索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用工具"><span class="toc-number">6.3.1.</span> <span class="toc-text">使用工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查找未使用过的索引"><span class="toc-number">6.3.2.</span> <span class="toc-text">查找未使用过的索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新索引统计信息以及减少索引碎片"><span class="toc-number">6.4.</span> <span class="toc-text">更新索引统计信息以及减少索引碎片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-Tree结构"><span class="toc-number">7.</span> <span class="toc-text">B+Tree结构</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#索引的好处"><span class="toc-number">1.</span> <span class="toc-text">索引的好处</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hash索引"><span class="toc-number">2.</span> <span class="toc-text">Hash索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">2.1.</span> <span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#B树索引"><span class="toc-number">3.</span> <span class="toc-text">B树索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL添加索引操作"><span class="toc-number">4.</span> <span class="toc-text">MySQL添加索引操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用索引的注意事项"><span class="toc-number">5.</span> <span class="toc-text">使用索引的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#索引列上不能使用表达式或函数"><span class="toc-number">5.1.</span> <span class="toc-text">索引列上不能使用表达式或函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前缀索引和索引列的选择性"><span class="toc-number">5.2.</span> <span class="toc-text">前缀索引和索引列的选择性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#联合索引"><span class="toc-number">5.3.</span> <span class="toc-text">联合索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#覆盖索引"><span class="toc-number">5.4.</span> <span class="toc-text">覆盖索引</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引优化查询"><span class="toc-number">6.</span> <span class="toc-text">索引优化查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用索引扫描来优化排序"><span class="toc-number">6.1.</span> <span class="toc-text">使用索引扫描来优化排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模拟Hash索引优化查询"><span class="toc-number">6.2.</span> <span class="toc-text">模拟Hash索引优化查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除重复和冗余的索引"><span class="toc-number">6.3.</span> <span class="toc-text">删除重复和冗余的索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用工具"><span class="toc-number">6.3.1.</span> <span class="toc-text">使用工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找未使用过的索引"><span class="toc-number">6.3.2.</span> <span class="toc-text">查找未使用过的索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新索引统计信息以及减少索引碎片"><span class="toc-number">6.4.</span> <span class="toc-text">更新索引统计信息以及减少索引碎片</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#B-Tree结构"><span class="toc-number">7.</span> <span class="toc-text">B+Tree结构</span></a></li></ol>
                     </div>
                 </span>
             </div>
