@@ -6,21 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>slice理解 | Pure Life</title>
+  <title>slice理解以及range | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="slice理解slice本身没有数据，是对底层的一个view。">
-<meta name="keywords" content="Go,slice">
+<meta name="keywords" content="Go,slice,range">
 <meta property="og:type" content="article">
-<meta property="og:title" content="slice理解">
+<meta property="og:title" content="slice理解以及range">
 <meta property="og:url" content="chunlife.top/2018/10/22/slice理解/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="slice理解slice本身没有数据，是对底层的一个view。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2018/10/22/slice理解/1540737171037.png">
 <meta property="og:image" content="chunlife.top/2018/10/22/slice理解/slice%E7%9A%84%E6%89%A9%E5%B1%95.png">
-<meta property="og:updated_time" content="2019-04-10T13:27:09.208Z">
+<meta property="og:updated_time" content="2019-09-03T12:20:57.048Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="slice理解">
+<meta name="twitter:title" content="slice理解以及range">
 <meta name="twitter:description" content="slice理解slice本身没有数据，是对底层的一个view。">
 <meta name="twitter:image" content="chunlife.top/2018/10/22/slice理解/1540737171037.png">
   
@@ -169,7 +169,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      slice理解
+      slice理解以及range
     </h1>
   
 
@@ -216,7 +216,7 @@ var _hmt = _hmt || [];
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">v := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> v &#123;</span><br><span class="line">	v = <span class="built_in">append</span>(v, i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>看这个代码是否可以猜到代码运行结果呢？程序是否会崩溃呢？</p>
-<h2 id="Go-Range"><a href="#Go-Range" class="headerlink" title="Go Range"></a>Go Range</h2><p>在实际的打印结果中，可以看到打印是：</p>
+<h2 id="go-range"><a href="#go-range" class="headerlink" title="go range"></a>go range</h2><p>在实际的打印结果中，可以看到打印是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1 2 3 0 1 2]</span><br></pre></td></tr></table></figure>
 
 <p>比较奇怪，打印成功，而不是死循环。</p>
@@ -282,6 +282,10 @@ var _hmt = _hmt || [];
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">slice</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">range</a>
         		</li>
       		
 		</ul>
@@ -400,7 +404,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#slice理解"><span class="toc-number">1.</span> <span class="toc-text">slice理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#slice的扩展"><span class="toc-number">2.</span> <span class="toc-text">slice的扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加slice"><span class="toc-number">3.</span> <span class="toc-text">添加slice</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Go-Range"><span class="toc-number">4.</span> <span class="toc-text">Go Range</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#slice理解"><span class="toc-number">1.</span> <span class="toc-text">slice理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#slice的扩展"><span class="toc-number">2.</span> <span class="toc-text">slice的扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加slice"><span class="toc-number">3.</span> <span class="toc-text">添加slice</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#go-range"><span class="toc-number">4.</span> <span class="toc-text">go range</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -976,6 +980,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
             
             <div class="clearfix"></div>

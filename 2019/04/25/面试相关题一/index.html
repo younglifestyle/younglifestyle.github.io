@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>面试相关题一 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
+  <meta name="description" content="1、cap(map) 是否正确? 请说明理由不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
 <meta name="keywords" content="Go">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试相关题一">
 <meta property="og:url" content="chunlife.top/2019/04/25/面试相关题一/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
+<meta property="og:description" content="1、cap(map) 是否正确? 请说明理由不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-21T15:34:47.934Z">
+<meta property="og:updated_time" content="2019-09-03T12:20:57.092Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试相关题一">
-<meta name="twitter:description" content="cap(map) 是否正确? 请说明理由  不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
+<meta name="twitter:description" content="1、cap(map) 是否正确? 请说明理由不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -179,22 +179,15 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li><h3 id="cap-map-是否正确-请说明理由"><a href="#cap-map-是否正确-请说明理由" class="headerlink" title="cap(map) 是否正确? 请说明理由"></a>cap(map) 是否正确? 请说明理由</h3></li>
-</ol>
-<p>不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。</p>
+        <h2 id="1、cap-map-是否正确-请说明理由"><a href="#1、cap-map-是否正确-请说明理由" class="headerlink" title="1、cap(map) 是否正确? 请说明理由"></a>1、cap(map) 是否正确? 请说明理由</h2><p>不正确，cap是获取slice底层结构中容量（cap）的值，而在go中map结构并没有直接获取长度的函数，若需要获取则只能通过range关键字。</p>
 <a id="more"></a>
 
-<ol start="2">
-<li><h3 id="a-make-int-5-20"><a href="#a-make-int-5-20" class="headerlink" title="a := make([]int, 5, 20)"></a>a := make([]int, 5, 20)</h3><p>fmt.Println(a[6])<br>fmt.Println(a[6:10]) </p>
-</li>
-</ol>
+<h2 id="2、a-make-int-5-20"><a href="#2、a-make-int-5-20" class="headerlink" title="2、a := make([]int, 5, 20)"></a>2、a := make([]int, 5, 20)</h2><p>fmt.Println(a[6]) </p>
+<p>fmt.Println(a[6:10]) </p>
 <p>编译通过，运行出错。数组越界，此slice是一个长度为5，容量为20的slice，而程序访问到了长度之外的数据。</p>
-<ol start="3">
-<li><h3 id="列出-golang-的所有数据类型"><a href="#列出-golang-的所有数据类型" class="headerlink" title="列出 golang 的所有数据类型"></a>列出 golang 的所有数据类型</h3></li>
-</ol>
-<p>这道题。。。。。。</p>
-<p>bool，数字类型（整型 int 和浮点型 float32、float64，Go 语言支持整型和浮点型数字），</p>
+<h2 id="3、列出-golang-的所有数据类型"><a href="#3、列出-golang-的所有数据类型" class="headerlink" title="3、列出 golang 的所有数据类型"></a>3、列出 golang 的所有数据类型</h2><p>这道题。。。。。。</p>
+<p>bool，</p>
+<p>数字类型（整型 int 和浮点型 float32、float64，Go 语言支持整型和浮点型数字），</p>
 <p>字符串类型，</p>
 <p>派生类型</p>
 <ul>
@@ -207,36 +200,27 @@ var _hmt = _hmt || [];
 <li>(g) 接口类型（interface）</li>
 <li>(h) Map 类型</li>
 </ul>
-<ol start="4">
-<li><h3 id="所有数据类型定义时候的默认值"><a href="#所有数据类型定义时候的默认值" class="headerlink" title="所有数据类型定义时候的默认值"></a>所有数据类型定义时候的默认值</h3></li>
-</ol>
-<p>bool为false，int为0，slice，map为nil</p>
-<ol start="5">
-<li><h3 id="lst-int-1-2-3-4-5"><a href="#lst-int-1-2-3-4-5" class="headerlink" title="lst := []int{1,2,3,4,5}"></a>lst := []int{1,2,3,4,5}</h3><p>for i, v := range lst{<br>/* 如何判断 range 是否有拷贝 lst 一个副本? */ </p>
-</li>
-</ol>
-<p>} </p>
-<p>证明条件如下：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, v := <span class="keyword">range</span> lst &#123;</span><br><span class="line">    <span class="comment">/* 如何判断 range 是否有拷贝 lst 一个副本? */</span></span><br><span class="line">    lst = <span class="built_in">append</span>(lst, <span class="number">1</span>)</span><br><span class="line">    fmt.Println(i, v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="6">
-<li><h3 id="哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？"><a href="#哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？" class="headerlink" title="哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？"></a>哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？</h3></li>
-</ol>
+<h2 id="4、所有数据类型定义时候的默认值"><a href="#4、所有数据类型定义时候的默认值" class="headerlink" title="4、所有数据类型定义时候的默认值"></a>4、所有数据类型定义时候的默认值</h2><p>bool为false，int为0，slice，map为nil</p>
+<h2 id="5、函数接受者问题"><a href="#5、函数接受者问题" class="headerlink" title="5、函数接受者问题"></a>5、函数接受者问题</h2><p>哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;&#125; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a A)</span> <span class="title">m</span><span class="params">()</span></span> &#123; </span><br><span class="line">	fmt.Println(<span class="string">"func m..."</span>) </span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a *A)</span> <span class="title">n</span><span class="params">()</span></span> &#123; </span><br><span class="line">	fmt.Println(<span class="string">"func n..."</span>) </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">ao := A&#123;&#125; </span><br><span class="line">ao.m() </span><br><span class="line">ao.n() </span><br><span class="line"></span><br><span class="line">ap := &amp;A&#123;&#125; </span><br><span class="line">ap.m() </span><br><span class="line">ap.n()</span><br></pre></td></tr></table></figure>
 
 <p>实际运行，上下两种情况均能顺利运行。</p>
 <p>这里区分的话，可以以修改receiver的值作为判断依据。</p>
-<ol>
-<li><h3 id="需要屏蔽-10-万个关键字，-写算法实现"><a href="#需要屏蔽-10-万个关键字，-写算法实现" class="headerlink" title="需要屏蔽 10 万个关键字， 写算法实现?"></a>需要屏蔽 10 万个关键字， 写算法实现?</h3></li>
-</ol>
-<p>AC自动机（Aho-Corasick）。</p>
+<h2 id="6、需要屏蔽-10-万个关键字，-写算法实现"><a href="#6、需要屏蔽-10-万个关键字，-写算法实现" class="headerlink" title="6、需要屏蔽 10 万个关键字， 写算法实现?"></a>6、需要屏蔽 10 万个关键字， 写算法实现?</h2><p>AC自动机（Aho-Corasick）。</p>
 <p>也可以使用<code>grep</code>。</p>
-<h3 id="2、Golang，empty-slice-与-nil-slice，json包如何应对？"><a href="#2、Golang，empty-slice-与-nil-slice，json包如何应对？" class="headerlink" title="2、Golang，empty slice 与 nil slice，json包如何应对？"></a>2、Golang，empty slice 与 nil slice，json包如何应对？</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a []<span class="keyword">int</span></span><br><span class="line">b := []<span class="keyword">int</span>&#123;&#125;</span><br><span class="line">bytes, err := json.Marshal(a)</span><br><span class="line">fmt.Println(<span class="keyword">string</span>(bytes), err)</span><br><span class="line"></span><br><span class="line">bytes, err = json.Marshal(b)</span><br><span class="line">fmt.Println(<span class="keyword">string</span>(bytes), err)</span><br><span class="line"></span><br><span class="line"><span class="comment">// null &lt;nil&gt;</span></span><br><span class="line"><span class="comment">// [] &lt;nil&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="7、Golang，empty-slice-与-nil-slice，json包如何应对？"><a href="#7、Golang，empty-slice-与-nil-slice，json包如何应对？" class="headerlink" title="7、Golang，empty slice 与 nil slice，json包如何应对？"></a>7、Golang，empty slice 与 nil slice，json包如何应对？</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a []<span class="keyword">int</span></span><br><span class="line">b := []<span class="keyword">int</span>&#123;&#125;</span><br><span class="line">bytes, err := json.Marshal(a)</span><br><span class="line">fmt.Println(<span class="keyword">string</span>(bytes), err)</span><br><span class="line"></span><br><span class="line">bytes, err = json.Marshal(b)</span><br><span class="line">fmt.Println(<span class="keyword">string</span>(bytes), err)</span><br><span class="line"></span><br><span class="line"><span class="comment">// null &lt;nil&gt;</span></span><br><span class="line"><span class="comment">// [] &lt;nil&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="1、空struct-的使用。"><a href="#1、空struct-的使用。" class="headerlink" title="1、空struct{}的使用。"></a>1、空struct{}的使用。</h3><p>空struct不占用内存，也就是说即使分配切片10000个空struct，也只是占用底层结构体的大小。</p>
+<h2 id="8、空struct-的使用"><a href="#8、空struct-的使用" class="headerlink" title="8、空struct{}的使用"></a>8、空struct{}的使用</h2><p>空struct不占用内存，也就是说即使分配切片10000个空struct，也只是占用底层结构体的大小。</p>
 <p>用途一般是：chan struct{} 比如用来实现set: map[string]struct{}</p>
 <p>空struct相等的特性在1.6之后不支持了。</p>
-<h3 id="2、在Go语言中结构体是否能够比较？该如何比较两个结构体？"><a href="#2、在Go语言中结构体是否能够比较？该如何比较两个结构体？" class="headerlink" title="2、在Go语言中结构体是否能够比较？该如何比较两个结构体？"></a>2、在Go语言中结构体是否能够比较？该如何比较两个结构体？</h3><p>相同类型的结构体能够进行比较。</p>
+<h2 id="9、在Go语言中结构体是否能够比较？该如何比较两个结构体？"><a href="#9、在Go语言中结构体是否能够比较？该如何比较两个结构体？" class="headerlink" title="9、在Go语言中结构体是否能够比较？该如何比较两个结构体？"></a>9、在Go语言中结构体是否能够比较？该如何比较两个结构体？</h2><p>相同类型的结构体能够进行比较。利用字段标签和反射可以达到比较的目的。</p>
+<p>例如库：<a href="https://github.com/r3labs/diff" target="_blank" rel="noopener">diff</a>。</p>
+<h2 id="10、range-关键字"><a href="#10、range-关键字" class="headerlink" title="10、range 关键字"></a>10、range 关键字</h2><p>大概是有这样一串代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">byteArr := []<span class="keyword">byte</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"><span class="keyword">for</span> i, val := byteArr &#123;</span><br><span class="line">    byteArr := <span class="built_in">append</span>(byteArr, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    fmt.Println(i, val)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问，程序是否会终止。</p>
+<p>答，会终止，循环三次，按原有的数据进行遍历。</p>
+<p>参考我之前的博客：<a href="https://chunlife.top/2018/10/22/slice理解/#Go-Range">Go-Range</a></p>
 
       
 
@@ -395,7 +379,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#cap-map-是否正确-请说明理由"><span class="toc-number">1.</span> <span class="toc-text">cap(map) 是否正确? 请说明理由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#a-make-int-5-20"><span class="toc-number">2.</span> <span class="toc-text">a := make([]int, 5, 20)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#列出-golang-的所有数据类型"><span class="toc-number">3.</span> <span class="toc-text">列出 golang 的所有数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#所有数据类型定义时候的默认值"><span class="toc-number">4.</span> <span class="toc-text">所有数据类型定义时候的默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lst-int-1-2-3-4-5"><span class="toc-number">5.</span> <span class="toc-text">lst := []int{1,2,3,4,5}</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？"><span class="toc-number">6.</span> <span class="toc-text">哪个无法运行？为什么？如果能运行，使用什么方法能区别出来？或者说如何能使其中看起来不正确的使它不要运行？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需要屏蔽-10-万个关键字，-写算法实现"><span class="toc-number">7.</span> <span class="toc-text">需要屏蔽 10 万个关键字， 写算法实现?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、Golang，empty-slice-与-nil-slice，json包如何应对？"><span class="toc-number">8.</span> <span class="toc-text">2、Golang，empty slice 与 nil slice，json包如何应对？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1、空struct-的使用。"><span class="toc-number">9.</span> <span class="toc-text">1、空struct{}的使用。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、在Go语言中结构体是否能够比较？该如何比较两个结构体？"><span class="toc-number">10.</span> <span class="toc-text">2、在Go语言中结构体是否能够比较？该如何比较两个结构体？</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、cap-map-是否正确-请说明理由"><span class="toc-number">1.</span> <span class="toc-text">1、cap(map) 是否正确? 请说明理由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、a-make-int-5-20"><span class="toc-number">2.</span> <span class="toc-text">2、a := make([]int, 5, 20)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、列出-golang-的所有数据类型"><span class="toc-number">3.</span> <span class="toc-text">3、列出 golang 的所有数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、所有数据类型定义时候的默认值"><span class="toc-number">4.</span> <span class="toc-text">4、所有数据类型定义时候的默认值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、函数接受者问题"><span class="toc-number">5.</span> <span class="toc-text">5、函数接受者问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、需要屏蔽-10-万个关键字，-写算法实现"><span class="toc-number">6.</span> <span class="toc-text">6、需要屏蔽 10 万个关键字， 写算法实现?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、Golang，empty-slice-与-nil-slice，json包如何应对？"><span class="toc-number">7.</span> <span class="toc-text">7、Golang，empty slice 与 nil slice，json包如何应对？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、空struct-的使用"><span class="toc-number">8.</span> <span class="toc-text">8、空struct{}的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、在Go语言中结构体是否能够比较？该如何比较两个结构体？"><span class="toc-number">9.</span> <span class="toc-text">9、在Go语言中结构体是否能够比较？该如何比较两个结构体？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10、range-关键字"><span class="toc-number">10.</span> <span class="toc-text">10、range 关键字</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -971,6 +955,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
             
             <div class="clearfix"></div>
