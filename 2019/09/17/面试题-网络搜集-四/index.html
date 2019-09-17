@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>面试题(网络搜集)四 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="31. 算法在utf8字符串判断是否包含指定字符串，并返回下标。“北京天安门最美丽” , “天安门”结果：2 解答： 123456789101112131415161718192021222324252627282930import (	&quot;fmt&quot;	&quot;strings&quot;)func main()&amp;#123;	fmt.Println(Utf8Index(&quot;北京天安门最美丽&quot;, &quot;天安门&quot;))	fmt">
+  <meta name="description" content="31. 算法">
 <meta name="keywords" content="Go,面试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试题(网络搜集)四">
 <meta property="og:url" content="chunlife.top/2019/09/17/面试题-网络搜集-四/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="31. 算法在utf8字符串判断是否包含指定字符串，并返回下标。“北京天安门最美丽” , “天安门”结果：2 解答： 123456789101112131415161718192021222324252627282930import (	&quot;fmt&quot;	&quot;strings&quot;)func main()&amp;#123;	fmt.Println(Utf8Index(&quot;北京天安门最美丽&quot;, &quot;天安门&quot;))	fmt">
+<meta property="og:description" content="31. 算法">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-09-17T12:31:31.963Z">
+<meta property="og:updated_time" content="2019-09-17T12:56:31.744Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题(网络搜集)四">
-<meta name="twitter:description" content="31. 算法在utf8字符串判断是否包含指定字符串，并返回下标。“北京天安门最美丽” , “天安门”结果：2 解答： 123456789101112131415161718192021222324252627282930import (	&quot;fmt&quot;	&quot;strings&quot;)func main()&amp;#123;	fmt.Println(Utf8Index(&quot;北京天安门最美丽&quot;, &quot;天安门&quot;))	fmt">
+<meta name="twitter:description" content="31. 算法">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -179,9 +179,9 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
+        <h2 id="31-算法"><a href="#31-算法" class="headerlink" title="31. 算法"></a>31. 算法</h2><a id="more"></a>
 
-<h2 id="31-算法"><a href="#31-算法" class="headerlink" title="31. 算法"></a>31. 算法</h2><p>在utf8字符串判断是否包含指定字符串，并返回下标。<br>“北京天安门最美丽” , “天安门”<br>结果：2</p>
+<p>在utf8字符串判断是否包含指定字符串，并返回下标。<br>“北京天安门最美丽” , “天安门”<br>结果：2</p>
 <p>解答：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	fmt.Println(Utf8Index(<span class="string">"北京天安门最美丽"</span>, <span class="string">"天安门"</span>))</span><br><span class="line">	fmt.Println(strings.Index(<span class="string">"北京天安门最美丽"</span>, <span class="string">"男"</span>))</span><br><span class="line">	fmt.Println(strings.Index(<span class="string">""</span>, <span class="string">"男"</span>))</span><br><span class="line">	fmt.Println(Utf8Index(<span class="string">"12ws北京天安门最美丽"</span>, <span class="string">"天安门"</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Utf8Index</span><span class="params">(str, substr <span class="keyword">string</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	asciiPos := strings.Index(str, substr)</span><br><span class="line">	<span class="keyword">if</span> asciiPos == <span class="number">-1</span> || asciiPos == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> asciiPos</span><br><span class="line">	&#125;</span><br><span class="line">	pos := <span class="number">0</span></span><br><span class="line">	totalSize := <span class="number">0</span></span><br><span class="line">	reader := strings.NewReader(str)</span><br><span class="line">	<span class="keyword">for</span> _, size, err := reader.ReadRune(); err == <span class="literal">nil</span>; _, size, err = reader.ReadRune() &#123;</span><br><span class="line">		totalSize += size</span><br><span class="line">		pos++</span><br><span class="line">		<span class="comment">// 匹配到</span></span><br><span class="line">		<span class="keyword">if</span> totalSize == asciiPos &#123;</span><br><span class="line">			<span class="keyword">return</span> pos</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> pos</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
