@@ -1,3 +1,7 @@
+chunlife.top/2019/09/17/面试题-网络搜集-四/
+chunlife.top/2019/09/17/面试题-网络搜集-三/
+chunlife.top/2019/09/17/面试题-网络搜集-二/
+chunlife.top/2019/09/17/面试题-网络搜集-一/
 chunlife.top/2019/09/03/copy-on-write技术/
 chunlife.top/2019/08/27/MySQL简单索引总结汇/
 chunlife.top/2019/08/26/mysql索引知识解/
@@ -14,7 +18,3 @@ chunlife.top/2019/06/27/根据业务改造ops-update/
 chunlife.top/2019/06/27/设计小册——序/
 chunlife.top/2019/06/24/中小型公司如何保存密码？/
 chunlife.top/2019/06/23/go实现stack/
-chunlife.top/2019/06/23/go实现队列/
-chunlife.top/2019/06/19/转载《Go语言interface底层实现》/
-chunlife.top/2019/06/19/转载《解剖Go语言map底层实现》/
-chunlife.top/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/
