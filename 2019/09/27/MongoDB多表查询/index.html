@@ -17,7 +17,8 @@
 <meta property="og:description" content="在之前的博客中就有对MongoDB一些操作的总结，但确实也遗漏了一些操作，这里将其补齐上来，毕竟以后自己也看的到，补充一个知识点是，MongoDB关于连表查询的操作，$lookup。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/09/27/MongoDB多表查询/1569558006756.png">
-<meta property="og:updated_time" content="2019-09-27T04:40:20.535Z">
+<meta property="og:image" content="chunlife.top/2019/09/27/MongoDB多表查询/1569572962228.png">
+<meta property="og:updated_time" content="2019-09-27T08:30:24.698Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MongoDB多表查询">
 <meta name="twitter:description" content="在之前的博客中就有对MongoDB一些操作的总结，但确实也遗漏了一些操作，这里将其补齐上来，毕竟以后自己也看的到，补充一个知识点是，MongoDB关于连表查询的操作，$lookup。">
@@ -217,6 +218,10 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.file_bind.aggregate([&#123;$lookup : &#123;from: &quot;file_info&quot;, localField: &quot;software_id&quot;, foreignField: &quot;_id&quot;, as: &quot;match_index&quot;&#125;&#125;]).pretty()</span><br></pre></td></tr></table></figure>
 
 <p><img src="1569558006756.png" alt="获取结果"></p>
+<p><code>$lookup</code>相当于将右集合所有符合条件的记录，都附加在左集合的记录下，所以<code>match_index</code>是被一个数组包裹的，当我们需要把数据给拆开时，我们需要聚合操作中的另一个函数：<code>&quot;$unwind&quot;</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.file_bind.aggregate([&#123;$lookup : &#123;from: &quot;file_info&quot;, localField: &quot;software_id&quot;, foreignField: &quot;_id&quot;, as: &quot;match_index&quot;&#125;&#125;,  &#123;$limit: 1&#125;,  &#123;$unwind: &quot;$match_index&quot;&#125;]).pretty()</span><br></pre></td></tr></table></figure>
+
+<p><img src="1569572962228.png" alt="unwind操作"></p>
 
       
 
