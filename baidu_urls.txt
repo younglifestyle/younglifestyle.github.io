@@ -1,3 +1,4 @@
+chunlife.top/2019/09/27/MongoDB多表查询/
 chunlife.top/2019/09/24/读长安十二时辰ing/
 chunlife.top/2019/09/17/面试题-网络搜集-四/
 chunlife.top/2019/09/17/面试题-网络搜集-三/
@@ -17,4 +18,3 @@ chunlife.top/2019/07/01/一致性hash/
 chunlife.top/2019/06/28/小工具CSDN自动点击插件和GitHub在线代码阅读/
 chunlife.top/2019/06/27/根据业务改造ops-update/
 chunlife.top/2019/06/27/设计小册——序/
-chunlife.top/2019/06/24/中小型公司如何保存密码？/
