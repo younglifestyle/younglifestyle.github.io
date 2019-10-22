@@ -1,3 +1,9 @@
+chunlife.top/2019/10/22/短连接算法解析/
+chunlife.top/2019/10/21/一次Go基础知识讲解（内部分享）/
+chunlife.top/2019/10/14/计算机大小端/
+chunlife.top/2019/10/10/Go协程调度以及协程运行的问题/
+chunlife.top/2019/09/27/MongoDB多表查询/
+chunlife.top/2019/09/24/读长安十二时辰ing/
 chunlife.top/2019/09/17/面试题-网络搜集-四/
 chunlife.top/2019/09/17/面试题-网络搜集-三/
 chunlife.top/2019/09/17/面试题-网络搜集-二/
@@ -12,9 +18,3 @@ chunlife.top/2019/07/21/为图片加上水印或文字-使用Go/
 chunlife.top/2019/07/17/函数选择模式-Functional-Options-Patter/
 chunlife.top/2019/07/17/go操作usb/
 chunlife.top/2019/07/01/CSDN自动展开chorme插件/
-chunlife.top/2019/07/01/一致性hash/
-chunlife.top/2019/06/28/小工具CSDN自动点击插件和GitHub在线代码阅读/
-chunlife.top/2019/06/27/根据业务改造ops-update/
-chunlife.top/2019/06/27/设计小册——序/
-chunlife.top/2019/06/24/中小型公司如何保存密码？/
-chunlife.top/2019/06/23/go实现stack/
