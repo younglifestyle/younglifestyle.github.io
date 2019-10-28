@@ -1,3 +1,4 @@
+chunlife.top/2019/10/28/MySQL存储JSON——Gorm———go编程/
 chunlife.top/2019/10/22/短连接算法解析/
 chunlife.top/2019/10/21/一次Go基础知识讲解（内部分享）/
 chunlife.top/2019/10/14/计算机大小端/
@@ -17,4 +18,3 @@ chunlife.top/2019/07/22/存储-文件系统的选择/
 chunlife.top/2019/07/21/为图片加上水印或文字-使用Go/
 chunlife.top/2019/07/17/函数选择模式-Functional-Options-Patter/
 chunlife.top/2019/07/17/go操作usb/
-chunlife.top/2019/07/01/CSDN自动展开chorme插件/
