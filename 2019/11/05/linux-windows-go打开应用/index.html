@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="日常做了个任务，需要在Go语言中打开windows上的软件，由于网上查询到的并不都是正确的，这里将代码记录下来。 打开应用的命令。 12345&amp;#123;    &quot;windows&quot;: &quot;start&quot;,    &quot;darwin&quot;:  &quot;open&quot;,    &quot;linux&quot;:   &quot;xdg-open&quot;,&amp;#125;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-06T01:48:14.646Z">
+<meta property="og:updated_time" content="2019-11-08T06:46:48.285Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux-windows-go打开系统各类应用">
 <meta name="twitter:description" content="日常做了个任务，需要在Go语言中打开windows上的软件，由于网上查询到的并不都是正确的，这里将代码记录下来。 打开应用的命令。 12345&amp;#123;    &quot;windows&quot;: &quot;start&quot;,    &quot;darwin&quot;:  &quot;open&quot;,    &quot;linux&quot;:   &quot;xdg-open&quot;,&amp;#125;">
@@ -189,6 +189,7 @@ var _hmt = _hmt || [];
 
 <h3 id="linux-openbsd"><a href="#linux-openbsd" class="headerlink" title="linux/openbsd"></a>linux/openbsd</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec.Command(<span class="string">"xdg-open"</span>, <span class="string">"xxxxxxxxxxxxxxx"</span>)</span><br></pre></td></tr></table></figure>
 
+<p><a href="https://chunlife.top/2019/03/22/go%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/">go执行shell命令</a> </p>
 <h3 id="darwin"><a href="#darwin" class="headerlink" title="darwin"></a>darwin</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec.Command(<span class="string">"open"</span>, <span class="string">"xxxxxxxxxxxxxxx"</span>)</span><br></pre></td></tr></table></figure>
 
 
