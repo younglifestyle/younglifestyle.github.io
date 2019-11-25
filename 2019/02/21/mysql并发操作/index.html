@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="在项目中，遇到个并发问题，虽然不是个大问题，但确实是之前没考虑到的，具体体现类似于余额扣减，多个客户端同时访问web接口，导致临界数据计算出现异常。此时就代表着我可能就碰到了一个并发问题了。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T10:03:30.824Z">
+<meta property="og:updated_time" content="2019-11-25T07:46:33.687Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql并发操作">
 <meta name="twitter:description" content="在项目中，遇到个并发问题，虽然不是个大问题，但确实是之前没考虑到的，具体体现类似于余额扣减，多个客户端同时访问web接口，导致临界数据计算出现异常。此时就代表着我可能就碰到了一个并发问题了。">
@@ -195,7 +195,7 @@ var _hmt = _hmt || [];
 <p>共享锁（Ｓ）：SELECT * FROM table_name WHERE … LOCK IN SHARE MODE</p>
 <p>排他锁（X）：SELECT * FROM table_name WHERE … FOR UPDATE</p>
 <p>​    用SELECT .. IN SHARE MODE获得共享锁，主要用在需要数据依存关系时确认某行记录是否存在，并确保没有人对这个记录进行UPDATE或者DELETE操作。但是如果当前事务也需要对该记录进行更新操作，则很有可能造成死锁，对于锁定行记录后需要进行更新操作的应用，应该使用SELECT … FOR UPDATE方式获取排他锁。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Go中显示标明需要获取排他锁的SQL语句， ·WAIT 2·表示其他SQL请求等待2s后timeout，NOWAIT表示不等待</span></span><br><span class="line">tx := Db.Set(<span class="string">"gorm:query_option"</span>, <span class="string">" FOR UPDATE WAIT 2"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Go中显示标明需要获取排他锁的SQL语句， ·WAIT 2·表示其他SQL请求等待2s后timeout，NOWAIT表示不等待</span></span><br><span class="line">tx := Db.Set(<span class="string">"gorm:query_option"</span>, <span class="string">" FOR UPDATE WAIT 2"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add extra SQL option for selecting SQL</span></span><br><span class="line">db.Set(<span class="string">"gorm:query_option"</span>, <span class="string">"FOR UPDATE"</span>).First(&amp;user, <span class="number">10</span>)</span><br><span class="line"><span class="comment">//// SELECT * FROM users WHERE id = 10 FOR UPDATE;</span></span><br></pre></td></tr></table></figure>
 
 <p>需要<strong>注意</strong>的是：只有通过 <strong><em>索引</em></strong> 条件检索数据，InnoDB才会使用行级锁，否则，InnoDB将使用表锁！</p>
 <p>使用<code>SELECT ... FOR UPDATE</code>时，只有明确指定<code>主键</code>，mysql才会执行Row Lock（只锁住被选取的数据），否则MySQL将获取表锁。</p>
