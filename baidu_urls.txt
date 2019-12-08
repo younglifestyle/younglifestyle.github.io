@@ -1,3 +1,4 @@
+chunlife.top/2019/12/08/12306抢票-极限并发带来的思考/
 chunlife.top/2019/12/05/查看linux当前shell/
 chunlife.top/2019/12/05/Linux-nohup和/
 chunlife.top/2019/11/11/linux解压文件的命令/
@@ -17,4 +18,3 @@ chunlife.top/2019/09/17/面试题-网络搜集-一/
 chunlife.top/2019/09/03/copy-on-write技术/
 chunlife.top/2019/08/27/MySQL简单索引总结汇/
 chunlife.top/2019/08/26/mysql索引知识解/
-chunlife.top/2019/08/15/usUSBMS大容量存储设备数据通信/
