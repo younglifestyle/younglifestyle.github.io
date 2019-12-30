@@ -188,6 +188,18 @@ var _hmt = _hmt || [];
 <h2 id="二、遍历目录下的文件列表"><a href="#二、遍历目录下的文件列表" class="headerlink" title="二、遍历目录下的文件列表"></a>二、遍历目录下的文件列表</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">listAll</span><span class="params">(path <span class="keyword">string</span>, suffix <span class="keyword">string</span>)</span> <span class="params">(fileTarget <span class="keyword">string</span>, err error)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 获取该路径下的文件列表，并不会像Walk一样遍历子目录</span></span><br><span class="line">   files, err := ioutil.ReadDir(path)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">""</span>, err</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">for</span> _, fi := <span class="keyword">range</span> files &#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> fi.IsDir() &#123;</span><br><span class="line">         <span class="comment">// 目录则直接跳过</span></span><br><span class="line">         <span class="keyword">continue</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> strings.HasSuffix(strings.ToLower(fi.Name()), suffix) &#123;</span><br><span class="line">            <span class="comment">//files = append(files, filename)</span></span><br><span class="line">            fileTarget = filepath.Join(path, fi.Name())</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> fileTarget, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
 
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- ads -->
+		<ins class="adsbygoogle"
+			 style="display:block"
+			 data-ad-client="ca-pub-2375091422289560"
+			 data-ad-slot="5287134821"
+			 data-ad-format="auto"
+			 data-full-width-responsive="true"></ins>
+		<script>
+			 (adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+
       
         <div class="page-reward">
           <a href="javascript:;" class="page-reward-btn tooltip-top">
@@ -356,17 +368,6 @@ var _hmt = _hmt || [];
     </div>
 </aside>
 
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<!-- ads -->
-	<ins class="adsbygoogle"
-		 style="display:block"
-		 data-ad-client="ca-pub-2375091422289560"
-		 data-ad-slot="5287134821"
-		 data-ad-format="auto"
-		 data-full-width-responsive="true"></ins>
-	<script>
-		 (adsbygoogle = window.adsbygoogle || []).push({});
-	</script>
 
 
   
