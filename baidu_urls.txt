@@ -1,3 +1,4 @@
+chunlife.top/2019/12/31/bufio-缓存IO，读取一行的数据/
 chunlife.top/2019/12/19/go写xlsx文件/
 chunlife.top/2019/12/18/使用unsafe-pointer引发GC错误/
 chunlife.top/2019/12/08/12306抢票-极限并发带来的思考/
@@ -17,4 +18,3 @@ chunlife.top/2019/09/17/面试题-网络搜集-四/
 chunlife.top/2019/09/17/面试题-网络搜集-三/
 chunlife.top/2019/09/17/面试题-网络搜集-二/
 chunlife.top/2019/09/17/面试题-网络搜集-一/
-chunlife.top/2019/09/03/copy-on-write技术/
