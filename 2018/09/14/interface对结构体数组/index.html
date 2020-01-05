@@ -6,21 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>interface对结构体数组 | Pure Life</title>
+  <title>interface转换结构体数组 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="interface非常好用，相当于一个空类型，什么类型都可以被它接受，可以说在传参上是非常方便的，那问题来了，什么类型它都能转得回去吗，结果是不能的。 这个问题，我自己碰到了两次，每次都没记录，每次都很干脆的忘了。">
 <meta name="keywords" content="Go,interface">
 <meta property="og:type" content="article">
-<meta property="og:title" content="interface对结构体数组">
+<meta property="og:title" content="interface转换结构体数组">
 <meta property="og:url" content="chunlife.top/2018/09/14/interface对结构体数组/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="interface非常好用，相当于一个空类型，什么类型都可以被它接受，可以说在传参上是非常方便的，那问题来了，什么类型它都能转得回去吗，结果是不能的。 这个问题，我自己碰到了两次，每次都没记录，每次都很干脆的忘了。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2018/09/14/interface对结构体数组/question.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/interface对结构体数组/1536911326824.png">
-<meta property="og:updated_time" content="2019-04-10T13:25:23.475Z">
+<meta property="og:updated_time" content="2019-11-02T01:40:02.316Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="interface对结构体数组">
+<meta name="twitter:title" content="interface转换结构体数组">
 <meta name="twitter:description" content="interface非常好用，相当于一个空类型，什么类型都可以被它接受，可以说在传参上是非常方便的，那问题来了，什么类型它都能转得回去吗，结果是不能的。 这个问题，我自己碰到了两次，每次都没记录，每次都很干脆的忘了。">
 <meta name="twitter:image" content="chunlife.top/2018/09/14/interface对结构体数组/question.png">
   
@@ -50,6 +50,7 @@ var _hmt = _hmt || [];
 </script>
 
 
+  <script data-ad-client="ca-pub-2375091422289560" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 </html>
 <body>
@@ -169,7 +170,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      interface对结构体数组
+      interface转换结构体数组
     </h1>
   
 
@@ -201,14 +202,15 @@ var _hmt = _hmt || [];
 <p>在Go中，一般语法是不应该隐藏那些复杂或耗费资源的操作的，转换string类型到interface类型算法可以O（1）时间内完成。切片[]string依然可以被视作是一个值（译者：我感觉这里可以将切片看做是一个连续内存的结构来将其视作一个值），转换到interface依然可以在O（1）时间内完成。</p>
 <p>此规则有一个例外——就是转换字符串，当转换变量string a，[]byte a或者是[]rune a，虽然算法难度为O（n），但还是可以视作正常操作。</p>
 <p>其实到这里就可以解决我们的问题了，interface用断言来做类型转换是官方干脆就没想过要做到那么复杂的程度，若是开发者需要做，可以采用反射来自己去实现这种操作的。</p>
-<p>这里贴一个：</p>
+<p>这里贴一个实现过程的帖子：</p>
 <p><a href="https://github.com/issue9/conv/blob/master/obj.go#L75" target="_blank" rel="noopener">https://github.com/issue9/conv/blob/master/obj.go#L75</a></p>
-<p>另外，还附上一个对interface断言的博客文章：</p>
+<p>另外，还附上一个对讲解interface断言的博客文章：</p>
 <p><a href="https://medium.com/golangspec/type-assertions-in-go-e609759c42e1" target="_blank" rel="noopener">Type assertions in Go</a></p>
 
       
 
       
+
         <div class="page-reward">
           <a href="javascript:;" class="page-reward-btn tooltip-top">
             <div class="tooltip tooltip-east">
@@ -218,7 +220,7 @@ var _hmt = _hmt || [];
             <span class="tooltip-content">
               <span class="tooltip-text">
                 <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i><i class="icon icon-quo-right"></i></p>
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我喝茶<i class="icon icon-quo-right"></i></p>
                   <div class="reward-box">
                     
                     
@@ -377,6 +379,17 @@ var _hmt = _hmt || [];
 </aside>
 
 
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- ads -->
+	<ins class="adsbygoogle"
+		 style="display:block"
+		 data-ad-client="ca-pub-2375091422289560"
+		 data-ad-slot="5287134821"
+		 data-ad-format="auto"
+		 data-full-width-responsive="true"></ins>
+	<script>
+		 (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 
   
   
@@ -419,7 +432,7 @@ gitalk.render('gitalk-container')
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Pure Life
+    		&copy; 2020 Pure Life
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -979,6 +992,74 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Gorm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">存储</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">cmd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">自动化点击</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Golang</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">windows api</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
             
             <div class="clearfix"></div>

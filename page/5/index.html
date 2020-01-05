@@ -42,6 +42,7 @@ var _hmt = _hmt || [];
 </script>
 
 
+  <script data-ad-client="ca-pub-2375091422289560" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 </html>
 <body>
@@ -156,27 +157,27 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-funny-link-TCP库的使用和bug-fix" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-中小型公司如何保存密码？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/06/funny-link-TCP库的使用和bug-fix/">funny/link TCP库的使用和bug fix</a>
+      <a class="article-title" href="/2019/06/24/中小型公司如何保存密码？/">中小型公司如何保存密码？</a>
     </h1>
   
 
         
-        <a href="/2019/06/06/funny-link-TCP库的使用和bug-fix/" class="archive-article-date">
-  	<time datetime="2019-06-06T02:55:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-06</time>
+        <a href="/2019/06/24/中小型公司如何保存密码？/" class="archive-article-date">
+  	<time datetime="2019-06-24T03:07:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-24</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>公司项目需要对接嵌入式设备，底层<code>stm32</code>使用的是TCP网络协议，go语言中原生TCP编程还是比较简单的，像网络方面的编程，其实很多操作都比较繁复，在编写时，就希望能够有类似的框架性质的库帮助统一所有网络的代码，以及减轻网络编写的负担。</p>
+        <p>一般的，我们在后端保存密码时，不会使用明文进行保存，明文保存意味着数据库被爆的损失将直线型上升，例如<code>CSDN</code>密码泄露事件，常见的方式是加盐操作，所谓的盐（salt）是一个随机数，算法演示入：<code>MD5（MD5（P） + salt）</code>、<code>SHA1（MD5（P） + salt）</code>或<code>MD5（P + salt）</code>等。</p>
         
       
 
@@ -190,15 +191,15 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">MD5</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">salt</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">funny/link</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">加盐</a>
         		</li>
       		
 		</ul>
@@ -219,7 +220,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/06/funny-link-TCP库的使用和bug-fix/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/06/24/中小型公司如何保存密码？/">展开全文 >></a>
         </p>
       
 
@@ -248,30 +249,28 @@ var _hmt = _hmt || [];
 
 
 
-
   
-    <article id="post-斐波那契数列——Golang" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-go实现stack" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/04/斐波那契数列——Golang/">斐波那契数列——Go</a>
+      <a class="article-title" href="/2019/06/23/go实现stack/">go实现stack</a>
     </h1>
   
 
         
-        <a href="/2019/06/04/斐波那契数列——Golang/" class="archive-article-date">
-  	<time datetime="2019-06-04T07:08:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
+        <a href="/2019/06/23/go实现stack/" class="archive-article-date">
+  	<time datetime="2019-06-23T14:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-23</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>fibonacci 数列算是不管哪个语言里头都能碰到的一个问题，其过于经典，导致其有很多解法，大体上可以归为遍历，递归，优化的递归，矩阵（矩阵这个确实很厉害）。</p>
-<p>什么是 斐波那契数列？ 0,1,1,2,3,5,8 … 除了<code>1</code>和<code>2</code>以外，剩下的数都满足 <code>f(n) = f(n-2)+f(n-1)</code>。</p>
+        <p>堆栈（英语：stack）又称为栈或堆叠，是计算机科学中的一种抽象数据类型，只允许在有序的线性数据集合的一端（称为堆栈顶端，英语：top）进行加入数据（英语：push）和移除数据（英语：pop）的运算。因而按照<strong>后进先出</strong>（LIFO, Last In First Out）的原理运作。</p>
         
       
 
@@ -285,11 +284,11 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">fibonacci</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">stack</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">斐波那契数列</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">栈</a>
         		</li>
       		
 		</ul>
@@ -310,7 +309,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/04/斐波那契数列——Golang/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/06/23/go实现stack/">展开全文 >></a>
         </p>
       
 
@@ -339,29 +338,29 @@ var _hmt = _hmt || [];
 
 
 
-
   
-    <article id="post-Jetbrains系列产品最新激活方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-go实现队列" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/29/Jetbrains系列产品最新激活方法/">Jetbrains系列产品最新激活方法</a>
+      <a class="article-title" href="/2019/06/23/go实现队列/">go实现队列</a>
     </h1>
   
 
         
-        <a href="/2019/05/29/Jetbrains系列产品最新激活方法/" class="archive-article-date">
-  	<time datetime="2019-05-29T03:23:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+        <a href="/2019/06/23/go实现队列/" class="archive-article-date">
+  	<time datetime="2019-06-23T08:44:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-23</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Go可以选择的IDE其实是有一些的，在初学阶段我比较推荐的是<em>LiteIDE</em>，使用<code>qt</code>进行开发，国产IDE（<img src="zan.png" alt="img">），简单易用，学习上来说是已经够用了，不折腾，不损耗自信心。</p>
+        <p>队列是什么？</p>
+<p><code>queue</code>作为一种<code>先进先出</code>（<em>FIFO</em>, First-In-First-Out）的线性表结构，在具体应用中通常用链表或者数组来实现。队列只允许在后端（称为<code>rear</code>）进行插入操作，在前端（称为<code>front</code>）进行删除操作。</p>
         
       
 
@@ -375,183 +374,11 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Jetbrains</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/实用工具//" class="article-tag-list-link color5">实用工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/29/Jetbrains系列产品最新激活方法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-  
-    <article id="post-解析Content-Disposition，获取文件名" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/28/解析Content-Disposition，获取文件名/">解析Content-Disposition，获取文件名</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/28/解析Content-Disposition，获取文件名/" class="archive-article-date">
-  	<time datetime="2019-05-28T01:52:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在文件下载中，我们需要设置一个header头，在浏览器下载文件时，指定下载文件的文件名。<code>Content-Disposition</code>，这里做的实用<code>golang</code>就是取出设置在<code>header</code>中的文件名。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">http</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/HTTP//" class="article-tag-list-link color5">HTTP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/28/解析Content-Disposition，获取文件名/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-  
-    <article id="post-检查回文数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/26/检查回文数/">检查回文数</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/26/检查回文数/" class="archive-article-date">
-  	<time datetime="2019-05-26T07:55:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>回文数类似于这样的字符串和整数<code>123321</code>。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">go</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">queue</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">队列</a>
         		</li>
       		
 		</ul>
@@ -572,7 +399,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/26/检查回文数/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/06/23/go实现队列/">展开全文 >></a>
         </p>
       
 
@@ -601,22 +428,110 @@ var _hmt = _hmt || [];
 
 
 
-
   
-    <article id="post-小工具（windows-便笺）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-转载《Go语言interface底层实现》" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/23/小工具（windows-便笺）/">小工具（windows 便笺）</a>
+      <a class="article-title" href="/2019/06/19/转载《Go语言interface底层实现》/">转载《Go语言interface底层实现》</a>
     </h1>
   
 
         
-        <a href="/2019/05/23/小工具（windows-便笺）/" class="archive-article-date">
-  	<time datetime="2019-05-23T05:50:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-23</time>
+        <a href="/2019/06/19/转载《Go语言interface底层实现》/" class="archive-article-date">
+  	<time datetime="2019-06-19T07:15:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>interface底层是怎么实现的，由于一直都是浮于水面，未去深究过，这里也是去查了些资料了解，这篇博客把<code>interface</code>结构解构的很清楚了，我觉得，博主画的那几幅图就能很好的进行理解了。</p>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">interface</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Go//" class="article-tag-list-link color3">Go</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/19/转载《Go语言interface底层实现》/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-转载《解剖Go语言map底层实现》" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/19/转载《解剖Go语言map底层实现》/">转载《解剖Go语言map底层实现》</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/19/转载《解剖Go语言map底层实现》/" class="archive-article-date">
+  	<time datetime="2019-06-19T06:28:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-19</time>
 </a>
         
       </header>
@@ -624,9 +539,8 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>转载自<a href="https://blog.csdn.net/chenghuikai/article/details/45173953" target="_blank" rel="noopener">https://blog.csdn.net/chenghuikai/article/details/45173953</a></p>
+<p>转载自：<a href="https://i6448038.github.io/2018/08/26/map-secret/" target="_blank" rel="noopener">https://i6448038.github.io/2018/08/26/map-secret/</a></p>
 </blockquote>
-<p>平时我们使用WIN7的便签，挺方便的，而且是系统自带的，还不用额外的安装，当你新建完标签，以后就会随系统开机启动，非常方便，唯一不足的是，不能最小化到右下角，可惜了，不过还是挺好用的，下面告诉你些使用的快捷键，看个图片吧：</p>
         
       
 
@@ -640,11 +554,192 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">便笺</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Sticky Notes</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Map</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Go//" class="article-tag-list-link color3">Go</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/19/转载《解剖Go语言map底层实现》/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-转载《一次完整的HTTP网络请求过程详解》" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/">转载《一次完整的HTTP网络请求过程详解》</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/" class="archive-article-date">
+  	<time datetime="2019-06-19T06:11:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>转载自：<a href="https://blog.csdn.net/qq_39393899/article/details/80405979" target="_blank" rel="noopener">https://blog.csdn.net/qq_39393899/article/details/80405979 </a></p>
+</blockquote>
+<h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0.  前言"></a>0.  前言</h2><p>从我们在浏览器的地址栏输入http: //blog.csdn.net/seu_calvin后回车，到我们看到该博客的主页，这中间经历了什么呢？简单地回答这个问题，大概是经历了域名解析、TCP的三次握手、建立TCP连接后发起HTTP请求、服务器响应HTTP请求、浏览器解析html代码，同时请求html代码中的资源（如js、css、图片等）、最后浏览器对页面进行渲染并呈现给用户。下面分别介绍一下每个过程。</p>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">UDP</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络//" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/19/转载《一次完整的HTTP网络请求过程详解》/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Markdown-For-Typora-中文版使用指南（转载）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/10/Markdown-For-Typora-中文版使用指南（转载）/">Markdown For Typora 中文版使用指南（转载）</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/10/Markdown-For-Typora-中文版使用指南（转载）/" class="archive-article-date">
+  	<time datetime="2019-06-10T10:10:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>转载自：<a href="https://zhuanlan.zhihu.com/p/39872673" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/39872673</a></p>
+</blockquote>
+<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p><strong>Markdown</strong>诞生自 <a href="https://link.zhihu.com/?target=http%3A//daringfireball.net/" target="_blank" rel="noopener">Daring Fireball</a>之手，点击<a href="https://link.zhihu.com/?target=http%3A//daringfireball.net/projects/markdown/syntax" target="_blank" rel="noopener">这里</a>可以找到最早版本的语法标准。然而，它的语法标准因解析器和编辑器而异，<strong>Typora</strong>使用的是<a href="https://link.zhihu.com/?target=https%3A//help.github.com/articles/github-flavored-markdown/" target="_blank" rel="noopener">GitHub Flavored Markdown</a>标准。</p>
+<p>需要注意的是在Markdown中的HTML代码块可以被识别但并不会被解析和编译。同样要注意的是，保存之后的文档格式可能会对最初的编写的文档格式有所微调。</p>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">markdown</a>
         		</li>
       		
 		</ul>
@@ -665,7 +760,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/23/小工具（windows-便笺）/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/06/10/Markdown-For-Typora-中文版使用指南（转载）/">展开全文 >></a>
         </p>
       
 
@@ -694,29 +789,28 @@ var _hmt = _hmt || [];
 
 
 
-
   
-    <article id="post-docker-pxc部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-TCP实现聊天室" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/21/docker-pxc部署/">docker pxc部署</a>
+      <a class="article-title" href="/2019/06/10/TCP实现聊天室/">TCP实现聊天室</a>
     </h1>
   
 
         
-        <a href="/2019/05/21/docker-pxc部署/" class="archive-article-date">
-  	<time datetime="2019-05-21T05:55:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-21</time>
+        <a href="/2019/06/10/TCP实现聊天室/" class="archive-article-date">
+  	<time datetime="2019-06-10T09:19:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>参考之前的博客，将docker的跨宿主机overlay网络部署成功，然后再进行此次操作。</p>
+        <p>简单的练手，使用到TCP协议和协程。</p>
         
       
 
@@ -730,15 +824,11 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">UDP</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">pxc</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Percona XtraDB Cluster</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
         		</li>
       		
 		</ul>
@@ -750,7 +840,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/docker//" class="article-tag-list-link color2">docker</a>
+        			<a href="/categories/网络//" class="article-tag-list-link color3">网络</a>
         		</li>
       		
 		</ul>
@@ -759,7 +849,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/21/docker-pxc部署/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/06/10/TCP实现聊天室/">展开全文 >></a>
         </p>
       
 
@@ -788,31 +878,28 @@ var _hmt = _hmt || [];
 
 
 
-
   
-    <article id="post-docker-overlay网络部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-TCP状态转换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/21/docker-overlay网络部署/">docker overlay网络部署</a>
+      <a class="article-title" href="/2019/06/10/TCP状态转换/">TCP状态转换</a>
     </h1>
   
 
         
-        <a href="/2019/05/21/docker-overlay网络部署/" class="archive-article-date">
-  	<time datetime="2019-05-21T03:16:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-21</time>
+        <a href="/2019/06/10/TCP状态转换/" class="archive-article-date">
+  	<time datetime="2019-06-10T06:12:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在实际的项目中，因为需要部署多节点冗余备份，以实现高可用，这里就要用到各类工具的分布式部署方案了，以前手动部署过mysql replication和pxc，但docker的方案没有尝试成功，无法成功部署，这里也是参考了各类博客和文档后，尝试部署成功。</p>
-<p>假设要在两台节点上安装docker，并使这两个docker可以相互访问。</p>
-<p>环境：Ubuntu 16.04  etcd docker</p>
+        <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>TCP与UDP属于传输层的基础协议，在实际的应用中，我们使用到的也就是传输层及传输层以上的协议，其他的底层协议，一般都是以了解基础协议原理即可。</p>
         
       
 
@@ -826,15 +913,11 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">UDP</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">overlay</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">跨宿主机</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">TCP</a>
         		</li>
       		
 		</ul>
@@ -846,7 +929,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/docker//" class="article-tag-list-link color2">docker</a>
+        			<a href="/categories/网络//" class="article-tag-list-link color3">网络</a>
         		</li>
       		
 		</ul>
@@ -855,7 +938,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/21/docker-overlay网络部署/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/06/10/TCP状态转换/">展开全文 >></a>
         </p>
       
 
@@ -880,105 +963,6 @@ var _hmt = _hmt || [];
         
     </div>
 </aside>
-
-
-
-
-
-  
-    <article id="post-mysql集群部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/17/mysql集群部署/">mysql集群部署</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/17/mysql集群部署/" class="archive-article-date">
-  	<time datetime="2019-05-17T12:18:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在实际的开发环境（我的为Ubuntu）中，为了保证数据的有效性以及稳定性，需要对数据库进行冗余设计，也就是集群部署，以此来应对在实际的生产环境中出现的数据库宕机，我这里主要是看了两种mysql集群设计方案，Replication和PXC（percona-xtradb-cluster）。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">pxc</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">replication</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">percona-xtradb-cluster</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/mysql//" class="article-tag-list-link color1">mysql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/17/mysql集群部署/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
 
 
 
@@ -986,7 +970,7 @@ var _hmt = _hmt || [];
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
@@ -998,7 +982,7 @@ var _hmt = _hmt || [];
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Pure Life
+    		&copy; 2020 Pure Life
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1558,6 +1542,74 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Gorm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">存储</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">cmd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">自动化点击</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Golang</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">windows api</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
             
             <div class="clearfix"></div>

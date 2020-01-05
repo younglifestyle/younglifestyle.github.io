@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="前因之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-09-03T17:00:15.426Z">
+<meta property="og:updated_time" content="2019-12-19T13:47:33.476Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="copy-on-write技术">
 <meta name="twitter:description" content="前因之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
@@ -47,6 +47,7 @@ var _hmt = _hmt || [];
 </script>
 
 
+  <script data-ad-client="ca-pub-2375091422289560" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 </html>
 <body>
@@ -196,6 +197,11 @@ var _hmt = _hmt || [];
 <h2 id="Copy-On-Write实现"><a href="#Copy-On-Write实现" class="headerlink" title="Copy-On-Write实现"></a>Copy-On-Write实现</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"strconv"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> testMap <span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">copyBak</span><span class="params">()</span> <span class="title">map</span>[<span class="title">int</span>]*<span class="title">string</span></span> &#123;</span><br><span class="line">	vals := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> key, value := <span class="keyword">range</span> testMap &#123;</span><br><span class="line">		vals[key] = value</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> vals</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	testMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span>)</span><br><span class="line">	str := <span class="string">"123"</span></span><br><span class="line">	testMap[<span class="number">1</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">2</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">3</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">4</span>] = &amp;str</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			fmt.Println(*testMap[<span class="number">3</span>])</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">100000000</span>; i++ &#123;</span><br><span class="line">			<span class="comment">// 写数据是需要加锁的，并发写的情况下，可能会出现copy多份数据的情况</span></span><br><span class="line">			<span class="comment">// 但此处只有一个协程做此操作</span></span><br><span class="line">			<span class="comment">// 1、复制出新的Map</span></span><br><span class="line">			newVals := copyBak()</span><br><span class="line">			<span class="comment">// 2、修改已有的元素，或添加新元素</span></span><br><span class="line">			str = <span class="string">"12343264364634"</span> + strconv.Itoa(i)</span><br><span class="line">			newVals[<span class="number">3</span>] = &amp;str</span><br><span class="line">			<span class="comment">// 3、将原有的Map地址指向新的Map</span></span><br><span class="line">			testMap = newVals</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>修改时锁住的仅仅是资源的一个备份，所以并不会影响到原有资源的正常访问，原有资源依然可以正常访问。</p>
+<blockquote>
+<p>我代码里头的例子。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> UpdatetaskInfoMap <span class="keyword">struct</span> &#123;</span><br><span class="line">	TaskCreateTime <span class="keyword">int64</span>                         <span class="string">`json:"task_Create_time,omitempty"`</span></span><br><span class="line">	DeviceIdMap    <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">struct</span>&#123;&#125;           <span class="string">`json:"device_id_map"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果是结构体，json marshal更为方便进行复制操作</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">clone</span><span class="params">()</span> *<span class="title">UpdatetaskInfoMap</span></span> &#123;</span><br><span class="line">	taskInfos := &amp;UpdatetaskInfoMap&#123;&#125;</span><br><span class="line">	bytes, _ := json.Marshal(ms)</span><br><span class="line">	json.Unmarshal(bytes, taskInfos)</span><br><span class="line">	<span class="keyword">return</span> taskInfos</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">copyDeviceIDArr</span><span class="params">(exclude <span class="keyword">string</span>)</span> <span class="title">map</span>[<span class="title">string</span>]<span class="title">struct</span></span>&#123;&#125; &#123;</span><br><span class="line">	values := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> key, value := <span class="keyword">range</span> ms.DeviceIdMap &#123;</span><br><span class="line">		<span class="keyword">if</span> key != exclude &#123;</span><br><span class="line">			values[key] = value</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> values</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">AddDeviceId</span><span class="params">(deviceIdArr []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">    deviceIDMap := ms.copyDeviceIDArr(<span class="string">""</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> _, deviceId := <span class="keyword">range</span> deviceIdArr &#123;</span><br><span class="line">		deviceIDMap[deviceId] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	ms.DeviceIdMap = deviceIDMap</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除操作</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">RemoveDeviceId</span><span class="params">(deviceId <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> _, ok := ms.DeviceIdMap[deviceId]; ok &#123;</span><br><span class="line">		<span class="keyword">return</span> g.ErrTaskNotFound</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	deviceIDMap := ms.copyDeviceIDArr(deviceId)</span><br><span class="line">	ms.DeviceIdMap = deviceIDMap</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="Copy-On-Write应用场景以及读写锁"><a href="#Copy-On-Write应用场景以及读写锁" class="headerlink" title="Copy-On-Write应用场景以及读写锁"></a>Copy-On-Write应用场景以及读写锁</h2><p>Copy-On-Write并发容器用于读多写少的并发场景。比如白名单，黑名单，商品类目的访问、更新场景以及一些数据的配置项（Gateway将此作为更新配置项），假如我们有一个搜索网站，用户在这个网站的搜索框中，输入关键字搜索内容，但是某些关键字不允许被搜索。这些不能被搜索的关键字会被放在一个黑名单当中，黑名单每天晚上更新一次。当用户搜索时，会检查当前关键字在不在黑名单当中，如果在，则提示不能搜索。</p>
 <p>读多写少一般还会被介绍使用读写锁，<code>RWMutex</code>，那和<code>COW</code>之前有什么不一样呢。我们顺道来看一下。</p>
 <p>这里直接上一个<code>Golang</code>中读写锁的阻塞状态：</p>
@@ -227,6 +233,7 @@ var _hmt = _hmt || [];
       
 
       
+
         <div class="page-reward">
           <a href="javascript:;" class="page-reward-btn tooltip-top">
             <div class="tooltip tooltip-east">
@@ -236,7 +243,7 @@ var _hmt = _hmt || [];
             <span class="tooltip-content">
               <span class="tooltip-text">
                 <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i><i class="icon icon-quo-right"></i></p>
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我喝茶<i class="icon icon-quo-right"></i></p>
                   <div class="reward-box">
                     
                     
@@ -395,6 +402,17 @@ var _hmt = _hmt || [];
 </aside>
 
 
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- ads -->
+	<ins class="adsbygoogle"
+		 style="display:block"
+		 data-ad-client="ca-pub-2375091422289560"
+		 data-ad-slot="5287134821"
+		 data-ad-format="auto"
+		 data-full-width-responsive="true"></ins>
+	<script>
+		 (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 
   
   
@@ -437,7 +455,7 @@ gitalk.render('gitalk-container')
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Pure Life
+    		&copy; 2020 Pure Life
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -997,6 +1015,74 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Gorm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">存储</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">cmd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">自动化点击</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Golang</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">windows api</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
             
             <div class="clearfix"></div>
