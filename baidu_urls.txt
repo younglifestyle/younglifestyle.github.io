@@ -1,3 +1,4 @@
+chunlife.top/2020/01/14/关于测试的方法以及建议/
 chunlife.top/2020/01/12/MySQL执行计划explain详解/
 chunlife.top/2019/12/31/科学需要谨慎，知识需要校校验/
 chunlife.top/2019/12/31/bufio-缓存IO，读取一行的数据/
@@ -17,4 +18,3 @@ chunlife.top/2019/10/10/Go协程调度以及协程运行的问题/
 chunlife.top/2019/09/27/MongoDB多表查询/
 chunlife.top/2019/09/24/读长安十二时辰ing/
 chunlife.top/2019/09/17/面试题-网络搜集-四/
-chunlife.top/2019/09/17/面试题-网络搜集-三/
