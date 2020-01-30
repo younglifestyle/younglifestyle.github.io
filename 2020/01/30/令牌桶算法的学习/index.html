@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-01-30T15:11:35.619Z">
+<meta property="og:updated_time" content="2020-01-30T15:15:04.928Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="令牌桶算法的学习">
 <meta name="twitter:description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。">
@@ -188,11 +188,11 @@ var _hmt = _hmt || [];
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单的描述限流就是对并发请求进行限制或对一个时间窗内的请求进行限速来保护系统，当请求到达限制时将会被拒绝或降级。 </p>
 <p>其实不管我们过去是否关注过限流，几乎都和限流打过交道，例如我们在开发中常用的各种资源池技术(线程池、数据库连接池、对象池)本质上都是限制总并发数，实际上就是通过计数器算法的限流。</p>
 <p>维基百科的描述：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- A token is added to the bucket every 1/r seconds. </span><br><span class="line">- The bucket can hold at the most b tokens. If a token arrives when the bucket is full, it is discarded. 这个 bucket </span><br><span class="line">- When a packet (network layer PDU) of n bytes arrives, </span><br><span class="line">  - if at least n tokens are in the bucket, n tokens are removed from the bucket, and the packet is sent to the network. </span><br><span class="line">  - if fewer than n tokens are available, no tokens are removed from the bucket, and the packet is considered to be non-conformant.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- A token is added to the bucket every 1/r seconds. </span><br><span class="line">- The bucket can hold at the most b tokens. If a token arrives when the bucket is full, it is discarded. </span><br><span class="line">- When a packet (network layer PDU) of n bytes arrives, </span><br><span class="line">  - if at least n tokens are in the bucket, n tokens are removed from the bucket, and the packet is sent to the network. </span><br><span class="line">  - if fewer than n tokens are available, no tokens are removed from the bucket, and the packet is considered to be non-conformant.</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>每隔 1/r 秒向 bucket 中增加一个 token。</li>
-<li>最多只能存放 b 个 token。如果放置 token 时 bucket 已经满了，丢弃这个 token。</li>
+<li>这个 bucket 最多只能存放 b 个 token。如果放置 token 时 bucket 已经满了，丢弃这个 token。</li>
 <li>当一个包含 n 个字节的数据包进来的时候，<ul>
 <li>如果 bucket 中有 &gt;= n 个 token，将从 bucket 中移除 n 个 token，然后把这个数据包发送出去。</li>
 <li>如果可用的 token &lt; n，此时不会从 bucket 中移除任何的 token，但是这个数据包会被认为是被限制的数据包。</li>
@@ -217,7 +217,7 @@ var _hmt = _hmt || [];
 <li>当 bucket 满的时候，将不再放入 token，即 token 数不能超过 bucket 容量限制。</li>
 <li>因为可以一次性从 bucket 拿出大量的 token 所以 token bucket 允许突发的峰值， 即，限速不是绝对的，而是允许存在尖峰/波峰。</li>
 </ul>
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><a href="https://www.jianshu.com/p/9aaf7ee776d2" target="_blank" rel="noopener">令牌桶（Token Bucket）</a></p>
+<h2 id="参考附录"><a href="#参考附录" class="headerlink" title="参考附录"></a>参考附录</h2><p><a href="https://www.jianshu.com/p/9aaf7ee776d2" target="_blank" rel="noopener">令牌桶（Token Bucket）</a></p>
 <p><a href="https://mozillazg.com/2019/01/rate-limiting-intro-token-bucket.html" target="_blank" rel="noopener">rate limiting 之 token bucket</a></p>
 
       
@@ -389,7 +389,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见的实现方法"><span class="toc-number">2.</span> <span class="toc-text">常见的实现方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一种算法实现"><span class="toc-number">2.1.</span> <span class="toc-text">第一种算法实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二种算法"><span class="toc-number">2.2.</span> <span class="toc-text">第二种算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">3.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录"><span class="toc-number">4.</span> <span class="toc-text">附录</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见的实现方法"><span class="toc-number">2.</span> <span class="toc-text">常见的实现方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一种算法实现"><span class="toc-number">2.1.</span> <span class="toc-text">第一种算法实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二种算法"><span class="toc-number">2.2.</span> <span class="toc-text">第二种算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">3.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考附录"><span class="toc-number">4.</span> <span class="toc-text">参考附录</span></a></li></ol>
                     </div>
                 </span>
             </div>
