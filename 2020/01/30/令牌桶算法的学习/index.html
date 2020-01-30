@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>令牌桶算法的学习 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。 前言简单的描述限流就是对并发请求进行限制或对一个时间窗内的">
+  <meta name="description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。">
 <meta name="keywords" content="Go,服务器,限流,bucket token,rate limit,令牌桶">
 <meta property="og:type" content="article">
 <meta property="og:title" content="令牌桶算法的学习">
 <meta property="og:url" content="chunlife.top/2020/01/30/令牌桶算法的学习/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。 前言简单的描述限流就是对并发请求进行限制或对一个时间窗内的">
+<meta property="og:description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-01-30T14:59:01.050Z">
+<meta property="og:updated_time" content="2020-01-30T15:11:35.619Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="令牌桶算法的学习">
-<meta name="twitter:description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。 前言简单的描述限流就是对并发请求进行限制或对一个时间窗内的">
+<meta name="twitter:description" content="在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。 在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。 我之前写过一篇比较简单的，服务器限流问题。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -183,6 +183,8 @@ var _hmt = _hmt || [];
         <p>在一些需要大量访问的服务中，访问量过大，处理方式无非是，① 提升后台性能（包括提升硬件性能，优化代码或者分布式架构这些的）；② 限速，（在一顿时间内，限制访问者的成功率，例如某接口访问限制为1000次/s）。</p>
 <p>在实现限速功能的时候，其中一种常用的方法是使用 token bucket 算法来实现。</p>
 <p>我之前写过一篇比较简单的，<a href="https://chunlife.top/2018/09/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%99%90%E6%B5%81%E9%97%AE%E9%A2%98/">服务器限流问题</a>。</p>
+<a id="more"></a>
+
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单的描述限流就是对并发请求进行限制或对一个时间窗内的请求进行限速来保护系统，当请求到达限制时将会被拒绝或降级。 </p>
 <p>其实不管我们过去是否关注过限流，几乎都和限流打过交道，例如我们在开发中常用的各种资源池技术(线程池、数据库连接池、对象池)本质上都是限制总并发数，实际上就是通过计数器算法的限流。</p>
 <p>维基百科的描述：</p>
