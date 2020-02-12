@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>Go gin单元测试 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。   main.go 12345678910111213141516171819202122package mainimport (   &quot;net/http&quot;   &quot;github.com/gin-gonic/gin&quot;)func main() &amp;#123;   router := SetupRouter()">
+  <meta name="description" content="这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。">
 <meta name="keywords" content="gin,go test,httptest">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go gin单元测试">
 <meta property="og:url" content="chunlife.top/2020/02/12/Go-gin单元测试/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。   main.go 12345678910111213141516171819202122package mainimport (   &quot;net/http&quot;   &quot;github.com/gin-gonic/gin&quot;)func main() &amp;#123;   router := SetupRouter()">
+<meta property="og:description" content="这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-02-12T09:53:03.613Z">
+<meta property="og:updated_time" content="2020-02-12T09:58:46.465Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go gin单元测试">
-<meta name="twitter:description" content="这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。   main.go 12345678910111213141516171819202122package mainimport (   &quot;net/http&quot;   &quot;github.com/gin-gonic/gin&quot;)func main() &amp;#123;   router := SetupRouter()">
+<meta name="twitter:description" content="这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -181,7 +181,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <p>这个好像没什么好讲，主要是gin框架下，httptest包要怎么写，这个是重点。直接上代码吧。</p>
-<!---->
+<a id="more"></a>
 
 <p><code>main.go</code></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net/http"</span></span><br><span class="line">   <span class="string">"github.com/gin-gonic/gin"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   router := SetupRouter()</span><br><span class="line">   router.Run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SetupRouter</span><span class="params">()</span> *<span class="title">gin</span>.<span class="title">Engine</span></span> &#123;</span><br><span class="line">   router := gin.Default()</span><br><span class="line">   router.GET(<span class="string">"/"</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">      c.JSON(http.StatusOK, gin.H&#123;</span><br><span class="line">          <span class="string">"hello"</span>: <span class="string">"world"</span>,</span><br><span class="line">      &#125;)</span><br><span class="line">   &#125;)</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">return</span> router</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

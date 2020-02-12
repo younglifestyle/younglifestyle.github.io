@@ -448,33 +448,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <p>在某个项目需要支持多平台时，某个功能可能需要针对不同平台编写专属这个平台的具体实现。 在c/c++中，不同平台的实现或者某个平台的特性往往通过<code>#if</code>, <code>#else</code>, <code>#endif</code>这类预处理指令来配合 交叉编译达到。</p>
-<!---->
-
-<blockquote>
-<p><a href="https://golang.org/pkg/go/build/" target="_blank" rel="noopener">原文地址</a></p>
-<p><a href="http://manguijie.top/2018/08/go-condition-build" target="_blank" rel="noopener">go build条件编译</a></p>
-</blockquote>
-<hr>
-<h3 id="go-build-tags"><a href="#go-build-tags" class="headerlink" title="go build -tags"></a>go build -tags</h3><p>go某种程度上也可以支持条件编译。go中的条件编译显得格外的隐蔽，并且条件编译也仅限于包级别。</p>
-<p>假设某个服务，对外既提供HTTP服务，也可选的提供grpc服务。以此为例来说明如何支持可选的grpc。</p>
-<p>go条件编译以一行特殊的 <code>// +build</code> 注释行开始。</p>
-<p>为了跟包文档区分开，<code>// +build</code>行后面必须跟一个空白行。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/*错误: +build下没有用空白行分隔，build tag无法生效*/</span><br><span class="line">// +build enable_rpc </span><br><span class="line">func init()&#123;</span><br><span class="line">    go StartRPCForever()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*正确*/</span><br><span class="line">// +build enable_rpc</span><br><span class="line"></span><br><span class="line">func init()&#123;</span><br><span class="line">    go StartRPCForever()    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func StartRPCForever()&#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在编译时，我们可以通过命令行: <code>go build -tags=enable_rpc</code>来启动RPC服务。</p>
-<p><code>+build</code>后面的tag也有讲究: 以</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// +build linux,386 darwin,!cgo 为例:</span><br></pre></td></tr></table></figure>
-
-<p>go build子命令将其解释成:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(linux AND 386) OR (darwin AND (NOT cgo))</span><br></pre></td></tr></table></figure>
-
-<p>当<code>+build</code>以多行出现时，这些<code>+build</code>之后的标签构成<strong>AND</strong>关系:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// +build linux darwin</span><br><span class="line">// +build 386</span><br></pre></td></tr></table></figure>
-
-<p>go build子命令将其解释为:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(linux OR darwin) AND 386</span><br></pre></td></tr></table></figure>
-
-
+        
       
 
       
