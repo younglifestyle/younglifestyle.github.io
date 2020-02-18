@@ -23,9 +23,9 @@
 <meta property="og:image" content="chunlife.top/2020/02/18/B站源码中的log-agent/image-20200218203734821.png">
 <meta property="og:image" content="chunlife.top/2020/02/18/B站源码中的log-agent/image-20200218203848834.png">
 <meta property="og:image" content="chunlife.top/2020/02/18/B站源码中的log-agent/image-20200218204034599.png">
-<meta property="og:image" content="/image-20200218204135654.png">
+<meta property="og:image" content="chunlife.top/2020/02/18/B站源码中的log-agent/image-20200218204135654.png">
 <meta property="og:image" content="chunlife.top/2020/02/18/B站源码中的log-agent/image-20200218204433538.png">
-<meta property="og:updated_time" content="2020-02-18T12:46:20.941Z">
+<meta property="og:updated_time" content="2020-02-18T12:53:51.555Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B站源码中的log-agent">
 <meta name="twitter:description" content="抱着学习的心态学习一下别家农场的代码，不同厂商的代码习惯肯定是不同的，标准更为的不同，这些都是我们可以学习的目标，毕竟很多东西是可以用来借鉴的，当然，轮子这玩意，能用现在还在维护的，就使用还在维护的，我其实有点不理解为啥要重复造轮子这事。 前言根据现在在了解的东西，选了一个log-agent模块来看看，初看只看发现有点眼熟，后来看了下确实是filebeat，这里面很多东西是搬的filebeat那一">
@@ -206,7 +206,7 @@ var _hmt = _hmt || [];
 <p>其中context的应用，也是一个可以关注的点，这个玩意在gin，trace等各类上下文的操作中都有着很多应用。</p>
 <p><img src="image-20200218204034599.png" alt="context"></p>
 <h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><p>另外我在这份代码上头有个疑惑，我认为这个地方有点问题：</p>
-<p><img src="/image-20200218204135654.png" alt="image-20200218204135654"></p>
+<p><img src="image-20200218204135654.png" alt="image-20200218204135654"></p>
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>因为log-agent参考的是filebeat的代码，上面input很多参数信息都是需要参考下filebeat的，否则很多信息都是无法知晓其含义的。</p>
 <p>看图应该是看不清的，如果后面有人看到这的，可以自行去搜索看看，在elastic官网上解释的非常详尽。</p>
 <p><img src="image-20200218204433538.png" alt="image-20200218204433538"></p>
