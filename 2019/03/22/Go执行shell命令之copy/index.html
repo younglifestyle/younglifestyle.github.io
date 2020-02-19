@@ -9,7 +9,7 @@
   <title>Go执行shell命令之copy命令 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="当我以为我不会遇到坑的时候，坑就在那里，不偏不移，刚好让我踩过去。之前写了关于如何调用系统命令的小结，这里果然不负我望，当场让我晓得了，总结不够到位，有瑕疵。">
-<meta name="keywords" content="Go,Shell">
+<meta name="keywords" content="Go,Shell,exec">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go执行shell命令之copy命令">
 <meta property="og:url" content="chunlife.top/2019/03/22/Go执行shell命令之copy/index.html">
@@ -17,7 +17,7 @@
 <meta property="og:description" content="当我以为我不会遇到坑的时候，坑就在那里，不偏不移，刚好让我踩过去。之前写了关于如何调用系统命令的小结，这里果然不负我望，当场让我晓得了，总结不够到位，有瑕疵。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/03/22/Go执行shell命令之copy/1553269116203.png">
-<meta property="og:updated_time" content="2019-04-12T10:03:30.529Z">
+<meta property="og:updated_time" content="2020-02-18T13:00:27.059Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go执行shell命令之copy命令">
 <meta name="twitter:description" content="当我以为我不会遇到坑的时候，坑就在那里，不偏不移，刚好让我踩过去。之前写了关于如何调用系统命令的小结，这里果然不负我望，当场让我晓得了，总结不够到位，有瑕疵。">
@@ -196,7 +196,7 @@ var _hmt = _hmt || [];
 <p>用力Google了一下，查到<a href="https://superuser.com/questions/1235420/cp-cannot-stat-some-path-no-such-file-or-directory" target="_blank" rel="noopener">cp: cannot stat ‘/some/path/*’: No such file or directory</a>。</p>
 <p>大概的意思是，该<code>*</code>会被处理成字符串，而不是特殊意义上的通配符，所以，也就会被认定为一个文件或者文件夹，所以，它就报错了，大概就是这么个情况。</p>
 <p>至于程序中如何解决这种情况呢？准确的来讲，我其实是没有找到解决方式的，也就只是换了种替代方式（一个一个文件/文件夹移动）。</p>
-<p><img src="1553269116203.png" alt="链接给的回答"></p>
+<p><img src="1553269116203.png" alt="123"></p>
 <p>这里，还发现另一个问题，若调用命令如：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpCmd := exec.Command(<span class="string">"sh"</span>, <span class="string">"-c"</span>,<span class="string">"cp"</span>, <span class="string">"-rf"</span>, <span class="string">"./test/*"</span>, <span class="string">"../"</span>)</span><br></pre></td></tr></table></figure>
 
@@ -251,6 +251,10 @@ var _hmt = _hmt || [];
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Shell</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">exec</a>
         		</li>
       		
 		</ul>
@@ -1136,6 +1140,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多进程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">exec</a>
               </li>
             
             <div class="clearfix"></div>
