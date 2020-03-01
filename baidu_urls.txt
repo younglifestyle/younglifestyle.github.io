@@ -1,3 +1,4 @@
+chunlife.top/2020/03/02/使用GO导出JIRA项目到excel/
 chunlife.top/2020/02/18/B站源码中的log-agent/
 chunlife.top/2020/02/12/Go-gin单元测试/
 chunlife.top/2020/02/11/服务器文件分片合并下载/
@@ -17,4 +18,3 @@ chunlife.top/2019/12/05/Linux-nohup和/
 chunlife.top/2019/11/11/linux解压文件的命令/
 chunlife.top/2019/11/06/windows自动化桌面软件，Go自动化点击操作/
 chunlife.top/2019/11/05/linux-windows-go打开应用/
-chunlife.top/2019/10/28/MySQL存储JSON——Gorm———go编程/
