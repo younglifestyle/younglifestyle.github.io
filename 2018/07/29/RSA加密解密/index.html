@@ -26,7 +26,7 @@
 <meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/clip_image004.png">
 <meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/123.png">
 <meta property="og:image" content="chunlife.top/2018/07/29/RSA加密解密/1234.png">
-<meta property="og:updated_time" content="2019-04-12T10:03:30.664Z">
+<meta property="og:updated_time" content="2019-04-12T10:03:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RSA加密解密">
 <meta name="twitter:description" content="因为项目需要，最近做一个RSA加密解密的接口，使用Go进行开发，接口使用jsonrpc，go 对RSA加密解密有很好的支持，不过由于受限于底层单片机，所以上层应用需要做一些稍微的调整。">
@@ -193,37 +193,40 @@ var _hmt = _hmt || [];
       
         <p>因为项目需要，最近做一个RSA加密解密的接口，使用Go进行开发，接口使用jsonrpc，go 对RSA加密解密有很好的支持，不过由于受限于底层单片机，所以上层应用需要做一些稍微的调整。</p>
 <a id="more"></a>
-
-<h2 id="一、概要"><a href="#一、概要" class="headerlink" title="一、概要"></a>一、概要</h2><p>RSA是一种非对称加密算法，什么是非对称加密算法呢，那就是公钥、私钥可互相进行加密解密：公钥加密—私钥解密，私钥加密—公钥解密。 </p>
+<h2 id="一、概要">一、概要</h2>
+<p>RSA是一种非对称加密算法，什么是非对称加密算法呢，那就是公钥、私钥可互相进行加密解密：公钥加密—私钥解密，私钥加密—公钥解密。</p>
 <p>了解RSA算法的实现原理，可参考：<a href="https://www.cnblogs.com/fangxupeng/p/4128990.html" target="_blank" rel="noopener">非对称加密过程详解（基于RSA非对称加密算法实现）</a></p>
 <p>RSA算法的基本原理（截图的来源没有保留链接，若侵权请直接告诉我，我会直接删除的）：</p>
 <p><img src="1537603491913.png" alt="1537603491913"></p>
-<h2 id="三、RSA一些名词的解释"><a href="#三、RSA一些名词的解释" class="headerlink" title="三、RSA一些名词的解释"></a>三、RSA一些名词的解释</h2><p>什么是PKCS#1，PKCS（公钥密码标准），而#1就是RSA的标准。 </p>
+<h2 id="三、RSA一些名词的解释">三、RSA一些名词的解释</h2>
+<p>什么是PKCS#1，PKCS（公钥密码标准），而#1就是RSA的标准。</p>
 <p>PEM文件，也就是公私钥的编码格式。</p>
 <p>RSA算法的原理：<a href="https://blog.csdn.net/starryheavens/article/details/8536238" target="_blank" rel="noopener">RSA算法详解</a>，从这篇博客主要是提取出RSA算法的公式。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C=(P^e)%n</span><br></pre></td></tr></table></figure>
-
 <p>N是公钥私钥共同使用的，其为模数。另外还有公钥的指数E，私钥的指数E。</p>
-<p>公钥的指数一般是65537，私钥的指数则是一个极大的数，想想一个极大的数作为指数，计算时间是会耗费很长时间的。故公钥加密解密都很快，私钥则会慢很多 </p>
-<h2 id="二、Go中的RSA加密解密"><a href="#二、Go中的RSA加密解密" class="headerlink" title="二、Go中的RSA加密解密"></a>二、Go中的RSA加密解密</h2><p>RSA标准是通过公钥加密，私钥解密 ，没有私钥加密，公钥解密。为什么会这样呢？</p>
+<p>公钥的指数一般是65537，私钥的指数则是一个极大的数，想想一个极大的数作为指数，计算时间是会耗费很长时间的。故公钥加密解密都很快，私钥则会慢很多</p>
+<h2 id="二、Go中的RSA加密解密">二、Go中的RSA加密解密</h2>
+<p>RSA标准是通过公钥加密，私钥解密 ，没有私钥加密，公钥解密。为什么会这样呢？</p>
 <p>Go设计库一般会严格按照标准来进行设计（在很多地方都见过相似做法），那是RSA标准中没有后一种情况的使用场景吗？其实是有的，只不过这个过程不要加密解密，而是RSA签名与验签。所以按照标准，RSA标准库也就不会有私钥加密，公钥解密的方法了。</p>
 <p>这个问题想想应该是很多人的问题了，那么在Google上进行搜索了下，还是发现了解决方法。</p>
 <p><a href="https://github.com/wenzhenxi/gorsa" target="_blank" rel="noopener">https://github.com/wenzhenxi/gorsa</a></p>
 <p>库中实现了公钥加解密的方法。</p>
 <p>还有其他解决方法吗？是有的，在Google上进行搜索就可以找到，记得还有人使用CGO调用C库来解决。</p>
-<h2 id="四、Go-RSA库的使用"><a href="#四、Go-RSA库的使用" class="headerlink" title="四、Go RSA库的使用"></a>四、Go RSA库的使用</h2><p>标准库的使用者很多，博客也很多，这里不做多的介绍，放上一个博主的链接。</p>
+<h2 id="四、Go-RSA库的使用">四、Go RSA库的使用</h2>
+<p>标准库的使用者很多，博客也很多，这里不做多的介绍，放上一个博主的链接。</p>
 <p><a href="http://blog.studygolang.com/2013/01/go%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E4%B9%8Brsa/" target="_blank" rel="noopener">GO加密解密之RSA</a></p>
-<h2 id="五、项目中的问题"><a href="#五、项目中的问题" class="headerlink" title="五、项目中的问题"></a>五、项目中的问题</h2><p>此处，由于我的问题比较特殊，所以到此并没完全解决我的问题，还记得上面说的RSA指数与模数的东西吗，因为上层是与stm32进行通信，32RSA的库是需要自己手动将指数与模数填入结构体中的，那么上层就应该将生成的私钥进行分解开来，得到stm32所需要的指数和模数，那么怎么得到这些数据呢。</p>
+<h2 id="五、项目中的问题">五、项目中的问题</h2>
+<p>此处，由于我的问题比较特殊，所以到此并没完全解决我的问题，还记得上面说的RSA指数与模数的东西吗，因为上层是与stm32进行通信，32RSA的库是需要自己手动将指数与模数填入结构体中的，那么上层就应该将生成的私钥进行分解开来，得到stm32所需要的指数和模数，那么怎么得到这些数据呢。</p>
 <p>我使用的方法是借用OpenSSL，理论上来说像Python就可以做到，但是我并不想将事情复杂化，直接借用现有的工具是最省事的。</p>
 <p>参考：<a href="https://blog.csdn.net/junkie0901/article/details/40539857" target="_blank" rel="noopener">如何用 openssl 生成RSA双密匙；签名证书；加密文件邮件</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -in private.pem -text -noout</span><br></pre></td></tr></table></figure>
-
 <p>-noout : 表示不显示密钥</p>
 <p>运行结果：</p>
 <p><img src="1533047035026.png" alt="1533047035026"></p>
 <p>modulus、publicExponent、privateExponent，这三个数就是我们所需要的数据（publicExponent一般算法会设为65537）。</p>
 <p>那么此处就很简单的进行字符串截取就可以做到拿出这三个数据了。</p>
-<h2 id="六、AES加密解密"><a href="#六、AES加密解密" class="headerlink" title="六、AES加密解密"></a>六、AES加密解密</h2><p>既然提到了RSA，不对称加密算法了，那么也去了解了解AES对称加密算法吧。</p>
+<h2 id="六、AES加密解密">六、AES加密解密</h2>
+<p>既然提到了RSA，不对称加密算法了，那么也去了解了解AES对称加密算法吧。</p>
 <p><a href="https://blog.csdn.net/yue7603835/article/details/73395580" target="_blank" rel="noopener">golang实现AES ECB模式的加密和解密</a></p>
 <p>Go的实现可参考贴出来的链接，不过此处给出我遇到的一个问题。</p>
 <p>截取自博客中的原文：</p>
@@ -232,38 +235,40 @@ var _hmt = _hmt || [];
 <p>摘抄自<a href="https://baike.baidu.com/item/aes/5903?fr=aladdin" target="_blank" rel="noopener">百度百科</a>：严格地说，AES和Rijndael加密法并不完全一样（虽然在实际应用中二者可以互换），因为Rijndael加密法可以支持更大范围的区块和密钥长度：AES的区块长度固定为128比特，密钥长度则可以是128、192、256比特；而Rijndael使用的密钥和区块长度可以是32位的整数倍，以128位为下限，256比特为上限。加密过程中使用的密钥是由Rijndael密钥生成方案产生。</p>
 <p>在golang的源码设计中也可以证明这点，其blocksize设定为const，其值为16(byte)，显然，标准库是并不允许使用者去修改这个值的，那么AES-128/192/256，其实是针对的密钥长度来说的。</p>
 <p>另外，使用go AES库需要注意的是，go aes输入的密钥不满足16、24、32的要求，会直接返回错误，其并没有设计补全机制，需要自己实现。</p>
-<p>数据块长度不足128bit，其同样也需要补全；很遗憾的是go依然没有帮助自动补全。补全方式有多种，一般常见的是zeropadding，pkcs5padding，pkcs7padding。 </p>
+<p>数据块长度不足128bit，其同样也需要补全；很遗憾的是go依然没有帮助自动补全。补全方式有多种，一般常见的是zeropadding，pkcs5padding，pkcs7padding。</p>
 <p>参考<a href="https://studygolang.com/articles/6662" target="_blank" rel="noopener">golang AES/ECB/PKCS5 加密解密 url-safe-base64</a></p>
 <p>博客使用的是pkcs5padding，这里补上zeropadding。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ZeroPadding</span><span class="params">(ciphertext []<span class="keyword">byte</span>, blockSize <span class="keyword">int</span>)</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">	padding := blockSize - <span class="built_in">len</span>(ciphertext)%blockSize</span><br><span class="line">	padtext := bytes.Repeat([]<span class="keyword">byte</span>&#123;<span class="number">0</span>&#125;, padding) </span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">append</span>(ciphertext, padtext...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ZeroUnPadding</span><span class="params">(origData []<span class="keyword">byte</span>)</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> bytes.TrimFunc(origData,</span><br><span class="line">		<span class="function"><span class="keyword">func</span><span class="params">(r <span class="keyword">rune</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">			<span class="keyword">return</span> r == <span class="keyword">rune</span>(<span class="number">0</span>)</span><br><span class="line">		&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>附上我写的填充key的代码：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">KeyPadding</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="params">(keyByte []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	keyLen := <span class="built_in">len</span>(key)</span><br><span class="line">	<span class="keyword">switch</span> &#123;</span><br><span class="line">	<span class="keyword">case</span> keyLen &lt; <span class="number">16</span>:</span><br><span class="line">		keyByte = ZeroPadding([]<span class="keyword">byte</span>(key), <span class="number">16</span>)</span><br><span class="line">	<span class="keyword">case</span> keyLen &gt; <span class="number">16</span> &amp;&amp; keyLen &lt; <span class="number">24</span>:</span><br><span class="line">		keyByte = ZeroPadding([]<span class="keyword">byte</span>(key), <span class="number">24</span>)</span><br><span class="line">	<span class="keyword">case</span> keyLen &gt; <span class="number">24</span> &amp;&amp; keyLen &lt; <span class="number">32</span>:</span><br><span class="line">		keyByte = ZeroPadding([]<span class="keyword">byte</span>(key), <span class="number">32</span>)</span><br><span class="line">	<span class="keyword">case</span> keyLen &gt; <span class="number">32</span>:</span><br><span class="line">		keyByte = []<span class="keyword">byte</span>(key)[:<span class="number">32</span>]</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		keyByte = []<span class="keyword">byte</span>(key)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> keyByte</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="七、使用的方法"><a href="#七、使用的方法" class="headerlink" title="七、使用的方法"></a>七、使用的方法</h2><h3 id="bytes-Join将byte数组的数组进行组合"><a href="#bytes-Join将byte数组的数组进行组合" class="headerlink" title="bytes.Join将byte数组的数组进行组合"></a>bytes.Join将byte数组的数组进行组合</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bytes.Join(pBytes, []<span class="keyword">byte</span>(<span class="string">""</span>))</span><br></pre></td></tr></table></figure>
-
+<h2 id="七、使用的方法">七、使用的方法</h2>
+<h3 id="bytes-Join将byte数组的数组进行组合">bytes.Join将byte数组的数组进行组合</h3>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bytes.Join(pBytes, []<span class="keyword">byte</span>(<span class="string">""</span>))</span><br></pre></td></tr></table></figure>
 <p>第二个参数表示数组间用什么去间隔</p>
-<h3 id="将一个大数按大小端转换为byte数组模式"><a href="#将一个大数按大小端转换为byte数组模式" class="headerlink" title="将一个大数按大小端转换为byte数组模式"></a>将一个大数按大小端转换为byte数组模式</h3><p>binary.BigEndian.PutUint64</p>
-<p><a href="https://blog.csdn.net/coledaddy/article/details/71195528" target="_blank" rel="noopener">https://blog.csdn.net/coledaddy/article/details/71195528</a> </p>
-<h3 id="返回子串在字符串中的索引"><a href="#返回子串在字符串中的索引" class="headerlink" title="返回子串在字符串中的索引"></a>返回子串在字符串中的索引</h3><p>例如strings.Index(str, “modules”)，返回的是开始出现”modules”的位置，即”m”。</p>
-<h3 id="将数组转换为以“-”分割的字符串"><a href="#将数组转换为以“-”分割的字符串" class="headerlink" title="将数组转换为以“,”分割的字符串"></a>将数组转换为以“,”分割的字符串</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings.Replace(strings.Trim(fmt.Sprint(byteArr),<span class="string">"[]"</span>), <span class="string">" "</span>, <span class="string">","</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="将十六进制的字符，转换为整数"><a href="#将十六进制的字符，转换为整数" class="headerlink" title="将十六进制的字符，转换为整数"></a>将十六进制的字符，转换为整数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strconv.ParseUint(data, 16, 8)</span><br></pre></td></tr></table></figure>
-
+<h3 id="将一个大数按大小端转换为byte数组模式">将一个大数按大小端转换为byte数组模式</h3>
+<p>binary.BigEndian.PutUint64</p>
+<p><a href="https://blog.csdn.net/coledaddy/article/details/71195528" target="_blank" rel="noopener">https://blog.csdn.net/coledaddy/article/details/71195528</a></p>
+<h3 id="返回子串在字符串中的索引">返回子串在字符串中的索引</h3>
+<p>例如strings.Index(str, “modules”)，返回的是开始出现&quot;modules&quot;的位置，即&quot;m&quot;。</p>
+<h3 id="将数组转换为以“-”分割的字符串">将数组转换为以“,”分割的字符串</h3>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings.Replace(strings.Trim(fmt.Sprint(byteArr),<span class="string">"[]"</span>), <span class="string">" "</span>, <span class="string">","</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="将十六进制的字符，转换为整数">将十六进制的字符，转换为整数</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strconv.ParseUint(data, 16, 8)</span><br></pre></td></tr></table></figure>
 <p>data：字符，16：进制，8：转换数据的大小，8则是8bit。</p>
-<h2 id="2018年8月22日17-38-32"><a href="#2018年8月22日17-38-32" class="headerlink" title="2018年8月22日17:38:32"></a>2018年8月22日17:38:32</h2><p>本来以为rsa加密解密的事都要翻篇了，谁知道底层突然和我说交互出了问题，STM32使用的RSA是官方库，Go使用的是官方库，理论上不应该有什么问题的，但实际上就是出了问题。</p>
+<h2 id="2018年8月22日17-38-32">2018年8月22日17:38:32</h2>
+<p>本来以为rsa加密解密的事都要翻篇了，谁知道底层突然和我说交互出了问题，STM32使用的RSA是官方库，Go使用的是官方库，理论上不应该有什么问题的，但实际上就是出了问题。</p>
 <p>问题是这样的，Go使用私钥加密，STM32无法使用公钥进行解密；STM32使用私钥加密，Go无法进行公钥解密。但双方公钥加密，对方都可以进行私钥解密。</p>
 <p>然后花了一天的时间的去细细的琢磨这个事，觉得这个过程还是很有意思的。</p>
 <p>首先，则是两方都去检查源码是否出现使用错误，在互相review代码确认无误，这样不会造成总是去怀疑对方的代码，至少在使用上都是按照官方文档进行的操作。</p>
 <p>第二步，再三确认私钥加密，公钥解密这个种非标用法是可行的。因为RSA签名和验证过程是包含有私钥加密，公钥解密的，这个点是不需要再去考虑正确性的。</p>
-<p>第三步，双方通讯无法通过对方，那么很自然的就会想到，先抛弃掉对方，使用另外一种标准库，或者是语言的标准库来佐证自己的库的正确性，这里我选择的是使用OpenSSL的接口，使用CGo，调用的OpenSSL的接口，放上借用的库链接<a href="https://github.com/dgkang/rsa，最终测试结果是与Go库中的结果是一样的。我这里用的库是https://github.com/wenzhenxi/gorsa，因为官方库并没有将RSA私钥加密暴露出来，若需要使用的话就需要自己动手了。" target="_blank" rel="noopener">https://github.com/dgkang/rsa，最终测试结果是与Go库中的结果是一样的。我这里用的库是https://github.com/wenzhenxi/gorsa，因为官方库并没有将RSA私钥加密暴露出来，若需要使用的话就需要自己动手了。</a></p>
-<p>第四步，我单方面的证明了Go库没有问题，此时怀疑的方向就只能是STM32官方库出了问题，哪里出了问题呢。偶然地，在使用<a href="https://github.com/dgkang/rsa库时，OpenSSL上报错信息是：error:0407006A:rsa" target="_blank" rel="noopener">https://github.com/dgkang/rsa库时，OpenSSL上报错信息是：error:0407006A:rsa</a> routines:RSA_padding_check_PKCS1_type_1:block type is not 01。这个报错信息很关键，STM32库上说的是PKCS1 padding方式，那现在OpenSSL又报出了type方式不同，那只能说明这是有点问题。使用了库的nopadding方式，可以解密出来的数据都打印出来（PKCS1会直接返回数据，填充的信息会直接过滤掉）。</p>
+<p>第三步，双方通讯无法通过对方，那么很自然的就会想到，先抛弃掉对方，使用另外一种标准库，或者是语言的标准库来佐证自己的库的正确性，这里我选择的是使用OpenSSL的接口，使用CGo，调用的OpenSSL的接口，放上借用的库链接https://github.com/dgkang/rsa，最终测试结果是与Go库中的结果是一样的。我这里用的库是https://github.com/wenzhenxi/gorsa，因为官方库并没有将RSA私钥加密暴露出来，若需要使用的话就需要自己动手了。</p>
+<p>第四步，我单方面的证明了Go库没有问题，此时怀疑的方向就只能是STM32官方库出了问题，哪里出了问题呢。偶然地，在使用https://github.com/dgkang/rsa库时，OpenSSL上报错信息是：error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:block type is not 01。这个报错信息很关键，STM32库上说的是PKCS1 padding方式，那现在OpenSSL又报出了type方式不同，那只能说明这是有点问题。使用了库的nopadding方式，可以解密出来的数据都打印出来（PKCS1会直接返回数据，填充的信息会直接过滤掉）。</p>
 <p><img src="clip_image001.png" alt="img"></p>
 <p>在调试时，这些数据也是一头雾水的，实际打印的信息是下面的，我实际想要的是后面的数字，这个byte数组和string乱码看的也是脑袋大，为了搞清楚这个，需要了解加密填充信息。</p>
 <p><img src="clip_image002.png" alt="img"></p>
 <p>以下介绍填充方式的知识皆参考自：</p>
 <p>RSA_PKCS1_PADDING</p>
-<p>来自 &lt;<a href="https://www.douban.com/note/338531480/" target="_blank" rel="noopener">https://www.douban.com/note/338531480/</a>&gt; </p>
+<p>来自 &lt;<a href="https://www.douban.com/note/338531480/" target="_blank" rel="noopener">https://www.douban.com/note/338531480/</a>&gt;</p>
 <p>padding的三种方式：</p>
 <p>RSA加密常用的填充方式有下面3种：</p>
 <p>1.RSA_PKCS1_PADDING 填充模式，最常用的模式</p>
@@ -287,7 +292,8 @@ var _hmt = _hmt || [];
 <p><img src="clip_image004.png" alt="img"></p>
 <p>这11个字长那么大概率就是为了增加秘钥安全性所预留的随机数了。</p>
 <p>至此，算是终于将问题找到，并找到解决的办法了，解决问题大概是经历了那几个步骤，中间夹杂着各种尝试，当然写出来的却是每一步走得都很正确，中间与人沟通的成本不低，沟通愉快的时候解决问题的方法就会非常的多。</p>
-<h3 id="Golang实现Nopadding模式"><a href="#Golang实现Nopadding模式" class="headerlink" title="Golang实现Nopadding模式"></a>Golang实现Nopadding模式</h3><p><a href="https://stackoverflow.com/questions/40870178/golang-rsa-decrypt-no-padding" target="_blank" rel="noopener">https://stackoverflow.com/questions/40870178/golang-rsa-decrypt-no-padding</a></p>
+<h3 id="Golang实现Nopadding模式">Golang实现Nopadding模式</h3>
+<p><a href="https://stackoverflow.com/questions/40870178/golang-rsa-decrypt-no-padding" target="_blank" rel="noopener">https://stackoverflow.com/questions/40870178/golang-rsa-decrypt-no-padding</a></p>
 <p><img src="123.png" alt="Nopadding"></p>
 <p>提供解决方法的人特意提醒了，若用户有选择，请尽量不要使用这种填充方式，并给出了提供意见的链接。（不得不说，做事真的严谨）</p>
 <p><a href="https://crypto.stackexchange.com/a/15184" target="_blank" rel="noopener">https://crypto.stackexchange.com/a/15184</a></p>
@@ -610,15 +616,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,15 +668,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -658,15 +692,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -698,23 +740,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -726,6 +756,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -734,11 +772,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -766,10 +800,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -782,10 +812,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -794,23 +820,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -822,7 +832,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -846,15 +896,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -866,11 +912,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -882,11 +924,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -906,51 +972,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -962,7 +988,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -974,11 +1012,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -998,15 +1036,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1018,15 +1052,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1042,6 +1068,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -1051,14 +1081,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1074,7 +1096,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1102,15 +1132,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1134,11 +1156,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1154,15 +1188,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1174,11 +1208,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1187,6 +1217,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1226,27 +1264,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1259,6 +1281,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">

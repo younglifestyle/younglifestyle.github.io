@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>copy-on-write技术 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前因之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
+  <meta name="description" content="前因 之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
 <meta name="keywords" content="Copy-On-Write,COW - 写时复制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="copy-on-write技术">
 <meta property="og:url" content="chunlife.top/2019/09/03/copy-on-write技术/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="前因之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
+<meta property="og:description" content="前因 之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-04T11:42:30.083Z">
+<meta property="og:updated_time" content="2019-11-04T11:42:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="copy-on-write技术">
-<meta name="twitter:description" content="前因之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
+<meta name="twitter:description" content="前因 之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -180,13 +180,13 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前因"><a href="#前因" class="headerlink" title="前因"></a>前因</h2><p>之所以突然去了解这块内容，是因为是之前做了关于<a href="https://github.com/fagongzi/gatewa" target="_blank" rel="noopener">gateway</a>的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。</p>
+        <h2 id="前因">前因</h2>
+<p>之所以突然去了解这块内容，是因为是之前做了关于<a href="https://github.com/fagongzi/gatewa" target="_blank" rel="noopener">gateway</a>的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。</p>
 <a id="more"></a>
-
 <p>看到Gateway中有介绍说使用写时复制（COW）技术，可以减少锁的操作。这项技术于我并不陌生，在写linux驱动的时候，<code>研究</code>（貌似说的有点过，学习）内核时就经常听到这个词汇，毕竟不管是文件系统，还是进程操作都会看见它的身影。</p>
-<h2 id="Copy-On-Write"><a href="#Copy-On-Write" class="headerlink" title="Copy-On-Write"></a>Copy-On-Write</h2><p>引用维基百科的定义：</p>
+<h2 id="Copy-On-Write">Copy-On-Write</h2>
+<p>引用维基百科的定义：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">写入时复制（英语：Copy-on-write，简称COW）是一种计算机程序设计领域的优化策略。</span><br><span class="line"></span><br><span class="line">其核心思想是，如果有多个调用者（callers）同时请求相同资源（如内存或磁盘上的数据存储），他们会共同获取相同的指针指向相同的资源，直到某个调用者试图修改资源的内容时，系统才会真正复制一份专用副本（private copy）给该调用者，而其他调用者所见到的最初的资源仍然保持不变。这过程对其他的调用者都是透明的（transparently）。此作法主要的优点是如果调用者没有修改该资源，就不会有副本（private copy）被创建，因此多个调用者只是读取操作时可以共享同一份资源。</span><br></pre></td></tr></table></figure>
-
 <p>也就是说，在一份共享资源，被多个调用者共同消费时，若出现修改资源的操作，我们并不直接对资源进行修改，而是对将资源修改操作划分为三个步骤：</p>
 <ul>
 <li>第一：先将资源进行复制，复制出一个新的资源备份；</li>
@@ -194,15 +194,15 @@ var _hmt = _hmt || [];
 <li>第三：将原先资源地址指向资源备份的地址。</li>
 </ul>
 <p>这样的好处是，我们在读数据时不需要加锁，因为资源是不变的，相对于其他不需要修改资源的调用者来说。这类似与一种读写分离的操作，将写和读两种操作作用于两个不同的地址上，互不干扰。</p>
-<h2 id="Copy-On-Write实现"><a href="#Copy-On-Write实现" class="headerlink" title="Copy-On-Write实现"></a>Copy-On-Write实现</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"strconv"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> testMap <span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">copyBak</span><span class="params">()</span> <span class="title">map</span>[<span class="title">int</span>]*<span class="title">string</span></span> &#123;</span><br><span class="line">	vals := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> key, value := <span class="keyword">range</span> testMap &#123;</span><br><span class="line">		vals[key] = value</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> vals</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	testMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span>)</span><br><span class="line">	str := <span class="string">"123"</span></span><br><span class="line">	testMap[<span class="number">1</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">2</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">3</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">4</span>] = &amp;str</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			fmt.Println(*testMap[<span class="number">3</span>])</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">100000000</span>; i++ &#123;</span><br><span class="line">			<span class="comment">// 写数据是需要加锁的，并发写的情况下，可能会出现copy多份数据的情况</span></span><br><span class="line">			<span class="comment">// 但此处只有一个协程做此操作</span></span><br><span class="line">			<span class="comment">// 1、复制出新的Map</span></span><br><span class="line">			newVals := copyBak()</span><br><span class="line">			<span class="comment">// 2、修改已有的元素，或添加新元素</span></span><br><span class="line">			str = <span class="string">"12343264364634"</span> + strconv.Itoa(i)</span><br><span class="line">			newVals[<span class="number">3</span>] = &amp;str</span><br><span class="line">			<span class="comment">// 3、将原有的Map地址指向新的Map</span></span><br><span class="line">			testMap = newVals</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h2 id="Copy-On-Write实现">Copy-On-Write实现</h2>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"strconv"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> testMap <span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">copyBak</span><span class="params">()</span> <span class="title">map</span>[<span class="title">int</span>]*<span class="title">string</span></span> &#123;</span><br><span class="line">	vals := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> key, value := <span class="keyword">range</span> testMap &#123;</span><br><span class="line">		vals[key] = value</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> vals</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	testMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]*<span class="keyword">string</span>)</span><br><span class="line">	str := <span class="string">"123"</span></span><br><span class="line">	testMap[<span class="number">1</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">2</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">3</span>] = &amp;str</span><br><span class="line">	testMap[<span class="number">4</span>] = &amp;str</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			fmt.Println(*testMap[<span class="number">3</span>])</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">100000000</span>; i++ &#123;</span><br><span class="line">			<span class="comment">// 写数据是需要加锁的，并发写的情况下，可能会出现copy多份数据的情况</span></span><br><span class="line">			<span class="comment">// 但此处只有一个协程做此操作</span></span><br><span class="line">			<span class="comment">// 1、复制出新的Map</span></span><br><span class="line">			newVals := copyBak()</span><br><span class="line">			<span class="comment">// 2、修改已有的元素，或添加新元素</span></span><br><span class="line">			str = <span class="string">"12343264364634"</span> + strconv.Itoa(i)</span><br><span class="line">			newVals[<span class="number">3</span>] = &amp;str</span><br><span class="line">			<span class="comment">// 3、将原有的Map地址指向新的Map</span></span><br><span class="line">			testMap = newVals</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>修改时锁住的仅仅是资源的一个备份，所以并不会影响到原有资源的正常访问，原有资源依然可以正常访问。</p>
 <blockquote>
 <p>我代码里头的例子。</p>
 </blockquote>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> UpdatetaskInfoMap <span class="keyword">struct</span> &#123;</span><br><span class="line">	TaskCreateTime <span class="keyword">int64</span>                         <span class="string">`json:"task_Create_time,omitempty"`</span></span><br><span class="line">	DeviceIdMap    <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">struct</span>&#123;&#125;           <span class="string">`json:"device_id_map"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果是结构体，json marshal更为方便进行复制操作</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">clone</span><span class="params">()</span> *<span class="title">UpdatetaskInfoMap</span></span> &#123;</span><br><span class="line">	taskInfos := &amp;UpdatetaskInfoMap&#123;&#125;</span><br><span class="line">	bytes, _ := json.Marshal(ms)</span><br><span class="line">	json.Unmarshal(bytes, taskInfos)</span><br><span class="line">	<span class="keyword">return</span> taskInfos</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">copyDeviceIDArr</span><span class="params">(exclude <span class="keyword">string</span>)</span> <span class="title">map</span>[<span class="title">string</span>]<span class="title">struct</span></span>&#123;&#125; &#123;</span><br><span class="line">	values := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> key, value := <span class="keyword">range</span> ms.DeviceIdMap &#123;</span><br><span class="line">		<span class="keyword">if</span> key != exclude &#123;</span><br><span class="line">			values[key] = value</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> values</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">AddDeviceId</span><span class="params">(deviceIdArr []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">    deviceIDMap := ms.copyDeviceIDArr(<span class="string">""</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> _, deviceId := <span class="keyword">range</span> deviceIdArr &#123;</span><br><span class="line">		deviceIDMap[deviceId] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	ms.DeviceIdMap = deviceIDMap</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除操作</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ms *UpdatetaskInfoMap)</span> <span class="title">RemoveDeviceId</span><span class="params">(deviceId <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> _, ok := ms.DeviceIdMap[deviceId]; ok &#123;</span><br><span class="line">		<span class="keyword">return</span> g.ErrTaskNotFound</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	deviceIDMap := ms.copyDeviceIDArr(deviceId)</span><br><span class="line">	ms.DeviceIdMap = deviceIDMap</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Copy-On-Write应用场景以及读写锁"><a href="#Copy-On-Write应用场景以及读写锁" class="headerlink" title="Copy-On-Write应用场景以及读写锁"></a>Copy-On-Write应用场景以及读写锁</h2><p>Copy-On-Write并发容器用于读多写少的并发场景。比如白名单，黑名单，商品类目的访问、更新场景以及一些数据的配置项（Gateway将此作为更新配置项），假如我们有一个搜索网站，用户在这个网站的搜索框中，输入关键字搜索内容，但是某些关键字不允许被搜索。这些不能被搜索的关键字会被放在一个黑名单当中，黑名单每天晚上更新一次。当用户搜索时，会检查当前关键字在不在黑名单当中，如果在，则提示不能搜索。</p>
+<h2 id="Copy-On-Write应用场景以及读写锁">Copy-On-Write应用场景以及读写锁</h2>
+<p>Copy-On-Write并发容器用于读多写少的并发场景。比如白名单，黑名单，商品类目的访问、更新场景以及一些数据的配置项（Gateway将此作为更新配置项），假如我们有一个搜索网站，用户在这个网站的搜索框中，输入关键字搜索内容，但是某些关键字不允许被搜索。这些不能被搜索的关键字会被放在一个黑名单当中，黑名单每天晚上更新一次。当用户搜索时，会检查当前关键字在不在黑名单当中，如果在，则提示不能搜索。</p>
 <p>读多写少一般还会被介绍使用读写锁，<code>RWMutex</code>，那和<code>COW</code>之前有什么不一样呢。我们顺道来看一下。</p>
 <p>这里直接上一个<code>Golang</code>中读写锁的阻塞状态：</p>
 <blockquote>
@@ -216,15 +216,17 @@ var _hmt = _hmt || [];
 <p>可以看到的是，读锁虽然不会阻塞读锁，但是会将写锁给阻塞了，这并不符合我们在读数据时不加锁的想法。</p>
 <p>我们都知道Map并发读写不安全，但Go语言开发小组很长时间都没去修复这个问题，为什么呢，这是因为<code>Go</code>开发组之前在很多Go其他的组件中使用了Map，若给其加锁，则会导致很多其他组件速度下降，所以开发组权衡后不考虑修改Map，而是后期推出了<code>sync.Map</code>来弥补这个遗憾。</p>
 <p>所以，加锁操作带来的是一些多余的瞬间延时，在不需要的时候尽量不需要加锁。减少了资源的分配。</p>
-<h2 id="Copy-On-Write缺点"><a href="#Copy-On-Write缺点" class="headerlink" title="Copy-On-Write缺点"></a>Copy-On-Write缺点</h2><blockquote>
+<h2 id="Copy-On-Write缺点">Copy-On-Write缺点</h2>
+<blockquote>
 <p>引用：<a href="https://coolshell.cn/articles/11175.html" target="_blank" rel="noopener">JAVA中的COPYONWRITE容器</a></p>
 </blockquote>
 <p>Copy-On-Write容器有很多优点，但是同时也存在两个问题，即内存占用问题和数据一致性问题。所以在开发的时候需要注意一下。</p>
 <p><strong>内存占用问题</strong>。因为Copy-On-Write的写时复制机制，所以在进行写操作的时候，内存里会同时驻扎两个对象的内存，旧的对象和新写入的对象（注意:在复制的时候只是复制容器里的引用，只是在写的时候会创建新对象添加到新容器里，而旧容器的对象还在使用，所以有两份对象内存）。如果这些对象占用的内存比较大，比如说200M左右，那么再写入100M数据进去，内存就会占用300M，那么这个时候很有可能造成频繁的Yong GC和Full GC。之前我们系统中使用了一个服务由于每晚使用Copy-On-Write机制更新大对象，造成了每晚15秒的Full GC，应用响应时间也随之变长。</p>
 <p>针对内存占用问题，可以通过压缩容器中的元素的方法来减少大对象的内存消耗，比如，如果元素全是10进制的数字，可以考虑把它压缩成36进制或64进制。</p>
-<p>​    * 注意：若是包含有IO读取操作，则也会造成操作上的IO双倍消费。</p>
+<p>​	* 注意：若是包含有IO读取操作，则也会造成操作上的IO双倍消费。</p>
 <p><strong>数据一致性问题</strong>。Copy-On-Write容器只能保证数据的<code>最终一致性</code>，不能保证数据的实时一致性。所以如果你希望写入的的数据，马上能读到，请不要使用Copy-On-Write容器。这里也就是说会出现一些脏数据，可能凑巧使用的原有资源数据，</p>
-<h2 id="Copy-On-Write-Linux下的一些应用"><a href="#Copy-On-Write-Linux下的一些应用" class="headerlink" title="Copy-On-Write Linux下的一些应用"></a>Copy-On-Write Linux下的一些应用</h2><p>linux中fork()就有COW的应用，父子进程间数据共享，而当子进程并不使用父进程数据的话，数据不需要进行进行复制，这时候使用写时复制就会很划算，只有当子进程需要使用到父进程数据时，系统触发异常，进入中断，复制使用的那份数据上来。</p>
+<h2 id="Copy-On-Write-Linux下的一些应用">Copy-On-Write Linux下的一些应用</h2>
+<p>linux中fork()就有COW的应用，父子进程间数据共享，而当子进程并不使用父进程数据的话，数据不需要进行进行复制，这时候使用写时复制就会很划算，只有当子进程需要使用到父进程数据时，系统触发异常，进入中断，复制使用的那份数据上来。</p>
 <p>文件系统中的文件修改也类似，我们所做的修改并不直接作用于源文件，例如，要修改文件A的内容时，先把A读出来，写到临时文件B里面去。然后在B中做修改，我们不保存时，是不会做写回文件操作的。常见的，我们使用vim打开一个文件，做一些修改，但并不保存，突然做关机，会发现源文件并不会变动，但vim会提示我们是否recover文件，做这个操作的依据便是，其有一份备份数据可以参照。</p>
 <blockquote>
 <p>这里讲解的更为详细，若需要详细了解，可以参考这篇博客，<a href="https://juejin.im/post/5bd96bcaf265da396b72f855" target="_blank" rel="noopener">COW奶牛！Copy On Write机制了解一下</a></p>
@@ -538,15 +540,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -562,15 +592,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -586,15 +616,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -626,23 +664,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -654,6 +680,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -662,11 +696,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -694,10 +724,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -710,10 +736,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -722,23 +744,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -750,7 +756,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -774,15 +820,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -794,11 +836,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -810,11 +848,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -834,51 +896,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -890,7 +912,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -902,11 +936,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -926,15 +960,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -946,15 +976,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -970,6 +992,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -979,14 +1005,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1002,7 +1020,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1030,15 +1056,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1062,11 +1080,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1082,15 +1112,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1102,11 +1132,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1115,6 +1141,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1154,27 +1188,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1187,6 +1205,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="在实际的项目中，因为需要部署多节点冗余备份，以实现高可用，这里就要用到各类工具的分布式部署方案了，以前手动部署过mysql replication和pxc，但docker的方案没有尝试成功，无法成功部署，这里也是参考了各类博客和文档后，尝试部署成功。 假设要在两台节点上安装docker，并使这两个docker可以相互访问。 环境：Ubuntu 16.04  etcd docker">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-10T10:11:35.914Z">
+<meta property="og:updated_time" content="2019-06-10T10:11:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker overlay网络部署">
 <meta name="twitter:description" content="在实际的项目中，因为需要部署多节点冗余备份，以实现高可用，这里就要用到各类工具的分布式部署方案了，以前手动部署过mysql replication和pxc，但docker的方案没有尝试成功，无法成功部署，这里也是参考了各类博客和文档后，尝试部署成功。 假设要在两台节点上安装docker，并使这两个docker可以相互访问。 环境：Ubuntu 16.04  etcd docker">
@@ -184,62 +184,55 @@ var _hmt = _hmt || [];
 <p>假设要在两台节点上安装docker，并使这两个docker可以相互访问。</p>
 <p>环境：Ubuntu 16.04  etcd docker</p>
 <a id="more"></a>
-
-<h1 id="安装ETCD"><a href="#安装ETCD" class="headerlink" title="安装ETCD"></a>安装ETCD</h1><h2 id="etcd集群"><a href="#etcd集群" class="headerlink" title="etcd集群"></a>etcd集群</h2><p>etcd集群参考<a href="https://www.kancloud.cn/hanxt/foreign-docker/164734" target="_blank" rel="noopener">基于etcd服务发现的overlay跨多宿主机容器网络</a>。</p>
+<h1>安装ETCD</h1>
+<h2 id="etcd集群">etcd集群</h2>
+<p>etcd集群参考<a href="https://www.kancloud.cn/hanxt/foreign-docker/164734" target="_blank" rel="noopener">基于etcd服务发现的overlay跨多宿主机容器网络</a>。</p>
 <p>在两台主机上：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -L &lt;https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-linux-amd64.tar.gz&gt; -o etcd-v2.2.1-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line">tar xzvf etcd-v2.2.1-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line">cd etcd-v2.2.1-linux-amd64</span><br></pre></td></tr></table></figure>
-
 <p>注意下面的命令需要先设置下面值：</p>
 <p>{NODE_NAME}:etcd节点名称，需要和命令中的-initial-cluster的对应的{NODE1_NAME}或{NODE2_NAME}对应</p>
 <p>{NODE_IP}/{NODE1_IP}/{NODE2_NAME}：节点的IP</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">./etcd -name &#123;NODE_NAME&#125; -initial-advertise-peer-urls [http://&#123;NODE_IP&#125;:2380](http://NODE_IP:2380) \</span><br><span class="line">-listen-peer-urls &lt;http://0.0.0.0:2380&gt; \</span><br><span class="line">-listen-client-urls [http://0.0.0.0:2379,http://127.0.0.1:4001](http://0.0.0.0:2379,http:/127.0.0.1:4001) \</span><br><span class="line">-advertise-client-urls &lt;http://0.0.0.0:2379&gt; \</span><br><span class="line">-initial-cluster-token etcd-cluster \</span><br><span class="line">-initial-cluster &#123;NODE1_NAME&#125;=http://&#123;NODE1_IP&#125;:2380,&#123;NODE2_NAME&#125;=http://&#123;NODE2_IP&#125;:2380 \</span><br><span class="line">-initial-cluster-state new</span><br></pre></td></tr></table></figure>
-
-<h2 id="单个运行etcd"><a href="#单个运行etcd" class="headerlink" title="单个运行etcd"></a>单个运行etcd</h2><p>参考<a href="https://github.com/alfredhuang211/study-doc/blob/master/docker%E8%B7%A8%E4%B8%BB%E6%9C%BAoverlay%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE.md" target="_blank" rel="noopener">docker跨主机overlay网络配置</a>。</p>
-<h2 id="etcd配置"><a href="#etcd配置" class="headerlink" title="etcd配置:"></a>etcd配置:</h2><h3 id="etcd启动"><a href="#etcd启动" class="headerlink" title="etcd启动"></a>etcd启动</h3><p>etcd启动命令:</p>
+<h2 id="单个运行etcd">单个运行etcd</h2>
+<p>参考<a href="https://github.com/alfredhuang211/study-doc/blob/master/docker%E8%B7%A8%E4%B8%BB%E6%9C%BAoverlay%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE.md" target="_blank" rel="noopener">docker跨主机overlay网络配置</a>。</p>
+<h2 id="etcd配置">etcd配置:</h2>
+<h3 id="etcd启动">etcd启动</h3>
+<p>etcd启动命令:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etcd --advertise-client-urls &apos;http://192.168.15.232:2379&apos; --listen-client-urls &apos;http://0.0.0.0:2379&apos;</span><br></pre></td></tr></table></figure>
-
 <p>需要确保 advertise-client-urls 是在正确的ip和端口上监听</p>
-<h3 id="etcd检查"><a href="#etcd检查" class="headerlink" title="etcd检查"></a>etcd检查</h3><ul>
+<h3 id="etcd检查">etcd检查</h3>
+<ul>
 <li>本机检查:</li>
 </ul>
 <p>在etcd运行的机器上,检查启动情况:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">etcdctl member list</span><br><span class="line">ce2a822cea30bfca: name=default peerURLs=http://localhost:2380,http://localhost:7001 clientURLs=http://192.168.15.232:2379 isLeader=true</span><br></pre></td></tr></table></figure>
-
 <p>检查功能是否正确,能否正确设置和获取</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">etcdctl mk key value</span><br><span class="line">etcdctl get key </span><br><span class="line">value</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>远程检查</li>
 </ul>
 <p>在其他主机上,验证远程连接的正确性,是否可以正确设置和获取</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./etcdctl -endpoints http://192.168.15.232:2379 get key</span><br><span class="line">value</span><br><span class="line">/etcdctl -endpoints http://192.168.15.232:2379 mk key2 value2</span><br><span class="line">value2</span><br><span class="line">./etcdctl -endpoints http://192.168.15.232:2379 get key2 </span><br><span class="line">value2</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><p>如何安装，参考：<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">https://docs.docker.com/install/linux/docker-ce/ubuntu/</a></p>
+<h1>安装docker</h1>
+<p>如何安装，参考：<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">https://docs.docker.com/install/linux/docker-ce/ubuntu/</a></p>
 <p>在两个节点上:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">sudo service docker stop</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash">sudo vim /etc/default/docker</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 写入:  (注意下面&#123;NODE_IP&#125;需要改为主机IP)</span></span><br><span class="line">DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --cluster-store=etcd://&#123;NODE_IP&#125;:2379 --cluster-advertise=&#123;NODE_IP&#125;:2375"</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo service docker start</span></span><br></pre></td></tr></table></figure>
-
 <p>在其中一台主机上初始化swarm，使其为swarm manager节点</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker swarm init</span></span><br></pre></td></tr></table></figure>
-
 <p>加入集群（运行完上面的命令后，会出现指示如何加入网络的指令）。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker swarm join --token SWMTKN-1-0qo83je2oxsfxd72m09fgsm598i4dqzu3xfim36f4w20ioovgs-7oj4jufbt6yhsbq8mdxzf0bkj xxx.1xx.xxx.201:2377</span><br></pre></td></tr></table></figure>
-
 <p>在这台主机上，新建overlay network：(注意下面命令{NETWORK_NAME}改为自己的network名称，–attachable参数很重要)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker network create --driver overlay --attachable &#123;NETWORK_NAME&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="测试："><a href="#测试：" class="headerlink" title="测试："></a>测试：</h1><p>  第一个节点: </p>
+<h1>测试：</h1>
+<p>第一个节点:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -itd --name=worker-1 --net=&#123;NETWORK_NAME&#125; ubuntu</span><br></pre></td></tr></table></figure>
-
-<p> 第二个节点: </p>
+<p>第二个节点:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -itd --name=worker-2 --net=&#123;NETWORK_NAME&#125; ubuntu</span><br></pre></td></tr></table></figure>
-
 <p>在两个节点运行的ubuntudocker 容器安装ping和ifconfig并查看各自的ip：</p>
 <p>第一个节点：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo docker exec worker-1 apt-get update</span><br><span class="line"></span><br><span class="line">sudo docker exec worker-1 apt-get install net-tools</span><br><span class="line"></span><br><span class="line">sudo docker exec worker-1 ifconfig      //看到eth0则为该docker容器的ip,比如看到的为10.0.0.2</span><br></pre></td></tr></table></figure>
-
 <p>第二个节点：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo docker exec worker-2 apt-get update</span><br><span class="line"></span><br><span class="line">sudo docker exec worker-2 apt-get install net-tools</span><br><span class="line"></span><br><span class="line">sudo docker exec worker-2 apt-get install inetutils-ping</span><br><span class="line"></span><br><span class="line">sudo docker exec worker-2 ifconfig      //看到eth0则为该docker容器的ip,比如看到的为10.0.0.4</span><br><span class="line"></span><br><span class="line">sudo docker exec worker-2 ping 10.0.0.2   //ping 得通则成功了</span><br></pre></td></tr></table></figure>
-
 
       
 
@@ -407,7 +400,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#安装ETCD"><span class="toc-number">1.</span> <span class="toc-text">安装ETCD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#etcd集群"><span class="toc-number">1.1.</span> <span class="toc-text">etcd集群</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单个运行etcd"><span class="toc-number">1.2.</span> <span class="toc-text">单个运行etcd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#etcd配置"><span class="toc-number">1.3.</span> <span class="toc-text">etcd配置:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#etcd启动"><span class="toc-number">1.3.1.</span> <span class="toc-text">etcd启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#etcd检查"><span class="toc-number">1.3.2.</span> <span class="toc-text">etcd检查</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装docker"><span class="toc-number">2.</span> <span class="toc-text">安装docker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#测试："><span class="toc-number">3.</span> <span class="toc-text">测试：</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">1.</span> <span class="toc-text">安装ETCD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#etcd集群"><span class="toc-number">1.1.</span> <span class="toc-text">etcd集群</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单个运行etcd"><span class="toc-number">1.2.</span> <span class="toc-text">单个运行etcd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#etcd配置"><span class="toc-number">1.3.</span> <span class="toc-text">etcd配置:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#etcd启动"><span class="toc-number">1.3.1.</span> <span class="toc-text">etcd启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#etcd检查"><span class="toc-number">1.3.2.</span> <span class="toc-text">etcd检查</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">2.</span> <span class="toc-text">安装docker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">3.</span> <span class="toc-text">测试：</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -553,15 +546,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -577,15 +598,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -601,15 +622,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -641,23 +670,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -669,6 +686,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -677,11 +702,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -709,10 +730,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -725,10 +742,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -737,23 +750,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -765,7 +762,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -789,15 +826,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -809,11 +842,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -825,11 +854,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -849,51 +902,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -905,7 +918,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -917,11 +942,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -941,15 +966,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -961,15 +982,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -985,6 +998,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -994,14 +1011,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1017,7 +1026,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1045,15 +1062,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1077,11 +1086,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1097,15 +1118,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1117,11 +1138,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1130,6 +1147,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1169,27 +1194,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1202,6 +1211,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">

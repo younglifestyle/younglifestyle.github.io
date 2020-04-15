@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>进程与线线程的翻译文章 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A gentle introduction to multithreadinghttps://www.internalpointers.com/post/gentle-introduction-multithreading">
+  <meta name="description" content="A gentle introduction to multithreading https://www.internalpointers.com/post/gentle-introduction-multithreading">
 <meta name="keywords" content="翻译,多进程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="进程与线线程的翻译文章">
 <meta property="og:url" content="chunlife.top/2019/04/25/进程与线线程的翻译文章/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="A gentle introduction to multithreadinghttps://www.internalpointers.com/post/gentle-introduction-multithreading">
+<meta property="og:description" content="A gentle introduction to multithreading https://www.internalpointers.com/post/gentle-introduction-multithreading">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2019/04/25/进程与线线程的翻译文章/1556249590804.png">
 <meta property="og:image" content="chunlife.top/2019/04/25/进程与线线程的翻译文章/1556249652132.png">
-<meta property="og:updated_time" content="2019-04-26T03:35:09.605Z">
+<meta property="og:updated_time" content="2019-04-26T03:35:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="进程与线线程的翻译文章">
-<meta name="twitter:description" content="A gentle introduction to multithreadinghttps://www.internalpointers.com/post/gentle-introduction-multithreading">
+<meta name="twitter:description" content="A gentle introduction to multithreading https://www.internalpointers.com/post/gentle-introduction-multithreading">
 <meta name="twitter:image" content="chunlife.top/2019/04/25/进程与线线程的翻译文章/1556249590804.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
@@ -183,65 +183,75 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="A-gentle-introduction-to-multithreading"><a href="#A-gentle-introduction-to-multithreading" class="headerlink" title="A gentle introduction to multithreading"></a>A gentle introduction to multithreading</h1><p><a href="https://www.internalpointers.com/post/gentle-introduction-multithreading" target="_blank" rel="noopener">https://www.internalpointers.com/post/gentle-introduction-multithreading</a></p>
+        <h1>A gentle introduction to multithreading</h1>
+<p><a href="https://www.internalpointers.com/post/gentle-introduction-multithreading" target="_blank" rel="noopener">https://www.internalpointers.com/post/gentle-introduction-multithreading</a></p>
 <a id="more"></a>
-
 <p>额，才发现评论里，已经有人翻译了。时间是2019年3月份。</p>
 <p><a href="https://mp.weixin.qq.com/s/2d-xgWbhSgyFJ3zKPOIscg" target="_blank" rel="noopener">多线程简述</a></p>
 <p><strong>转载：</strong></p>
 <p>一次一步，走进并发的世界。</p>
 <p>现代计算机有能力在同一时间执行多个操作。随着硬件的进步和操作系统的发展，这项特性让程序运行得更快，无论是在执行速度上还是在响应性上。</p>
 <p>编写利用到此特性的软件另人着迷但也需要更多技巧: 你需要明白计算机底层发生了什么。本系列第一篇将对 线程(threads) 进行概述。在这些魔法背后，线程是操作系统(os) 提供的工具之一。</p>
-<h2 id="进程-process-和线程-thread-对号入座"><a href="#进程-process-和线程-thread-对号入座" class="headerlink" title="进程(process)和线程(thread): 对号入座"></a>进程(process)和线程(thread): 对号入座</h2><p>现代操作系统能够在同一时间运行多个程序. 这也是为什么此刻你可以在浏览器中阅读本文，同时又能使用音乐播放器听音乐的原因(浏览器和播放器是两个不同的程序)。每一个运行的程序都会是一个进程(process)。操作系统知晓很多软件技巧，使得多个进程可以一起运行，并能利用好底层的硬件。无论怎样，最终的结果都是，用户 <em>感觉</em> 所有的程序是同时跑着的。</p>
+<h2 id="进程-process-和线程-thread-对号入座">进程(process)和线程(thread): 对号入座</h2>
+<p>现代操作系统能够在同一时间运行多个程序. 这也是为什么此刻你可以在浏览器中阅读本文，同时又能使用音乐播放器听音乐的原因(浏览器和播放器是两个不同的程序)。每一个运行的程序都会是一个进程(process)。操作系统知晓很多软件技巧，使得多个进程可以一起运行，并能利用好底层的硬件。无论怎样，最终的结果都是，用户 <em>感觉</em> 所有的程序是同时跑着的。</p>
 <p>多进程并非操作系统中在同一时间执行多条任务的惟一方法。每个进程内部也可能同时跑多个子任务，这被叫做 线程(threads)。可以把线程当作进程的切片。每个进程启动时至少激活了一个线程，这个线程叫做 主线程(main thread)。然后，根据程序或程序设计者的需要，额外的线程会被创建或终止。多线程(multitreading) 就是关于单个进程内跑多个线程的。</p>
 <p>例如，很有可能你用的播放器就跑了多个线程: 一个用来渲染用户界面(通常是主线程)，另一个用来播放音乐。</p>
 <p>可以把操作系统当作持有多个进程的容器，而每个容器本身也持有多个线程。本篇文章主要关注线程，完整的话题很吸引人，值得未来写一篇更深入的分析文章。</p>
-<p><img src="1556249590804.png" alt="*Operating systems can be seen as a box that contains processes, which in turn contain one or more threads.*"></p>
+<p><img src="1556249590804.png" alt="Operating systems can be seen as a box that contains processes, which in turn contain one or more threads."></p>
 <ol>
 <li>操作系统可以被看作包含了很多进程的盒子，而进程本身则包含了很多线程。</li>
 </ol>
-<h3 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h3><p>操作系统为每个进程分配了自己的一片内存。通常这片内存不与其它进程共享：你的浏览器没法访问你的播放器的内存，反之亦然。把浏览器打开2次也遵循同样的规则，操作系统把一个应用的每个实例都当作一个独立的进程，每个进程都有会分配自己的独占内存。所以，两个或多个进程之间默认无法分享数据，除非它们应用了更高级的技巧–所谓的 进程间通信 (IPC).</p>
+<h3 id="进程和线程的区别">进程和线程的区别</h3>
+<p>操作系统为每个进程分配了自己的一片内存。通常这片内存不与其它进程共享：你的浏览器没法访问你的播放器的内存，反之亦然。把浏览器打开2次也遵循同样的规则，操作系统把一个应用的每个实例都当作一个独立的进程，每个进程都有会分配自己的独占内存。所以，两个或多个进程之间默认无法分享数据，除非它们应用了更高级的技巧–所谓的 进程间通信 (IPC).</p>
 <p>和进程不同，线程与其所在的进程共用一片操作系统分配的内存：播放器主线程内的数据可以轻易地被音频引擎访问到，反之亦然。因此，线程之间通信更加容易。在此基础上，线程通常比进程更轻量：它们资源占用得更少，更易创建。这也是我们称呼线程 轻量化的进程(lightweight processes) 的原因。</p>
 <p>线程让你的程序在同一时间执行多个操作变得方便。没有线程，你要针对每个任务写一个程序，每个任务跑一个进程，并利用操作系统对它们进行同步。这样做更难(进程间通信是棘手的)、更慢(进程比线程的开销更重)</p>
-<h3 id="绿色线程，或-纤程"><a href="#绿色线程，或-纤程" class="headerlink" title="绿色线程，或 纤程"></a>绿色线程，或 纤程</h3><p>目前为止，我们讨论的线程都是操作系统层面的：一个进程想创建一个新线程，必须告诉操作系统。然而，不是每个平台都原生支持线程。绿色线程(green threads), 也叫 纤程(fibers) 是一类模拟，它使得多线程程序在没有多线程支持的环境下也能工作。例如，在底层操作系统没有原生线程支持的情况下，某些虚拟机会实现绿色线程。</p>
+<h3 id="绿色线程，或-纤程">绿色线程，或 纤程</h3>
+<p>目前为止，我们讨论的线程都是操作系统层面的：一个进程想创建一个新线程，必须告诉操作系统。然而，不是每个平台都原生支持线程。绿色线程(green threads), 也叫 纤程(fibers) 是一类模拟，它使得多线程程序在没有多线程支持的环境下也能工作。例如，在底层操作系统没有原生线程支持的情况下，某些虚拟机会实现绿色线程。</p>
 <p>绿色线程的创建和管理都更快速，因为它们完全绕过了操作系统，但也有一些缺点。这个话题在后续的文章中会提到。</p>
 <p>绿色线程(green threads) 这个名字来自于 Sun Microsystem的绿色小组(Green Team), 90年代Java 线程库的初版即在这里设计。今天Java已不再使用绿色线程，在2000年时，他们切换到了原生线程。其它的一些语言–Go, Haskell 或 Rust, 举这几个例子 – 没有使用原生线程，而是实现了和绿色线程类似的功能。</p>
-<h2 id="线程的用途"><a href="#线程的用途" class="headerlink" title="线程的用途"></a>线程的用途</h2><p>进程为什么要使用多个线程？之前提到过，并行可以加快速度。比如，你打算在电影编辑器中渲染一部电影。编辑器可以聪明到将渲染操作分拆给多个线程，每个线程负责处理一部分数据。所以如果让一个线程来做需要1小时，那么2个线程只需要30分钟，而4个线程15分钟就行了，如此这般。</p>
+<h2 id="线程的用途">线程的用途</h2>
+<p>进程为什么要使用多个线程？之前提到过，并行可以加快速度。比如，你打算在电影编辑器中渲染一部电影。编辑器可以聪明到将渲染操作分拆给多个线程，每个线程负责处理一部分数据。所以如果让一个线程来做需要1小时，那么2个线程只需要30分钟，而4个线程15分钟就行了，如此这般。</p>
 <p>事情真的这样简单吗？有3个重要的点要考虑：</p>
 <ol>
 <li>不是所有程序都需要多线程。如果你的程序执行的是顺序操作或者总是等待用户操作，多线程不会带来多少好处；</li>
 <li>引入更多线程不一定会让程序跑得更快：每个子任务必须精心设计以保证并行执行；</li>
 <li>多个线程并不能保证100%并行，即，同一时间执行：这取决于底层硬件。</li>
 </ol>
-<p>第3点至关重要：如果你的计算机不支持同一时间多个操作，操作系统必须进行模拟操作。这一点后面会说到。暂时地，我们把并发(concurrency)描述为在同一时间执行多个任务的感受(perception)，而<strong>真实的并行(true parallelism)</strong>是多个任务确确实实地在同一时间运行着。</p>
-<p><img src="1556249652132.png" alt="*Parallelism is a subset of concurrency.*"></p>
+<p>第3点至关重要：如果你的计算机不支持同一时间多个操作，操作系统必须进行模拟操作。这一点后面会说到。暂时地，我们把并发(concurrency)描述为在同一时间执行多个任务的感受(perception)，而**真实的并行(true parallelism)**是多个任务确确实实地在同一时间运行着。</p>
+<p><img src="1556249652132.png" alt="Parallelism is a subset of concurrency."></p>
 <ol>
 <li>并行是并发的子集.</li>
 </ol>
-<h2 id="什么让并发和并行成为可能"><a href="#什么让并发和并行成为可能" class="headerlink" title="什么让并发和并行成为可能"></a>什么让并发和并行成为可能</h2><p> 程序的运行依赖于计算机中的中央处理器(CPU)。它由多个部分组成，主要的部分被称作 核心(core)：运算就是在这里执行的。一个核心一次只能运行一个操作。</p>
+<h2 id="什么让并发和并行成为可能">什么让并发和并行成为可能</h2>
+<p>程序的运行依赖于计算机中的中央处理器(CPU)。它由多个部分组成，主要的部分被称作 核心(core)：运算就是在这里执行的。一个核心一次只能运行一个操作。</p>
 <p>这自然就成了主要的缺点。为解决这个问题，操作系统发展出了高级技巧，让计算机有能力同时跑多个进程(或线程)，尤其在图形界面环境中，即使是单核机器。其中最重要的部分叫做 先占式多任务处理(preemptive multitasking), 这里 <strong>先占(preemption)</strong> 是这样一种能力: 中断一个任务，切换到另一个任务，稍后再恢复先前中断的任务。</p>
 <p>所以，如果你电脑的cpu只有一个核心，操作系统的职责之一就是将单核的运算能力分拆给多个进程(或线程)，让它们循环地相继执行。这给了我们一种假象，以为有多个程序在并行运行或者一个程序同时做着多件事情(多线程情况下)。这样并发便实现了，但 <em>真正的并行</em> – 同一时间跑多个进程的能力 – 仍然是缺失的。</p>
 <p>时至今日，现代cpu的核心通常不只一个，每个核心都能独立的一次执行一个操作。这意味着，有了多核心，真实的并行有了可能。比如，我自己的 Intel Core i7 有4个核心：它在同一时刻能跑4个不同的进程(或线程)。</p>
 <p>操作系统能监测到cpu的核心数并给它们分配进程或线程。线程可能被分配到任意一个核心上，而且这种调度对于程序是透明的。先占式多任务机制在所有核心都繁忙时也可能介入。这使得计算机有能力执行比核心数更多的进程和线程。</p>
-<h3 id="多线程应用在单核机器上：有意义吗？"><a href="#多线程应用在单核机器上：有意义吗？" class="headerlink" title="多线程应用在单核机器上：有意义吗？"></a>多线程应用在单核机器上：有意义吗？</h3><p>单核机器无法实现真正的并行。不过单核机器上的多线程仍然是有意义的，如果你的程序能够受益的话。当一个进程用到了多线程时，先占式多任务机制可以使你的程序正常的运行，即使某一个线程很慢或者阻塞了。</p>
+<h3 id="多线程应用在单核机器上：有意义吗？">多线程应用在单核机器上：有意义吗？</h3>
+<p>单核机器无法实现真正的并行。不过单核机器上的多线程仍然是有意义的，如果你的程序能够受益的话。当一个进程用到了多线程时，先占式多任务机制可以使你的程序正常的运行，即使某一个线程很慢或者阻塞了。</p>
 <p>比如，你在用一个桌面应用从一个慢速硬盘上读取数据。如果该桌面应用只有一个线程，在读取操作结束前，整个程序都是卡住的：在等待硬盘操作时，赋予该线程的cpu就浪费掉了。当然，除了这个程序外，操作系统还在跑着其它进程，但你在用的这个程序不会有任何进展(除了等待)。</p>
 <p>让我们以多线程方式重新思考这款程序。线程A负责访问硬盘，同时线程B负责处理用户界面。当因为硬盘读取速度慢导致线程A僵住时，线程B仍然管理着用户界面，程序不会丧失响应。这样做是可行的，因为有了2个线程后，当其中一个卡住后，操作系统可以将CPU资源切换给另一个线程使用。</p>
-<h2 id="线程越多，风险越多"><a href="#线程越多，风险越多" class="headerlink" title="线程越多，风险越多"></a>线程越多，风险越多</h2><p>上面谈到，线程和其所在进程共享内存。这使得在一个应用内线程间交换数据变得极其简单。例如，视频编辑器占有了包含视频时间线的内存区域，这片内存又被一些工作线程读取并渲染到文件中。它们只需要一个把手或指针(pointer)指向那个区域，就能够读取它的内容并写入磁盘。</p>
+<h2 id="线程越多，风险越多">线程越多，风险越多</h2>
+<p>上面谈到，线程和其所在进程共享内存。这使得在一个应用内线程间交换数据变得极其简单。例如，视频编辑器占有了包含视频时间线的内存区域，这片内存又被一些工作线程读取并渲染到文件中。它们只需要一个把手或指针(pointer)指向那个区域，就能够读取它的内容并写入磁盘。</p>
 <p>一切都很顺利，只要两个或多个线程只是从同一内存进行读取操作。问题发生在当有至少一个线程往共享内存执行写入操作而同时有其它线程在读取时。此时可能发生2类问题：</p>
 <ul>
 <li>数据竞争(data race) – 写线程在修改数据时，读线程在执行读入操作。如果写线程还未完成操作，读线程获取的是脏数据。</li>
 <li>竞态条件 – 读线程只应该在写线程写完后执行读取操作。如果不是这样会怎样？比数据竞争更微妙，竞态条件是关于两个或多个线程以不可预测的顺序执行任务，而实际上这些任务要以特定的顺序执行。即使没有数据竞争，程序也可能出现竞态条件。</li>
 </ul>
-<h3 id="线程安全的概念"><a href="#线程安全的概念" class="headerlink" title="线程安全的概念"></a>线程安全的概念</h3><p>没有数据竞争和竞态条件的代码被认为是线程安全的(thread-safe), 即使有多个线程同时执行的情况下。你可能注意过，一些程序库声明自己是线程安全的。如果你在写多线程程序，你会想知道第三方函数在多个线程中执行是否会导致并发问题。</p>
-<h2 id="数据竞争的根由"><a href="#数据竞争的根由" class="headerlink" title="数据竞争的根由"></a>数据竞争的根由</h2><p>我们知道一个CPU核心一次只能执行一个机器指令。这样的指令被称作原子的(atomic)，因为它不可再分了：它无法被分成多个更小的操作。在希腊语中，单词<strong>atom(ἄτομος; atomos)</strong>意即 不可切分的(uncuttable)</p>
+<h3 id="线程安全的概念">线程安全的概念</h3>
+<p>没有数据竞争和竞态条件的代码被认为是线程安全的(thread-safe), 即使有多个线程同时执行的情况下。你可能注意过，一些程序库声明自己是线程安全的。如果你在写多线程程序，你会想知道第三方函数在多个线程中执行是否会导致并发问题。</p>
+<h2 id="数据竞争的根由">数据竞争的根由</h2>
+<p>我们知道一个CPU核心一次只能执行一个机器指令。这样的指令被称作原子的(atomic)，因为它不可再分了：它无法被分成多个更小的操作。在希腊语中，单词**atom(ἄτομος; atomos)**意即 不可切分的(uncuttable)</p>
 <p>不可切分的特点使得原子操作天生线程安全。一个线程对共享数据进行原子写操作时，操作结束前没有其它线程能读取到该次修改。相反地，当一个线程对共享数据进行原子读操作时，它读到的是该时间点上的完整的数据。一个线程不可能溜进另一个线程的原子操作，因此数据竞争不会发生。</p>
 <p>坏消息是大部分操作都是非原子的。即使诸如<code>x=1</code>这样简单的赋值，在某些硬件上都可能涉及多个原子操作，让赋值操作整体上变成非原子的。所以如果一个线程读取x而另一个线程在对x赋值时，数据竞争便产生了。</p>
-<h2 id="竞态条件的根由"><a href="#竞态条件的根由" class="headerlink" title="竞态条件的根由"></a>竞态条件的根由</h2><p>先占式多任务处理让操作系统对线程管理有了完全的控制权：它可以根据更高级的调度算法，开始、结束或暂停线程。作为程序设计者的你无法控制代码执行的时间或顺序。实际上，像下面这样的代码我们无法保证它们的执行顺序：</p>
+<h2 id="竞态条件的根由">竞态条件的根由</h2>
+<p>先占式多任务处理让操作系统对线程管理有了完全的控制权：它可以根据更高级的调度算法，开始、结束或暂停线程。作为程序设计者的你无法控制代码执行的时间或顺序。实际上，像下面这样的代码我们无法保证它们的执行顺序：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">writer_thread.start()</span><br><span class="line">reader_thread.start()</span><br></pre></td></tr></table></figure>
-
 <p>将上述代码执行多次，你会注意到每次表现可能都不一样：有时写线程先开始，有时读线程先开始。如果你的程序需要让写线程跑在读线程前面，你就会遇到竞态条件的问题。</p>
 <p>这类行为被称作 非确定性的(non-deterministic)：结果每次都会变，而且你无法预测。调试受竞态条件影响的程序是烦人的，因为你无法以一种可控的方式重现问题。</p>
-<h2 id="让线程们和谐相处-并发控制"><a href="#让线程们和谐相处-并发控制" class="headerlink" title="让线程们和谐相处: 并发控制"></a>让线程们和谐相处: 并发控制</h2><p>数据竞争和竞态条件都是现实世界中的问题：一些人甚至因为它而丧命(见:<a href="https://en.wikipedia.org/wiki/Therac-25)。调节两个或多个并发线程的手段叫并发控制" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Therac-25)。调节两个或多个并发线程的手段叫并发控制</a>(concurrency control)：操作系统和编程语言都提供了一些方案。其中最重要的有：</p>
+<h2 id="让线程们和谐相处-并发控制">让线程们和谐相处: 并发控制</h2>
+<p>数据竞争和竞态条件都是现实世界中的问题：一些人甚至因为它而丧命(见:<a href="https://en.wikipedia.org/wiki/Therac-25" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Therac-25</a>)。调节两个或多个并发线程的手段叫并发控制(concurrency control)：操作系统和编程语言都提供了一些方案。其中最重要的有：</p>
 <ul>
 <li>同步化(synchronization) – 用来确保资源一次只会被一个线程使用。同步即是把代码的一部分标记为<em>受保护的</em>，这样一来，多个线程不能同时执行它，也就不会搞乱共享的数据了。</li>
 <li>原子操作(atomic operations) – 操作系统提供了一些特殊的指令，可以把一组非原子操作(像之前提及的赋值操作)转换成原子操作。这样，共享的数据总是处于有效状态，不管其它线程怎么访问。</li>
@@ -411,7 +421,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#A-gentle-introduction-to-multithreading"><span class="toc-number">1.</span> <span class="toc-text">A gentle introduction to multithreading</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#进程-process-和线程-thread-对号入座"><span class="toc-number">1.1.</span> <span class="toc-text">进程(process)和线程(thread): 对号入座</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#进程和线程的区别"><span class="toc-number">1.1.1.</span> <span class="toc-text">进程和线程的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绿色线程，或-纤程"><span class="toc-number">1.1.2.</span> <span class="toc-text">绿色线程，或 纤程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的用途"><span class="toc-number">1.2.</span> <span class="toc-text">线程的用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么让并发和并行成为可能"><span class="toc-number">1.3.</span> <span class="toc-text">什么让并发和并行成为可能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多线程应用在单核机器上：有意义吗？"><span class="toc-number">1.3.1.</span> <span class="toc-text">多线程应用在单核机器上：有意义吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程越多，风险越多"><span class="toc-number">1.4.</span> <span class="toc-text">线程越多，风险越多</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程安全的概念"><span class="toc-number">1.4.1.</span> <span class="toc-text">线程安全的概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据竞争的根由"><span class="toc-number">1.5.</span> <span class="toc-text">数据竞争的根由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#竞态条件的根由"><span class="toc-number">1.6.</span> <span class="toc-text">竞态条件的根由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让线程们和谐相处-并发控制"><span class="toc-number">1.7.</span> <span class="toc-text">让线程们和谐相处: 并发控制</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">1.</span> <span class="toc-text">A gentle introduction to multithreading</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#进程-process-和线程-thread-对号入座"><span class="toc-number">1.1.</span> <span class="toc-text">进程(process)和线程(thread): 对号入座</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#进程和线程的区别"><span class="toc-number">1.1.1.</span> <span class="toc-text">进程和线程的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绿色线程，或-纤程"><span class="toc-number">1.1.2.</span> <span class="toc-text">绿色线程，或 纤程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的用途"><span class="toc-number">1.2.</span> <span class="toc-text">线程的用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么让并发和并行成为可能"><span class="toc-number">1.3.</span> <span class="toc-text">什么让并发和并行成为可能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多线程应用在单核机器上：有意义吗？"><span class="toc-number">1.3.1.</span> <span class="toc-text">多线程应用在单核机器上：有意义吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程越多，风险越多"><span class="toc-number">1.4.</span> <span class="toc-text">线程越多，风险越多</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程安全的概念"><span class="toc-number">1.4.1.</span> <span class="toc-text">线程安全的概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据竞争的根由"><span class="toc-number">1.5.</span> <span class="toc-text">数据竞争的根由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#竞态条件的根由"><span class="toc-number">1.6.</span> <span class="toc-text">竞态条件的根由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让线程们和谐相处-并发控制"><span class="toc-number">1.7.</span> <span class="toc-text">让线程们和谐相处: 并发控制</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -557,15 +567,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -581,15 +619,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -605,15 +643,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -645,23 +691,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -673,6 +707,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -681,11 +723,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -713,10 +751,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -729,10 +763,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -741,23 +771,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -769,7 +783,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -793,15 +847,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -813,11 +863,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -829,11 +875,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -853,51 +923,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -909,7 +939,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -921,11 +963,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -945,15 +987,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -965,15 +1003,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -989,6 +1019,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -998,14 +1032,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1021,7 +1047,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1049,15 +1083,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1081,11 +1107,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1101,15 +1139,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1121,11 +1159,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1134,6 +1168,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1173,27 +1215,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1206,6 +1232,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">

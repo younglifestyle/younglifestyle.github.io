@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>网关插件编写 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。">
+  <meta name="description" content="概述 在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。">
 <meta name="keywords" content="Go,Gateway">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网关插件编写">
 <meta property="og:url" content="chunlife.top/2018/12/13/网关插件编写/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="概述在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。">
+<meta property="og:description" content="概述 在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T10:03:31.048Z">
+<meta property="og:updated_time" content="2019-04-12T10:03:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网关插件编写">
-<meta name="twitter:description" content="概述在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。">
+<meta name="twitter:description" content="概述 在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -180,16 +180,17 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。</p>
+        <h2 id="概述">概述</h2>
+<p>在使用网关的过程中，可能需要对已有功能进行一些扩展，这个时候就需要对网关进行一些改造工作，在gateway中，除了一些核心模块外，相关的功能模块都采用插件的形式进行实现，例如：黑白名单，熔断器，JWT，限流等，所以，在功能上的扩展上是可以按照插件的形式进行添加的，这也是gateway作者推荐的操作。</p>
 <a id="more"></a>
-
-<h2 id="接口interface"><a href="#接口interface" class="headerlink" title="接口interface"></a>接口interface</h2><p>插件的实现依赖于gateway给出的两个接口：</p>
+<h2 id="接口interface">接口interface</h2>
+<p>插件的实现依赖于gateway给出的两个接口：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Context filter context</span></span><br><span class="line"><span class="keyword">type</span> Context <span class="keyword">interface</span> &#123;</span><br><span class="line">	StartAt() time.Time</span><br><span class="line">	EndAt() time.Time</span><br><span class="line"></span><br><span class="line">	OriginRequest() *fasthttp.RequestCtx</span><br><span class="line">	ForwardRequest() *fasthttp.Request</span><br><span class="line">	Response() *fasthttp.Response</span><br><span class="line"></span><br><span class="line">	API() *metapb.API</span><br><span class="line">	DispatchNode() *metapb.DispatchNode</span><br><span class="line">	Server() *metapb.Server</span><br><span class="line">	Analysis() *util.Analysis</span><br><span class="line"></span><br><span class="line">	SetAttr(key <span class="keyword">string</span>, value <span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">	GetAttr(key <span class="keyword">string</span>) <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// BaseFilter base filter support default implemention</span></span><br><span class="line"><span class="keyword">type</span> BaseFilter <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Init init filter</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f BaseFilter)</span> <span class="title">Init</span><span class="params">(cfg <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Pre execute before proxy</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f BaseFilter)</span> <span class="title">Pre</span><span class="params">(c Context)</span> <span class="params">(statusCode <span class="keyword">int</span>, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> fasthttp.StatusOK, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Post execute after proxy</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f BaseFilter)</span> <span class="title">Post</span><span class="params">(c Context)</span> <span class="params">(statusCode <span class="keyword">int</span>, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> fasthttp.StatusOK, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PostErr execute proxy has errors</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f BaseFilter)</span> <span class="title">PostErr</span><span class="params">(c Context)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这些相关的定义都在<code>github.com/fagongzi/gateway/pkg/filter</code>包中，每一个Filter都需要导入。其中的<code>Context</code>的上下文接口，提供了Filter和Gateway交互的能力；<code>BaseFilter</code>定义了默认行为。</p>
 <p>在实际代码中，<code>Context</code>可以让插件在全局获取到route请求中的数据，例如API绑定到网关时，用户填写的相关配置——<code>API()</code>，HTTP请求的request——<code>ForwardRequest()</code>，后台接口返回的结果——<code>Response()</code>。</p>
 <p><code>BaseFilter</code>作为插件的响应动作，并不强制实现所有函数，这里只有两个比较重要的函数需要被关注到，<code>Pre</code>和<code>Post</code>，<code>Pre</code>作为网关在转发请求到后台时的前置性操作，例如黑名单功能插件就需要在<code>Pre</code>函数中判断URI是否匹配预先设置的正则表达式。例如接下来需要实现的一个webhook功能，可能就需要在<code>post</code>中进行一些操作，根据接口返回的一些信息来决定是否访问一些接口。</p>
-<h2 id="Request处理流程"><a href="#Request处理流程" class="headerlink" title="Request处理流程"></a>Request处理流程</h2><p>request -&gt; filter预处理 -&gt; 转发请求 -&gt; filter后置处理 -&gt; 响应客户端</p>
+<h2 id="Request处理流程">Request处理流程</h2>
+<p>request -&gt; filter预处理 -&gt; 转发请求 -&gt; filter后置处理 -&gt; 响应客户端</p>
 <p>整个逻辑处理符合以下规则:</p>
 <ul>
 <li>filter预处理返回错误，流程立即终止，并且使用filter返回的状态码响应客户端</li>
@@ -199,34 +200,29 @@ var _hmt = _hmt || [];
 <p>这里直接截取gateway官方的帮助文档中的内容，代码所体现的内容正如流程所说的。</p>
 <p><code>main</code> ——&gt;</p>
 <p>proxy.go</p>
-<p> <code>Start()</code>——&gt; <code>ServeFastHTTP</code> ——&gt; <code>p.doProxy</code>：</p>
+<p><code>Start()</code>——&gt; <code>ServeFastHTTP</code> ——&gt; <code>p.doProxy</code>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pre filters  轮询调用所有注册过的插件的pre函数</span></span><br><span class="line">filterName, code, err := p.doPreFilters(c)</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="comment">// post filters 轮询调用所有注册过的插件的post函数</span></span><br><span class="line">filterName, code, err = p.doPostFilters(c)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-
-<h2 id="编写插件"><a href="#编写插件" class="headerlink" title="编写插件"></a>编写插件</h2><p>预先设定一个简单的需求，例如，在一些特定的接口访问成功后，访问一个特定的地址，传输一些信息给这个地址。</p>
+<h2 id="编写插件">编写插件</h2>
+<p>预先设定一个简单的需求，例如，在一些特定的接口访问成功后，访问一个特定的地址，传输一些信息给这个地址。</p>
 <p>插件操作简单，不需要一些附加的逻辑，所有编写这个插件，只需要完成<code>BaseFilter</code>的相关函数即可，这里先完成一个大概的框架。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// WebHookFilter is an event handler that triggers web hooks</span></span><br><span class="line"><span class="keyword">type</span> WebHookFilter <span class="keyword">struct</span> &#123;</span><br><span class="line">	filter.BaseFilter</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Name name</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *WebHookFilter)</span> <span class="title">Name</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> FilterWebHook</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newWebHookFilter</span><span class="params">()</span> <span class="title">filter</span>.<span class="title">Filter</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;WebHookFilter&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Post execute after proxy</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *WebHookFilter)</span> <span class="title">Post</span><span class="params">(c filter.Context)</span> <span class="params">(statusCode <span class="keyword">int</span>, err error)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(c.API().GetTags()) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> fasthttp.StatusBadRequest, err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> isNeedWebHook <span class="keyword">bool</span></span><br><span class="line">	<span class="keyword">for</span> _, tags := <span class="keyword">range</span> c.API().GetTags() &#123;</span><br><span class="line">		<span class="keyword">if</span> tags.Name == <span class="string">"webhook"</span> &amp;&amp; tags.Value == <span class="string">"true"</span> &#123;</span><br><span class="line">			isNeedWebHook = <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// web url传递一个统一的地址？</span></span><br><span class="line">	<span class="keyword">if</span> isNeedWebHook &amp;&amp; c.Response().StatusCode() == http.StatusOK &#123;</span><br><span class="line">		log.Info(Send(c.Response().Body()))  <span class="comment">// 处理逻辑</span></span><br><span class="line">        <span class="comment">// go Send(c.Response().Body())</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	log.Info(<span class="string">"webhook post exec!"</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> fasthttp.StatusOK, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>可以看到在<code>post</code>函数中，出现<code>c.API().GetTags()</code>，这里的tag是API设置时的一个可选填项，用于个性化标记一个API，用在这里是因为不想对已有的gateway参数进行增添，直接使用一个gateway的可选参数来定制自己的参数，算是一种偷懒少改代码的方式。</p>
 <p><code>Post</code>这里是一般压力的话，使用协程进行异步操作；若是访问比较频繁，就使用10个channel限制一下速度，慢慢发送数据；当然更顺畅的做法肯定是引入消息队列（MQ），不过当整个系统没这么复杂时，多上一个组件，可能也会造成一定量的维护负担（视业务来定）。</p>
 <p>若使用代码来设置API（一般使用前端UI较为方便）：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sb := c.NewAPIBuilder()</span><br><span class="line"><span class="comment">// 必选项</span></span><br><span class="line">sb.Name(<span class="string">"用户API"</span>)</span><br><span class="line"><span class="comment">// 设置URL规则，匹配所有开头为/api/user的请求</span></span><br><span class="line">sb.MatchURLPattern(<span class="string">"/hello/(.+)"</span>)</span><br><span class="line"><span class="comment">// 匹配GET请求</span></span><br><span class="line">sb.MatchMethod(<span class="string">"GET"</span>)</span><br><span class="line"><span class="comment">// 添加tag</span></span><br><span class="line">sb.AddTag(<span class="string">"webhook"</span>, <span class="string">"true"</span>)</span><br></pre></td></tr></table></figure>
-
 <p>到这里代码已完成一个大概的框架，可以看到编写逻辑非常简单，但若要插件插入gateway运行，还需要将插件信息注册gateway中，接口中的<code>Name()</code>需要和这里的name信息能够匹配。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">--- &quot;gateway\pkg\proxy\factory.go&quot;</span><br><span class="line"></span><br><span class="line">// Filter WebHook jwt filter</span><br><span class="line">FilterWebHook = &quot;WEBHOOK&quot;</span><br><span class="line"></span><br><span class="line">func (p *Proxy) newFilter(filterSpec *FilterSpec) (filter.Filter, error) &#123;</span><br><span class="line">	......</span><br><span class="line">	</span><br><span class="line">	switch input &#123;</span><br><span class="line">	......</span><br><span class="line">	case FilterWebHook:</span><br><span class="line">		return newWebHookFilter(), nil</span><br><span class="line">	default:</span><br><span class="line">		return nil, ErrUnknownFilter</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--- &quot;gateway\cmd\proxy\proxy.go&quot;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line">	......</span><br><span class="line">	defaultFilters.Set(proxy.FilterWebHook)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>插件程序编写到这里，其实已经是可以正常运行了，但还缺了一个必要的环节，那就是可配置的参数信息，用于多机环境下进行工作，参数借助etcd进行分布式设置。</p>
-<h2 id="获取etcd配置"><a href="#获取etcd配置" class="headerlink" title="获取etcd配置"></a>获取etcd配置</h2><p><code>initDispatcher()</code>——&gt; <code>GetStoreFrom</code> ——&gt; <code>fn, ok := supportSchema[schema]</code> ——&gt; <code>getEtcdStoreFrom</code> ——&gt; <code>NewEtcdStore</code> ——&gt; <code>store.init()</code>，到这里就配置好各个插件取etcd配置的函数了,<strong>需要动手添加函数</strong>。</p>
+<h2 id="获取etcd配置">获取etcd配置</h2>
+<p><code>initDispatcher() </code>——&gt; <code>GetStoreFrom</code> ——&gt; <code>fn, ok := supportSchema[schema]</code> ——&gt; <code>getEtcdStoreFrom</code> ——&gt; <code>NewEtcdStore</code> ——&gt; <code>store.init()</code>，到这里就配置好各个插件取etcd配置的函数了,<strong>需要动手添加函数</strong>。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *EtcdStore)</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	e.watchMethodMapping[EventSrcBind] = e.doWatchWithBind</span><br><span class="line">	e.watchMethodMapping[EventSrcServer] = e.doWatchWithServer</span><br><span class="line">	e.watchMethodMapping[EventSrcCluster] = e.doWatchWithCluster</span><br><span class="line">	e.watchMethodMapping[EventSrcAPI] = e.doWatchWithAPI</span><br><span class="line">	e.watchMethodMapping[EventSrcRouting] = e.doWatchWithRouting</span><br><span class="line">	e.watchMethodMapping[EventSrcProxy] = e.doWatchWithProxy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>函数是根据配置路径的前缀来匹配插件的配置的，而这些前缀同样也是需要提前写好的，<strong>需要动手添加函数</strong>， <code>NewEtcdStore</code> 函数：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">store := &amp;EtcdStore&#123;</span><br><span class="line">    prefix:             prefix,</span><br><span class="line">    clustersDir:        fmt.Sprintf(<span class="string">"%s/clusters"</span>, prefix),</span><br><span class="line">    serversDir:         fmt.Sprintf(<span class="string">"%s/servers"</span>, prefix),</span><br><span class="line">    bindsDir:           fmt.Sprintf(<span class="string">"%s/binds"</span>, prefix),</span><br><span class="line">    apisDir:            fmt.Sprintf(<span class="string">"%s/apis"</span>, prefix),</span><br><span class="line">    proxiesDir:         fmt.Sprintf(<span class="string">"%s/proxies"</span>, prefix),</span><br><span class="line">    routingsDir:        fmt.Sprintf(<span class="string">"%s/routings"</span>, prefix),</span><br><span class="line">    idPath:             fmt.Sprintf(<span class="string">"%s/id"</span>, prefix),</span><br><span class="line">    watchMethodMapping: <span class="built_in">make</span>(<span class="keyword">map</span>[EvtSrc]<span class="function"><span class="keyword">func</span><span class="params">(EvtType, *mvccpb.KeyValue)</span> *<span class="title">Evt</span>),</span></span><br><span class="line"><span class="function">    <span class="title">base</span>:               100,</span></span><br><span class="line"><span class="function">    <span class="title">end</span>:                100,</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
 <p>接下来就是监听etcd的配置信息：</p>
 <p><code>p.dispatcher.load()</code> ——&gt; <code>go r.watch()</code> ——&gt; <code>r.store.Watch(r.watchEventC, r.watchStopC)</code> ——&gt; <code>e.doWatch()</code> ——&gt; <code>e.evtCh &lt;- e.watchMethodMapping[evtSrc](evtType, ev.Kv)</code></p>
 <p>根据etcd出发的事件，判断是哪个插件的配置进行更改或是删除，然后调用在 <code>store.init()</code>中配置的取etcd配置的函数（还未处理），再通过channel发送出去，<strong>需要动手添加一个case处理自定义的插件</strong>。</p>
 <p>在这个流程中的<code>go r.watch()</code>，有着另一条分支路线，<code>go r.readyToReceiveWatchEvent()</code>，<strong>这里也是需要我们添加函数处理的地方，用于根据etcd事件对参数进行实际处理（增删改）</strong>。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *dispatcher)</span> <span class="title">readyToReceiveWatchEvent</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		evt := &lt;-r.watchEventC</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> evt.Src == store.EventSrcCluster &#123;</span><br><span class="line">			r.doClusterEvent(evt)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> evt.Src == store.EventSrcServer &#123;</span><br><span class="line">			r.doServerEvent(evt)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> evt.Src == store.EventSrcBind &#123;</span><br><span class="line">			r.doBindEvent(evt)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> evt.Src == store.EventSrcAPI &#123;</span><br><span class="line">			r.doAPIEvent(evt)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> evt.Src == store.EventSrcRouting &#123;</span><br><span class="line">			r.doRoutingEvent(evt)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> evt.Src == store.EventSrcProxy &#123;</span><br><span class="line">			r.doProxyEvent(evt)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			log.Warnf(<span class="string">"unknown event &lt;%+v&gt;"</span>, evt)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>至此，配置参数信息被保存到了结构体<code>dispatcher</code>中，当然若是新增的配置，这里依然是需要在结构体<code>dispatcher</code>中新增一个结构体成员来保存用于自定义插件的配置的。</p>
 <p>那如何使用这些配置呢？</p>
 <p>在context中，插件所使用的函数由proxyContext实现，<code>&quot;gateway\pkg\proxy\filter.go&quot;</code>，这里保存了<code>dispatcher</code>的相关信息，可以由开发者自由拿取数据。</p>
@@ -540,15 +536,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -564,15 +588,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -588,15 +612,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -628,23 +660,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -656,6 +676,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -664,11 +692,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -696,10 +720,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -712,10 +732,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -724,23 +740,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -752,7 +752,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -776,15 +816,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -796,11 +832,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -812,11 +844,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -836,51 +892,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -892,7 +908,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -904,11 +932,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -928,15 +956,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -948,15 +972,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -972,6 +988,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -981,14 +1001,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1004,7 +1016,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1032,15 +1052,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1064,11 +1076,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1084,15 +1108,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1104,11 +1128,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1117,6 +1137,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1156,27 +1184,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1189,6 +1201,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -27,7 +27,7 @@
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_itable.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_all.png">
 <meta property="og:image" content="chunlife.top/2019/06/19/转载《Go语言interface底层实现》/iface_fuzhi.png">
-<meta property="og:updated_time" content="2019-06-19T07:31:42.929Z">
+<meta property="og:updated_time" content="2019-06-19T07:31:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="转载《Go语言interface底层实现》">
 <meta name="twitter:description" content="interface底层是怎么实现的，由于一直都是浮于水面，未去深究过，这里也是去查了些资料了解，这篇博客把interface结构解构的很清楚了，我觉得，博主画的那几幅图就能很好的进行理解了。">
@@ -194,65 +194,78 @@ var _hmt = _hmt || [];
       
         <p>interface底层是怎么实现的，由于一直都是浮于水面，未去深究过，这里也是去查了些资料了解，这篇博客把<code>interface</code>结构解构的很清楚了，我觉得，博主画的那几幅图就能很好的进行理解了。</p>
 <a id="more"></a>
-
-<h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p><code>eface</code>的具体结构是：</p>
+<h1>简述</h1>
+<p><code>eface</code>的具体结构是：</p>
 <p><img src="eface.png" alt="eface"></p>
 <p><code>eface</code>的整体结构是：</p>
 <p><img src="eface_all.png" alt="eface_all"></p>
 <p><code>iface</code>的具体结构是：</p>
 <p><img src="iface.png" alt="iface"></p>
-<p><code>itab</code>是<code>iface</code>不同于<code>eface</code>比较关键的数据结构。其可包含两部分：一部分是确定唯一的包含方法的interface的具体结构类型，一部分是指向具体方法集的指针。<br>具体结构为：<br><img src="iface_itable.png" alt="iface_itable"></p>
+<p><code>itab</code>是<code>iface</code>不同于<code>eface</code>比较关键的数据结构。其可包含两部分：一部分是确定唯一的包含方法的interface的具体结构类型，一部分是指向具体方法集的指针。<br>
+具体结构为：<br>
+<img src="iface_itable.png" alt="iface_itable"></p>
 <hr>
 <hr>
 <blockquote>
 <p>转载自：<a href="https://i6448038.github.io/2018/10/01/Golang-interface/" target="_blank" rel="noopener">https://i6448038.github.io/2018/10/01/Golang-interface/</a></p>
 </blockquote>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Go的interface源码在Golang源码的<code>runtime</code>目录中。<br>Go在不同版本之间的interface结构可能会有所不同，但是，整体的结构是不会改变的，此文章用的Go版本是1.11。</p>
-<p>Go的interface是由两种类型来实现的：<code>iface</code>和<code>eface</code>。
+<h1>概述</h1>
+<p>Go的interface源码在Golang源码的<code>runtime</code>目录中。<br>
+Go在不同版本之间的interface结构可能会有所不同，但是，整体的结构是不会改变的，此文章用的Go版本是1.11。</p>
+<p>Go的interface是由两种类型来实现的：<code>iface</code>和<code>eface</code>。<br>
 其中，<code>iface</code>表示的是包含方法的interface，例如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Person interface &#123;</span><br><span class="line">	Print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>而<code>eface</code>代表的是不包含方法的interface，即</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type Person interface &#123;&#125;</span><br></pre></td></tr></table></figure>
-
 <p>或者</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var person interface&#123;&#125; = xxxx实体</span><br></pre></td></tr></table></figure>
-
-<h1 id="eface"><a href="#eface" class="headerlink" title="eface"></a><code>eface</code></h1><p><code>eface</code>的具体结构是：<br><img src="eface.png" alt="eface"></p>
-<p>一共有两个属性构成，一个是类型信息<code>_type</code>，一个是数据信息。<br>其中，<code>_type</code>可以认为是Go语言中所有类型的公共描述，Go语言中几乎所有的数据结构都可以抽象成<code>_type</code>，是所有类型的表现，可以说是万能类型，<br><code>data</code>是指向具体数据的指针。</p>
+<h1><code>eface</code></h1>
+<p><code>eface</code>的具体结构是：<br>
+<img src="eface.png" alt="eface"></p>
+<p>一共有两个属性构成，一个是类型信息<code>_type</code>，一个是数据信息。<br>
+其中，<code>_type</code>可以认为是Go语言中所有类型的公共描述，Go语言中几乎所有的数据结构都可以抽象成<code>_type</code>，是所有类型的表现，可以说是万能类型，<br>
+<code>data</code>是指向具体数据的指针。</p>
 <p><code>type</code>的具体代码为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">type _type struct &#123;</span><br><span class="line">	size       uintptr </span><br><span class="line">	ptrdata    uintptr // size of memory prefix holding all pointers</span><br><span class="line">	hash       uint32</span><br><span class="line">	tflag      tflag</span><br><span class="line">	align      uint8</span><br><span class="line">	fieldalign uint8</span><br><span class="line">	kind       uint8</span><br><span class="line">	alg        *typeAlg</span><br><span class="line">	// gcdata stores the GC type data for the garbage collector.</span><br><span class="line">	// If the KindGCProg bit is set in kind, gcdata is a GC program.</span><br><span class="line">	// Otherwise it is a ptrmask bitmap. See mbitmap.go for details.</span><br><span class="line">	gcdata    *byte</span><br><span class="line">	str       nameOff</span><br><span class="line">	ptrToThis typeOff</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>eface</code>的整体结构是：<br><img src="eface_all.png" alt="eface_all"><br>对于没有方法的interface赋值后的内部结构是怎样的呢？<br>可以先看段代码：</p>
+<p><code>eface</code>的整体结构是：<br>
+<img src="eface_all.png" alt="eface_all"><br>
+对于没有方法的interface赋值后的内部结构是怎样的呢？<br>
+可以先看段代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;strconv&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Binary uint64</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	b := Binary(200)</span><br><span class="line">	any := (interface&#123;&#125;)(b)</span><br><span class="line">	fmt.Println(any)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出200，赋值后的结构图是这样的：<br><img src="eface_fuzhi.png" alt="eface_fuzhi"></p>
-<p>对于将不同类型转化成<code>type</code>万能结构的方法，是运行时的<code>convT2E</code>方法，在<code>runtime</code>包中。<br>以上，是对于没有方法的接口说明。<br>对于包含方法的函数，用到的是另外的一种结构，叫<code>iface</code></p>
-<h1 id="iface"><a href="#iface" class="headerlink" title="iface"></a><code>iface</code></h1><p>所有包含方法的接口，都会使用<code>iface</code>结构。包含方法的接口就是一下这种最常见，最普通的接口：</p>
+<p>输出200，赋值后的结构图是这样的：<br>
+<img src="eface_fuzhi.png" alt="eface_fuzhi"></p>
+<p>对于将不同类型转化成<code>type</code>万能结构的方法，是运行时的<code>convT2E</code>方法，在<code>runtime</code>包中。<br>
+以上，是对于没有方法的接口说明。<br>
+对于包含方法的函数，用到的是另外的一种结构，叫<code>iface</code></p>
+<h1><code>iface</code></h1>
+<p>所有包含方法的接口，都会使用<code>iface</code>结构。包含方法的接口就是一下这种最常见，最普通的接口：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Person interface &#123;</span><br><span class="line">	Print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>iface</code>的源代码是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type iface struct &#123;</span><br><span class="line">	tab  *itab</span><br><span class="line">	data unsafe.Pointer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>iface</code>的具体结构是：</p>
 <p><img src="iface.png" alt="iface"></p>
-<p><code>itab</code>是<code>iface</code>不同于<code>eface</code>比较关键的数据结构。其可包含两部分：一部分是确定唯一的包含方法的interface的具体结构类型，一部分是指向具体方法集的指针。<br>具体结构为：<br><img src="iface_itable.png" alt="iface_itable"><br>属性 <code>itab</code>的源代码是：</p>
+<p><code>itab</code>是<code>iface</code>不同于<code>eface</code>比较关键的数据结构。其可包含两部分：一部分是确定唯一的包含方法的interface的具体结构类型，一部分是指向具体方法集的指针。<br>
+具体结构为：<br>
+<img src="iface_itable.png" alt="iface_itable"><br>
+属性 <code>itab</code>的源代码是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type itab struct &#123;</span><br><span class="line">	inter *interfacetype //此属性用于定位到具体interface</span><br><span class="line">	_type *_type //此属性用于定位到具体interface</span><br><span class="line">	hash  uint32 // copy of _type.hash. Used for type switches.</span><br><span class="line">	_     [4]byte</span><br><span class="line">	fun   [1]uintptr // variable sized. fun[0]==0 means _type does not implement inter.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>属性<code>interfacetype</code>类似于<code>_type</code>，其作用就是interface的公共描述，类似的还有<code>maptype</code>、<code>arraytype</code>、<code>chantype</code>…其都是各个结构的公共描述，可以理解为一种外在的表现信息。<code>interfacetype</code>源码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type interfacetype struct &#123;</span><br><span class="line">	typ     _type</span><br><span class="line">	pkgpath name</span><br><span class="line">	mhdr    []imethod</span><br><span class="line">&#125;</span><br><span class="line">type imethod struct &#123;</span><br><span class="line">	name nameOff</span><br><span class="line">	ityp typeOff</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>iface</code>的整体结构为：</p>
 <p><img src="iface_all.png" alt="iface_all"></p>
-<p>对于含有方法的interface赋值后的内部结构是怎样的呢？<br>一下代码运行后</p>
+<p>对于含有方法的interface赋值后的内部结构是怎样的呢？<br>
+一下代码运行后</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;strconv&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Binary uint64</span><br><span class="line">func (i Binary) String() string &#123;</span><br><span class="line">	return strconv.FormatUint(i.Get(), 10)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (i Binary) Get() uint64 &#123;</span><br><span class="line">	return uint64(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	b := Binary(200)</span><br><span class="line">	any := fmt.Stringer(b)</span><br><span class="line">	fmt.Println(any)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>首先，要知道代码运行结果为:200。<br>其次，了解到<code>fmt.Stringer</code>是一个包含<code>String</code>方法的接口。</p>
+<p>首先，要知道代码运行结果为:200。<br>
+其次，了解到<code>fmt.Stringer</code>是一个包含<code>String</code>方法的接口。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Stringer interface &#123;</span><br><span class="line">	String() string</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后，赋值后接口<code>Stringer</code>的内部结构为：<br><img src="iface_fuzhi.png" alt="iface_fuzhi"></p>
+<p>最后，赋值后接口<code>Stringer</code>的内部结构为：<br>
+<img src="iface_fuzhi.png" alt="iface_fuzhi"></p>
 <p>对于将不同类型转化成itable中<code>type(Binary)</code>的方法，是运行时的<code>convT2I</code>方法，在<code>runtime</code>包中。</p>
-<p>参考文献：<br>《Go in action》<br><a href="https://research.swtch.com/interfaces" target="_blank" rel="noopener">https://research.swtch.com/interfaces</a><br><a href="https://juejin.im/entry/5a7d08d3f265da4e865a6200" target="_blank" rel="noopener">https://juejin.im/entry/5a7d08d3f265da4e865a6200</a></p>
+<p>参考文献：<br>
+《Go in action》<br>
+<a href="https://research.swtch.com/interfaces" target="_blank" rel="noopener">https://research.swtch.com/interfaces</a><br>
+<a href="https://juejin.im/entry/5a7d08d3f265da4e865a6200" target="_blank" rel="noopener">https://juejin.im/entry/5a7d08d3f265da4e865a6200</a></p>
 
       
 
@@ -416,7 +429,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#简述"><span class="toc-number">1.</span> <span class="toc-text">简述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#eface"><span class="toc-number">3.</span> <span class="toc-text">eface</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#iface"><span class="toc-number">4.</span> <span class="toc-text">iface</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">1.</span> <span class="toc-text">简述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">3.</span> <span class="toc-text">eface</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">iface</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -562,15 +575,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -586,15 +627,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -610,15 +651,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -650,23 +699,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -678,6 +715,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -686,11 +731,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -718,10 +759,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -734,10 +771,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -746,23 +779,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -774,7 +791,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -798,15 +855,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -818,11 +871,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -834,11 +883,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -858,51 +931,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -914,7 +947,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -926,11 +971,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -950,15 +995,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -970,15 +1011,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -994,6 +1027,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -1003,14 +1040,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1026,7 +1055,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1054,15 +1091,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1086,11 +1115,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1106,15 +1147,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1126,11 +1167,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1139,6 +1176,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1178,27 +1223,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1211,6 +1240,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="21.编译执行下面代码会出现什么?">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-09-27T08:31:25.606Z">
+<meta property="og:updated_time" content="2019-09-27T08:31:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题(网络搜集)三">
 <meta name="twitter:description" content="21.编译执行下面代码会出现什么?">
@@ -180,11 +180,12 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="21-编译执行下面代码会出现什么"><a href="#21-编译执行下面代码会出现什么" class="headerlink" title="21.编译执行下面代码会出现什么?"></a>21.编译执行下面代码会出现什么?</h1><a id="more"></a>
-
+        <h1>21.编译执行下面代码会出现什么?</h1>
+<a id="more"></a>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">var</span>(</span><br><span class="line">    size :=<span class="number">1024</span></span><br><span class="line">    max_size = size*<span class="number">2</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    <span class="built_in">println</span>(size,max_size)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>考点:<strong>变量简短模式</strong><br>变量简短模式限制：</p>
+<h2 id="解析">解析</h2>
+<p>考点:<strong>变量简短模式</strong><br>
+变量简短模式限制：</p>
 <ul>
 <li>定义变量同时显式初始化</li>
 <li>不能提供数据类型</li>
@@ -192,64 +193,75 @@ var _hmt = _hmt || [];
 </ul>
 <p>结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">syntax error: unexpected :=</span><br></pre></td></tr></table></figure>
-
-<h1 id="22-下面函数有什么问题？"><a href="#22-下面函数有什么问题？" class="headerlink" title="22.下面函数有什么问题？"></a>22.下面函数有什么问题？</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">const cl  = 100</span><br><span class="line"></span><br><span class="line">var bl    = 123</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    println(&amp;bl,bl)</span><br><span class="line">    println(&amp;cl,cl)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-1"><a href="#解析-1" class="headerlink" title="解析"></a>解析</h2><p>考点:<strong>常量</strong><br>常量不同于变量的在运行期分配内存，常量通常会被编译器在预处理阶段直接展开，作为指令数据使用，</p>
+<h1>22.下面函数有什么问题？</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">const cl  = 100</span><br><span class="line"></span><br><span class="line">var bl    = 123</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    println(&amp;bl,bl)</span><br><span class="line">    println(&amp;cl,cl)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-2">解析</h2>
+<p>考点:<strong>常量</strong><br>
+常量不同于变量的在运行期分配内存，常量通常会被编译器在预处理阶段直接展开，作为指令数据使用，</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cannot take the address of cl</span><br></pre></td></tr></table></figure>
-
-<h1 id="23-编译执行下面代码会出现什么"><a href="#23-编译执行下面代码会出现什么" class="headerlink" title="23.编译执行下面代码会出现什么?"></a>23.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line"></span><br><span class="line">    for i:=0;i&lt;10 ;i++  &#123;</span><br><span class="line">    loop:</span><br><span class="line">        println(i)</span><br><span class="line">    &#125;</span><br><span class="line">    goto loop</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-2"><a href="#解析-2" class="headerlink" title="解析"></a>解析</h2><p>考点：<strong>goto</strong><br>goto不能跳转到其他函数或者内层代码</p>
+<h1>23.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line"></span><br><span class="line">    for i:=0;i&lt;10 ;i++  &#123;</span><br><span class="line">    loop:</span><br><span class="line">        println(i)</span><br><span class="line">    &#125;</span><br><span class="line">    goto loop</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-3">解析</h2>
+<p>考点：<strong>goto</strong><br>
+goto不能跳转到其他函数或者内层代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">goto loop jumps into block starting at</span><br></pre></td></tr></table></figure>
-
-<h1 id="24-编译执行下面代码会出现什么"><a href="#24-编译执行下面代码会出现什么" class="headerlink" title="24.编译执行下面代码会出现什么?"></a>24.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    type MyInt1 int</span><br><span class="line">    type MyInt2 = int</span><br><span class="line">    var i int =9</span><br><span class="line">    var i1 MyInt1 = i</span><br><span class="line">    var i2 MyInt2 = i</span><br><span class="line">    fmt.Println(i1,i2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-3"><a href="#解析-3" class="headerlink" title="解析"></a>解析</h2><p>考点：*<em>Go 1.9 新特性 Type Alias *</em><br>基于一个类型创建一个新类型，称之为defintion；基于一个类型创建一个别名，称之为alias。<br>MyInt1为称之为defintion，虽然底层类型为int类型，但是不能直接赋值，需要强转；<br>MyInt2称之为alias，可以直接赋值。</p>
+<h1>24.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    type MyInt1 int</span><br><span class="line">    type MyInt2 = int</span><br><span class="line">    var i int =9</span><br><span class="line">    var i1 MyInt1 = i</span><br><span class="line">    var i2 MyInt2 = i</span><br><span class="line">    fmt.Println(i1,i2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-4">解析</h2>
+<p>考点：**Go 1.9 新特性 Type Alias **<br>
+基于一个类型创建一个新类型，称之为defintion；基于一个类型创建一个别名，称之为alias。<br>
+MyInt1为称之为defintion，虽然底层类型为int类型，但是不能直接赋值，需要强转；<br>
+MyInt2称之为alias，可以直接赋值。</p>
 <p>结果:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cannot use i (type int) as type MyInt1 in assignment</span><br></pre></td></tr></table></figure>
-
-<h1 id="25-编译执行下面代码会出现什么"><a href="#25-编译执行下面代码会出现什么" class="headerlink" title="25.编译执行下面代码会出现什么?"></a>25.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">type User struct &#123;</span><br><span class="line">&#125;</span><br><span class="line">type MyUser1 User</span><br><span class="line">type MyUser2 = User</span><br><span class="line">func (i MyUser1) m1()&#123;</span><br><span class="line">    fmt.Println(&quot;MyUser1.m1&quot;)</span><br><span class="line">&#125;</span><br><span class="line">func (i User) m2()&#123;</span><br><span class="line">    fmt.Println(&quot;User.m2&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var i1 MyUser1</span><br><span class="line">    var i2 MyUser2</span><br><span class="line">    i1.m1()</span><br><span class="line">    i2.m2()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-4"><a href="#解析-4" class="headerlink" title="解析"></a>解析</h2><p>考点：*<em>Go 1.9 新特性 Type Alias *</em><br>因为MyUser2完全等价于User，所以具有其所有的方法，并且其中一个新增了方法，另外一个也会有。<br>但是</p>
+<h1>25.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">type User struct &#123;</span><br><span class="line">&#125;</span><br><span class="line">type MyUser1 User</span><br><span class="line">type MyUser2 = User</span><br><span class="line">func (i MyUser1) m1()&#123;</span><br><span class="line">    fmt.Println(&quot;MyUser1.m1&quot;)</span><br><span class="line">&#125;</span><br><span class="line">func (i User) m2()&#123;</span><br><span class="line">    fmt.Println(&quot;User.m2&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var i1 MyUser1</span><br><span class="line">    var i2 MyUser2</span><br><span class="line">    i1.m1()</span><br><span class="line">    i2.m2()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-5">解析</h2>
+<p>考点：**Go 1.9 新特性 Type Alias **<br>
+因为MyUser2完全等价于User，所以具有其所有的方法，并且其中一个新增了方法，另外一个也会有。<br>
+但是</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i1.m2()</span><br></pre></td></tr></table></figure>
-
-<p>是不能执行的，因为MyUser1没有定义该方法。<br>结果:</p>
+<p>是不能执行的，因为MyUser1没有定义该方法。<br>
+结果:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MyUser1.m1</span><br><span class="line">User.m2</span><br></pre></td></tr></table></figure>
-
-<h1 id="26-编译执行下面代码会出现什么"><a href="#26-编译执行下面代码会出现什么" class="headerlink" title="26.编译执行下面代码会出现什么?"></a>26.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">type T1 struct &#123;</span><br><span class="line">&#125;</span><br><span class="line">func (t T1) m1()&#123;</span><br><span class="line">    fmt.Println(&quot;T1.m1&quot;)</span><br><span class="line">&#125;</span><br><span class="line">type T2 = T1</span><br><span class="line">type MyStruct struct &#123;</span><br><span class="line">    T1</span><br><span class="line">    T2</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">    my:=MyStruct&#123;&#125;</span><br><span class="line">    my.m1()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-5"><a href="#解析-5" class="headerlink" title="解析"></a>解析</h2><p>考点：*<em>Go 1.9 新特性 Type Alias *</em><br>是不能正常编译的,异常：</p>
+<h1>26.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">type T1 struct &#123;</span><br><span class="line">&#125;</span><br><span class="line">func (t T1) m1()&#123;</span><br><span class="line">    fmt.Println(&quot;T1.m1&quot;)</span><br><span class="line">&#125;</span><br><span class="line">type T2 = T1</span><br><span class="line">type MyStruct struct &#123;</span><br><span class="line">    T1</span><br><span class="line">    T2</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">    my:=MyStruct&#123;&#125;</span><br><span class="line">    my.m1()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-6">解析</h2>
+<p>考点：**Go 1.9 新特性 Type Alias **<br>
+是不能正常编译的,异常：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ambiguous selector my.m1</span><br></pre></td></tr></table></figure>
-
-<p>结果不限于方法，字段也也一样；也不限于type alias，type defintion也是一样的，只要有重复的方法、字段，就会有这种提示，因为不知道该选择哪个。<br>改为:</p>
+<p>结果不限于方法，字段也也一样；也不限于type alias，type defintion也是一样的，只要有重复的方法、字段，就会有这种提示，因为不知道该选择哪个。<br>
+改为:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">my.T1.m1()</span><br><span class="line">my.T2.m1()</span><br></pre></td></tr></table></figure>
-
 <p>type alias的定义，本质上是一样的类型，只是起了一个别名，源类型怎么用，别名类型也怎么用，保留源类型的所有方法、字段等。</p>
-<h1 id="27-编译执行下面代码会出现什么"><a href="#27-编译执行下面代码会出现什么" class="headerlink" title="27.编译执行下面代码会出现什么?"></a>27.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;errors&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var ErrDidNotWork = errors.New(&quot;did not work&quot;)</span><br><span class="line"></span><br><span class="line">func DoTheThing(reallyDoIt bool) (err error) &#123;</span><br><span class="line">    if reallyDoIt &#123;</span><br><span class="line">        result, err := tryTheThing()</span><br><span class="line">        if err != nil || result != &quot;it worked&quot; &#123;</span><br><span class="line">            err = ErrDidNotWork</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func tryTheThing() (string,error)  &#123;</span><br><span class="line">    return &quot;&quot;,ErrDidNotWork</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    fmt.Println(DoTheThing(true))</span><br><span class="line">    fmt.Println(DoTheThing(false))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-6"><a href="#解析-6" class="headerlink" title="解析"></a>解析</h2><p>考点：<strong>变量作用域</strong><br>因为 if 语句块内的 err 变量会遮罩函数作用域内的 err 变量，结果：</p>
+<h1>27.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;errors&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var ErrDidNotWork = errors.New(&quot;did not work&quot;)</span><br><span class="line"></span><br><span class="line">func DoTheThing(reallyDoIt bool) (err error) &#123;</span><br><span class="line">    if reallyDoIt &#123;</span><br><span class="line">        result, err := tryTheThing()</span><br><span class="line">        if err != nil || result != &quot;it worked&quot; &#123;</span><br><span class="line">            err = ErrDidNotWork</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func tryTheThing() (string,error)  &#123;</span><br><span class="line">    return &quot;&quot;,ErrDidNotWork</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    fmt.Println(DoTheThing(true))</span><br><span class="line">    fmt.Println(DoTheThing(false))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-7">解析</h2>
+<p>考点：<strong>变量作用域</strong><br>
+因为 if 语句块内的 err 变量会遮罩函数作用域内的 err 变量，结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;nil&gt;</span><br><span class="line">&lt;nil&gt;</span><br></pre></td></tr></table></figure>
-
 <p>改为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func DoTheThing(reallyDoIt bool) (err error) &#123;</span><br><span class="line">    var result string</span><br><span class="line">    if reallyDoIt &#123;</span><br><span class="line">        result, err = tryTheThing()</span><br><span class="line">        if err != nil || result != &quot;it worked&quot; &#123;</span><br><span class="line">            err = ErrDidNotWork</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="28-编译执行下面代码会出现什么"><a href="#28-编译执行下面代码会出现什么" class="headerlink" title="28.编译执行下面代码会出现什么?"></a>28.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">func test() []func()  &#123;</span><br><span class="line">    var funs []func()</span><br><span class="line">    for i:=0;i&lt;2 ;i++  &#123;</span><br><span class="line">        funs = append(funs, func() &#123;</span><br><span class="line">            println(&amp;i,i)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    return funs</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">    funs:=test()</span><br><span class="line">    for _,f:=range funs&#123;</span><br><span class="line">        f()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-7"><a href="#解析-7" class="headerlink" title="解析"></a>解析</h2><p>考点：<strong>闭包延迟求值</strong><br>for循环复用局部变量i，每一次放入匿名函数的应用都是想一个变量。<br>结果：</p>
+<h1>28.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">func test() []func()  &#123;</span><br><span class="line">    var funs []func()</span><br><span class="line">    for i:=0;i&lt;2 ;i++  &#123;</span><br><span class="line">        funs = append(funs, func() &#123;</span><br><span class="line">            println(&amp;i,i)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    return funs</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">    funs:=test()</span><br><span class="line">    for _,f:=range funs&#123;</span><br><span class="line">        f()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-8">解析</h2>
+<p>考点：<strong>闭包延迟求值</strong><br>
+for循环复用局部变量i，每一次放入匿名函数的应用都是想一个变量。<br>
+结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0xc042046000 2</span><br><span class="line">0xc042046000 2</span><br></pre></td></tr></table></figure>
-
 <p>如果想不一样可以改为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func test() []func()  &#123;</span><br><span class="line">    var funs []func()</span><br><span class="line">    for i:=0;i&lt;2 ;i++  &#123;</span><br><span class="line">        x:=i</span><br><span class="line">        funs = append(funs, func() &#123;</span><br><span class="line">            println(&amp;x,x)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    return funs</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="29-编译执行下面代码会出现什么"><a href="#29-编译执行下面代码会出现什么" class="headerlink" title="29.编译执行下面代码会出现什么?"></a>29.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">func test(x int) (func(),func())  &#123;</span><br><span class="line">    return func() &#123;</span><br><span class="line">        println(x)</span><br><span class="line">        x+=10</span><br><span class="line">    &#125;, func() &#123;</span><br><span class="line">        println(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    a,b:=test(100)</span><br><span class="line">    a()</span><br><span class="line">    b()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-8"><a href="#解析-8" class="headerlink" title="解析"></a>解析</h2><p>考点：<strong>闭包引用相同变量*</strong><br>结果：</p>
+<h1>29.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">func test(x int) (func(),func())  &#123;</span><br><span class="line">    return func() &#123;</span><br><span class="line">        println(x)</span><br><span class="line">        x+=10</span><br><span class="line">    &#125;, func() &#123;</span><br><span class="line">        println(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    a,b:=test(100)</span><br><span class="line">    a()</span><br><span class="line">    b()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-9">解析</h2>
+<p>考点：<strong>闭包引用相同变量</strong>*<br>
+结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">100</span><br><span class="line">110</span><br></pre></td></tr></table></figure>
-
-<h1 id="30-编译执行下面代码会出现什么"><a href="#30-编译执行下面代码会出现什么" class="headerlink" title="30.编译执行下面代码会出现什么?"></a>30.编译执行下面代码会出现什么?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;reflect&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main1()  &#123;</span><br><span class="line">    defer func() &#123;</span><br><span class="line">       if err:=recover();err!=nil&#123;</span><br><span class="line">           fmt.Println(err)</span><br><span class="line">       &#125;else &#123;</span><br><span class="line">           fmt.Println(&quot;fatal&quot;)</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    defer func() &#123;</span><br><span class="line">        panic(&quot;defer panic&quot;)</span><br><span class="line">    &#125;()</span><br><span class="line">    panic(&quot;panic&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    defer func() &#123;</span><br><span class="line">        if err:=recover();err!=nil&#123;</span><br><span class="line">            fmt.Println(&quot;++++&quot;)</span><br><span class="line">            f:=err.(func()string)</span><br><span class="line">            fmt.Println(err,f(),reflect.TypeOf(err).Kind().String())</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            fmt.Println(&quot;fatal&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    defer func() &#123;</span><br><span class="line">        panic(func() string &#123;</span><br><span class="line">            return  &quot;defer panic&quot;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;()</span><br><span class="line">    panic(&quot;panic&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解析-9"><a href="#解析-9" class="headerlink" title="解析"></a>解析</h2><p>考点：<strong>panic仅有最后一个可以被revover捕获</strong><br>触发<code>panic(&quot;panic&quot;)</code>后顺序执行defer，但是defer中还有一个panic，所以覆盖了之前的<code>panic(&quot;panic&quot;)</code></p>
+<h1>30.编译执行下面代码会出现什么?</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;reflect&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main1()  &#123;</span><br><span class="line">    defer func() &#123;</span><br><span class="line">       if err:=recover();err!=nil&#123;</span><br><span class="line">           fmt.Println(err)</span><br><span class="line">       &#125;else &#123;</span><br><span class="line">           fmt.Println(&quot;fatal&quot;)</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    defer func() &#123;</span><br><span class="line">        panic(&quot;defer panic&quot;)</span><br><span class="line">    &#125;()</span><br><span class="line">    panic(&quot;panic&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()  &#123;</span><br><span class="line">    defer func() &#123;</span><br><span class="line">        if err:=recover();err!=nil&#123;</span><br><span class="line">            fmt.Println(&quot;++++&quot;)</span><br><span class="line">            f:=err.(func()string)</span><br><span class="line">            fmt.Println(err,f(),reflect.TypeOf(err).Kind().String())</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            fmt.Println(&quot;fatal&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    defer func() &#123;</span><br><span class="line">        panic(func() string &#123;</span><br><span class="line">            return  &quot;defer panic&quot;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;()</span><br><span class="line">    panic(&quot;panic&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解析-10">解析</h2>
+<p>考点：<strong>panic仅有最后一个可以被revover捕获</strong><br>
+触发<code>panic(&quot;panic&quot;)</code>后顺序执行defer，但是defer中还有一个panic，所以覆盖了之前的<code>panic(&quot;panic&quot;)</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defer panic</span><br></pre></td></tr></table></figure>
       
 
@@ -413,7 +425,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#21-编译执行下面代码会出现什么"><span class="toc-number">1.</span> <span class="toc-text">21.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">1.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#22-下面函数有什么问题？"><span class="toc-number">2.</span> <span class="toc-text">22.下面函数有什么问题？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-1"><span class="toc-number">2.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#23-编译执行下面代码会出现什么"><span class="toc-number">3.</span> <span class="toc-text">23.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-2"><span class="toc-number">3.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#24-编译执行下面代码会出现什么"><span class="toc-number">4.</span> <span class="toc-text">24.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-3"><span class="toc-number">4.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#25-编译执行下面代码会出现什么"><span class="toc-number">5.</span> <span class="toc-text">25.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-4"><span class="toc-number">5.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#26-编译执行下面代码会出现什么"><span class="toc-number">6.</span> <span class="toc-text">26.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-5"><span class="toc-number">6.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#27-编译执行下面代码会出现什么"><span class="toc-number">7.</span> <span class="toc-text">27.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-6"><span class="toc-number">7.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#28-编译执行下面代码会出现什么"><span class="toc-number">8.</span> <span class="toc-text">28.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-7"><span class="toc-number">8.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#29-编译执行下面代码会出现什么"><span class="toc-number">9.</span> <span class="toc-text">29.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-8"><span class="toc-number">9.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#30-编译执行下面代码会出现什么"><span class="toc-number">10.</span> <span class="toc-text">30.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-9"><span class="toc-number">10.1.</span> <span class="toc-text">解析</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">1.</span> <span class="toc-text">21.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">1.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">2.</span> <span class="toc-text">22.下面函数有什么问题？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-2"><span class="toc-number">2.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">3.</span> <span class="toc-text">23.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-3"><span class="toc-number">3.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">24.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-4"><span class="toc-number">4.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">5.</span> <span class="toc-text">25.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-5"><span class="toc-number">5.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">6.</span> <span class="toc-text">26.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-6"><span class="toc-number">6.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">7.</span> <span class="toc-text">27.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-7"><span class="toc-number">7.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">8.</span> <span class="toc-text">28.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-8"><span class="toc-number">8.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">9.</span> <span class="toc-text">29.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-9"><span class="toc-number">9.1.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">10.</span> <span class="toc-text">30.编译执行下面代码会出现什么?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解析-10"><span class="toc-number">10.1.</span> <span class="toc-text">解析</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -559,15 +571,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">高并发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
+                <a href="javascript:void(0)" class="js-tag color1">Axure</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
+                <a href="javascript:void(0)" class="js-tag color2">微信和小程序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">iOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">macOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -583,15 +623,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">6.824</a>
+                <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">[object Object]</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">分布式</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -607,15 +647,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Goroutine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Google</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -647,23 +695,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Google</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">lantern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
+                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Goland</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Jetbrains</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -675,6 +711,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -683,11 +727,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nohub</a>
+                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -715,10 +755,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
@@ -731,10 +767,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">QT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">串口</a>
               </li>
              
@@ -743,23 +775,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+                <a href="javascript:void(0)" class="js-tag color3">QT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -771,7 +787,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">函数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">ARM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Tiny6410</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -795,15 +851,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Copy-On-Write</a>
+                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">COW - 写时复制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
+                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -815,11 +867,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">funny/link</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -831,11 +879,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">http</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">enum</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Glide</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">包依赖管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">file</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">stack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -855,51 +927,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">stack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">栈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bufio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ReadLine - ReadBytes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">缓存</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">etcd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">go mod</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">http</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">write</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -911,7 +943,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">write</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">interface</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">解压</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -923,11 +967,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">tar</a>
+                <a href="javascript:void(0)" class="js-tag color2">replication</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">解压</a>
+                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -947,15 +991,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">replication</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">percona-xtradb-cluster</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">slice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">range</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -967,15 +1007,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">range</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -991,6 +1023,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">知识分享</a>
               </li>
              
@@ -1000,14 +1036,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1023,7 +1051,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1051,15 +1087,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CSV文件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1083,11 +1111,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">viper</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Elastic Search</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1103,15 +1143,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1123,11 +1163,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
+                <a href="javascript:void(0)" class="js-tag color5">上传下载</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1136,6 +1172,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分片合并</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">查看shell类型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1175,27 +1219,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">转载</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">pipe</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">goroutine</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">手机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1208,6 +1236,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">读书</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">转载</a>
               </li>
              
               <li class="article-tag-list-item">
