@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Copyright 2015 The Hugo Authors. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Licensed under the Apache License, Version 2.0 (the "License");</span></span><br><span class="line"><span class="comment">// you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment">// You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment">// distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment">// See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment">// limitations under the License.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> watcher</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line"></span><br><span class="line">	<span class="string">"github.com/fsnotify/fsnotify"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Batcher batches file watch events in a given interval.</span></span><br><span class="line"><span class="keyword">type</span> Batcher <span class="keyword">struct</span> &#123;</span><br><span class="line">	*fsnotify.Watcher</span><br><span class="line">	interval time.Duration</span><br><span class="line">	done     <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">	Events <span class="keyword">chan</span> []fsnotify.Event <span class="comment">// Events are returned on this channel</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// New creates and starts a Batcher with the given time interval.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">New</span><span class="params">(interval time.Duration)</span> <span class="params">(*Batcher, error)</span></span> &#123;</span><br><span class="line">	watcher, err := fsnotify.NewWatcher()</span><br><span class="line"></span><br><span class="line">	batcher := &amp;Batcher&#123;&#125;</span><br><span class="line">	batcher.Watcher = watcher</span><br><span class="line">	batcher.interval = interval</span><br><span class="line">	batcher.done = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, <span class="number">1</span>)</span><br><span class="line">	batcher.Events = <span class="built_in">make</span>(<span class="keyword">chan</span> []fsnotify.Event, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">go</span> batcher.run()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> batcher, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Batcher)</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	tick := time.Tick(b.interval)</span><br><span class="line">	evs := <span class="built_in">make</span>([]fsnotify.Event, <span class="number">0</span>)</span><br><span class="line">OuterLoop:</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> ev := &lt;-b.Watcher.Events:</span><br><span class="line">			evs = <span class="built_in">append</span>(evs, ev)</span><br><span class="line">		<span class="keyword">case</span> &lt;-tick:</span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">len</span>(evs) == <span class="number">0</span> &#123;</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">			b.Events &lt;- evs</span><br><span class="line">			evs = <span class="built_in">make</span>([]fsnotify.Event, <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">case</span> &lt;-b.done:</span><br><span class="line">			<span class="keyword">break</span> OuterLoop</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">close</span>(b.done)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Close stops the watching of the files.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Batcher)</span> <span class="title">Close</span><span class="params">()</span></span> &#123;</span><br><span class="line">	b.done &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">	b.Watcher.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="使用">使用</h3>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">	<span class="comment">//创建一个监控对象</span></span><br><span class="line">	watch, err := watcher.New(<span class="number">1</span> * time.Second)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"new watch :"</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> watch.Close()</span><br><span class="line"></span><br><span class="line">	<span class="comment">//添加要监控的对象，文件或文件夹</span></span><br><span class="line">	err = watch.Add(needDataFilename)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"watch add :"</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">	<span class="comment">//我们另启一个goroutine来处理监控对象的事件</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> evs := &lt;-watch.Events:</span><br><span class="line">				<span class="comment">// 处理事件</span></span><br><span class="line">				handleEvents(watch, evs)</span><br><span class="line">			<span class="keyword">case</span> err := &lt;-watch.Errors:</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					fmt.Println(<span class="string">"程序运行中的错误 :"</span>, err)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleEvents</span><span class="params">(watcher *watcher.Batcher, evs []fsnotify.Event)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> _, ev := <span class="keyword">range</span> evs &#123;</span><br><span class="line">		<span class="keyword">if</span> ev.Name == needDataFilename &#123;</span><br><span class="line">        	</span><br><span class="line">            .......</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2020/04/09/服务器文件分片合并下载/">服务器文件分片合并下载</a></li><li><a href="chunlife.top/2020/04/01/json-tag-中的inline属性/">json tag 中的inline属性</a></li><li><a href="chunlife.top/2020/04/01/json-解析int到string类型中/">json 解析int到string类型中</a></li><li><a href="https://abelsu7.top/2019/11/10/gops-intro/">gops：Go 程序查看和诊断分析工具简介</a></li></ul></div>
+<div><br><hr><h1 style="margin-top:0.7em; margin-bottom:0.7em">推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2020/04/09/服务器文件分片合并下载/">服务器文件分片合并下载</a></li><li><a href="chunlife.top/2020/04/01/json-tag-中的inline属性/">json tag 中的inline属性</a></li><li><a href="chunlife.top/2020/04/01/json-解析int到string类型中/">json 解析int到string类型中</a></li><li><a href="https://abelsu7.top/2019/11/10/gops-intro/">gops：Go 程序查看和诊断分析工具简介</a></li></ul></div>
       
 
       
@@ -503,18 +503,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bilibili源码</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">bilibili code</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">6.824</a>
               </li>
              
@@ -551,15 +539,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bilibili源码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">bilibili code</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -571,11 +571,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go test</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">httptest</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -592,18 +604,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go test</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">httptest</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -631,14 +631,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
               </li>
              
@@ -648,6 +640,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -715,14 +715,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
@@ -759,6 +751,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
@@ -767,11 +767,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -935,6 +935,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自动化点击</a>
               </li>
              
@@ -944,10 +948,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">windows api</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -967,10 +967,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MD5</a>
               </li>
              
@@ -983,11 +979,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1011,6 +1007,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">test</a>
               </li>
              
@@ -1031,6 +1031,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">fastdfs</a>
               </li>
              
@@ -1043,10 +1047,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
@@ -1055,11 +1055,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1123,11 +1123,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1155,6 +1155,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">转换</a>
               </li>
              
@@ -1164,10 +1168,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">

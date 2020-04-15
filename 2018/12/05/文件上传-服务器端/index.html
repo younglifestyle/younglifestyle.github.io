@@ -199,7 +199,7 @@ var _hmt = _hmt || [];
 </ul>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// function body of a http.HandlerFunc</span></span><br><span class="line">r.Body = http.MaxBytesReader(w, r.Body, <span class="number">32</span>&lt;&lt;<span class="number">20</span>+<span class="number">1024</span>)</span><br><span class="line">reader, err := r.MultipartReader()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusBadRequest)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// parse text field</span></span><br><span class="line">text := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">512</span>)</span><br><span class="line">p, err := reader.NextPart()</span><br><span class="line"><span class="comment">// one more field to parse, EOF is considered as failure here</span></span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> p.FormName() != <span class="string">"text_field"</span> &#123;</span><br><span class="line">    http.Error(w, <span class="string">"text_field is expected"</span>, http.StatusBadRequest)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">_, err = p.Read(text)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// parse file field</span></span><br><span class="line">p, err = reader.NextPart()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> p.FormName() != <span class="string">"file_field"</span> &#123;</span><br><span class="line">    http.Error(w, <span class="string">"file_field is expected"</span>, http.StatusBadRequest)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">buf := bufio.NewReader(p)</span><br><span class="line">sniff, _ := buf.Peek(<span class="number">512</span>)   <span class="comment">// 判断文件类型</span></span><br><span class="line">contentType := http.DetectContentType(sniff)</span><br><span class="line"><span class="keyword">if</span> contentType != <span class="string">"application/zip"</span> &#123;</span><br><span class="line">    http.Error(w, <span class="string">"file type not allowed"</span>, http.StatusBadRequest)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">f, err := ioutil.TempFile(<span class="string">""</span>, <span class="string">""</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">defer</span> f.Close()</span><br><span class="line"><span class="keyword">var</span> maxSize <span class="keyword">int64</span> = <span class="number">32</span> &lt;&lt; <span class="number">20</span></span><br><span class="line">lmt := io.MultiReader(buf, io.LimitReader(p, maxSize - <span class="number">511</span>))</span><br><span class="line">written, err := io.Copy(f, lmt)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</span><br><span class="line">    http.Error(w, err.Error(), http.StatusInternalServerError)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> written &gt; maxSize &#123;</span><br><span class="line">    os.Remove(f.Name())</span><br><span class="line">    http.Error(w, <span class="string">"file size over limit"</span>, http.StatusBadRequest)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// schedule for other stuffs (s3, scanning, etc.)</span></span><br></pre></td></tr></table></figure>
 <p>内容参考自：<code>https://medium.com/@owlwalks/dont-parse-everything-from-client-multipart-post-golang-9280d23cd4ad</code>。</p>
-<div><h1>推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2020/04/09/服务器文件分片合并下载/">服务器文件分片合并下载</a></li><li><a href="chunlife.top/2020/04/01/json-tag-中的inline属性/">json tag 中的inline属性</a></li><li><a href="chunlife.top/2020/04/01/json-解析int到string类型中/">json 解析int到string类型中</a></li><li><a href="https://abelsu7.top/2019/11/10/gops-intro/">gops：Go 程序查看和诊断分析工具简介</a></li></ul></div>
+<div><br><hr><h1 style="margin-top:0.7em; margin-bottom:0.7em">推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2020/04/09/服务器文件分片合并下载/">服务器文件分片合并下载</a></li><li><a href="chunlife.top/2020/04/01/json-tag-中的inline属性/">json tag 中的inline属性</a></li><li><a href="chunlife.top/2020/04/01/json-解析int到string类型中/">json 解析int到string类型中</a></li><li><a href="https://abelsu7.top/2019/11/10/gops-intro/">gops：Go 程序查看和诊断分析工具简介</a></li></ul></div>
       
 
       
@@ -516,18 +516,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">bilibili源码</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">bilibili code</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">6.824</a>
               </li>
              
@@ -564,15 +552,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">bilibili源码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">bilibili code</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">便笺</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Sticky Notes</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -584,11 +584,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">elasticsearch</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">apidoc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">gin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">go test</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">httptest</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -605,18 +617,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">chromium 谷歌访问助手</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">gin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">go test</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">httptest</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -644,14 +644,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">后台运行</a>
               </li>
              
@@ -661,6 +653,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Freescale</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -728,14 +728,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ARM</a>
               </li>
              
@@ -772,6 +764,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">pxc</a>
               </li>
              
@@ -780,11 +780,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">overlay</a>
+                <a href="javascript:void(0)" class="js-tag color3">OpenSSL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">跨宿主机</a>
+                <a href="javascript:void(0)" class="js-tag color3">RSA加密解密</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -948,6 +948,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自动化点击</a>
               </li>
              
@@ -957,10 +961,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">windows api</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">VxWorks</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -980,10 +980,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MD5</a>
               </li>
              
@@ -996,11 +992,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">image</a>
+                <a href="javascript:void(0)" class="js-tag color1">uboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+                <a href="javascript:void(0)" class="js-tag color1">image</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1024,6 +1020,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Jira export</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">test</a>
               </li>
              
@@ -1044,6 +1044,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">fastdfs</a>
               </li>
              
@@ -1056,10 +1060,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">PPT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">confd</a>
               </li>
              
@@ -1068,11 +1068,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">简历</a>
+                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">学习博客</a>
+                <a href="javascript:void(0)" class="js-tag color3">简历</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1136,11 +1136,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">正则表达式</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1168,6 +1168,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">转换</a>
               </li>
              
@@ -1177,10 +1181,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Marshal</a>
               </li>
              
               <li class="article-tag-list-item">
