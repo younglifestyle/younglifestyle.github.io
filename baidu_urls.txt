@@ -1,3 +1,6 @@
+chunlife.top/2020/04/18/The-Google-File-System中文版/
+chunlife.top/2020/04/18/Bigtable：一个分布式的结构化数据存储系统/
+chunlife.top/2020/04/18/Google-MapReduce中文版/
 chunlife.top/2020/04/15/Axure-RP-各类元件库/
 chunlife.top/2020/04/09/服务器文件分片合并下载/
 chunlife.top/2020/04/01/json-tag-中的inline属性/
@@ -15,6 +18,3 @@ chunlife.top/2020/01/30/令牌桶算法的学习/
 chunlife.top/2020/01/29/通过方法学习熔断器/
 chunlife.top/2020/01/14/关于测试的方法以及建议/
 chunlife.top/2020/01/12/MySQL执行计划explain详解/
-chunlife.top/2019/12/31/科学需要谨慎，知识需要校校验/
-chunlife.top/2019/12/31/bufio-缓存IO，读取一行的数据/
-chunlife.top/2019/12/19/go写xlsx文件/
