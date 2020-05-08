@@ -1,3 +1,4 @@
+chunlife.top/2020/05/08/基于etcd3的访问序列化及分布式软事务内存/
 chunlife.top/2020/04/27/使工作集中的图书馆噪音/
 chunlife.top/2020/04/18/The-Google-File-System中文版/
 chunlife.top/2020/04/18/Bigtable：一个分布式的结构化数据存储系统/
@@ -17,4 +18,3 @@ chunlife.top/2020/02/09/根据SQL文件自动生成Markdown/
 chunlife.top/2020/02/09/搭建并行管道-学习/
 chunlife.top/2020/01/30/令牌桶算法的学习/
 chunlife.top/2020/01/29/通过方法学习熔断器/
-chunlife.top/2020/01/14/关于测试的方法以及建议/
