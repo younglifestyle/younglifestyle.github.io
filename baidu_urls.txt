@@ -1,3 +1,4 @@
+chunlife.top/2020/06/04/使用etcd搭建OTA服务/
 chunlife.top/2020/05/22/Go-context源码学习/
 chunlife.top/2020/05/08/基于etcd3的访问序列化及分布式软事务内存/
 chunlife.top/2020/04/27/使工作集中的图书馆噪音/
@@ -17,4 +18,3 @@ chunlife.top/2020/02/18/B站源码中的log-agent/
 chunlife.top/2020/02/12/Go-gin单元测试/
 chunlife.top/2020/02/09/根据SQL文件自动生成Markdown/
 chunlife.top/2020/02/09/搭建并行管道-学习/
-chunlife.top/2020/01/30/令牌桶算法的学习/
