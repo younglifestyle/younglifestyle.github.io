@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>使用etcd搭建OTA服务 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分页查询，其中数据量变大后导致查询速度变慢。 快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。 ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。 整体设计如下：">
+  <meta name="description" content="快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。 ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。 整体设计如下：">
 <meta name="keywords" content="Go,mongodb,etcd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用etcd搭建OTA服务">
 <meta property="og:url" content="chunlife.top/2020/06/04/使用etcd搭建OTA服务/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="分页查询，其中数据量变大后导致查询速度变慢。 快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。 ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。 整体设计如下：">
+<meta property="og:description" content="快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。 ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。 整体设计如下：">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2020/06/04/使用etcd搭建OTA服务/image-20200604225723949.png">
-<meta property="og:updated_time" content="2020-06-04T15:02:44.007Z">
+<meta property="og:updated_time" content="2020-06-16T09:18:50.474Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用etcd搭建OTA服务">
-<meta name="twitter:description" content="分页查询，其中数据量变大后导致查询速度变慢。 快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。 ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。 整体设计如下：">
+<meta name="twitter:description" content="快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。 ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。 整体设计如下：">
 <meta name="twitter:image" content="chunlife.top/2020/06/04/使用etcd搭建OTA服务/image-20200604225723949.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
@@ -182,8 +182,7 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>分页查询，其中数据量变大后导致查询速度变慢。</p>
-<p>快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。</p>
+        <p>快速的部署和更新底层设备需要一个类似于分发二进制文件的平台，根据这个需求，依托于etcd做了一个简略的OTA平台。</p>
 <p>ETCD又类似于消息发布和订阅的操作，通过key的目录，可以划分不同的空间，执行不同的任务，可以满足我们的需求。</p>
 <p>整体设计如下：</p>
 <a id="more"></a>

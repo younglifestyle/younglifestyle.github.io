@@ -16,7 +16,7 @@
 <meta property="og:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/image-20200616112325209.png">
-<meta property="og:updated_time" content="2020-06-16T05:57:29.170Z">
+<meta property="og:updated_time" content="2020-06-16T06:28:34.205Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go协程调度以及协程运行的问题">
 <meta name="twitter:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
@@ -201,7 +201,7 @@ var _hmt = _hmt || [];
 <hr>
 <p><strong>系统调用</strong></p>
 <p><strong>进入系统调用</strong></p>
-<p>某个G运行过程中，碰到某个系统调用阻塞，则M与P进行解绑，goroutine进入<code>Gsyscall</code>状态，让出CPU。</p>
+<p>某个G运行过程中，碰到某个系统调用阻塞，则M与P进行解绑（<code>不阻塞不解绑</code>），goroutine进入<code>Gsyscall</code>状态，让出CPU。</p>
 <p>每个P中都挂了一个可执行的G的队列，如果这个队列不为空，即如果P中还有G需要执行，则让P与某个M绑定后立刻去执行，否则将P挂到<code>idlep</code>队列中。</p>
 <p><strong>系统调用完成</strong></p>
 <p>调度器检查当前m的P和它状态，如果P不空且状态为<code>Psyscall</code>(<code>在非阻塞的系统调用P状态中只是被设置成Psyscall，不会将M与P进行解绑</code>)，则说明是从一个非阻塞的系统调用中返回的，这时是仍然有CPU可用的。继续执行G就好了。否则，M时从阻塞的系统调用中返回的，M与P已经完成解绑了，需要检查是否有idle的P，有则与当前M绑定。</p>
