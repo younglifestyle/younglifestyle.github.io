@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>Go协程调度以及协程运行的问题 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，顺着这个知识，">
+  <meta name="description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go协程调度以及协程运行的问题">
 <meta property="og:url" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，顺着这个知识，">
+<meta property="og:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/image-20200616112325209.png">
-<meta property="og:updated_time" content="2020-06-16T04:08:30.683Z">
+<meta property="og:updated_time" content="2020-06-16T05:57:29.170Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go协程调度以及协程运行的问题">
-<meta name="twitter:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，顺着这个知识，">
+<meta name="twitter:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
 <meta name="twitter:image" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/image-20200616112325209.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
@@ -181,9 +181,9 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？</p>
+        <p>Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？</p>
 <p>这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。</p>
-<p>刚学习Goroutine时，就应该会看到一些文章说过，<code>goroutine</code>是非抢占式的，顺着这个知识，能够推到出该协程是运行在用户态线程中的，那其中的奥妙是什么呢，协程与用户线程和内核线程的关系是个啥呢。</p>
+<p>刚学习Goroutine时，就应该会看到一些文章说过，<code>goroutine</code>是非抢占式的，或者称之为协作式抢占调度，其运行在用户态。</p>
 <a id="more"></a>
 <p><a href="https://zhuanlan.zhihu.com/p/60613088" target="_blank" rel="noopener">如图</a>：</p>
 <p><code>M</code>指的是<code>Machine</code>，一个<code>M</code>直接关联了一个物理内核线程，是真正干活的。由操作系统管理。</p>
