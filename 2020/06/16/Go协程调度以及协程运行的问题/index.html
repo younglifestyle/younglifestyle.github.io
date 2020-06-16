@@ -8,17 +8,19 @@
   <link rel="dns-prefetch" href="chunlife.top">
   <title>Go协程调度以及协程运行的问题 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，协程是非抢占式的，顺着这个知识，能够推到出该协">
+  <meta name="description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，顺着这个知识，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go协程调度以及协程运行的问题">
-<meta property="og:url" content="chunlife.top/2019/10/10/Go协程调度以及协程运行的问题/index.html">
+<meta property="og:url" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，协程是非抢占式的，顺着这个知识，能够推到出该协">
+<meta property="og:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，顺着这个知识，">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-10-10T02:50:52.000Z">
+<meta property="og:image" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/image-20200616112325209.png">
+<meta property="og:updated_time" content="2020-06-16T04:08:30.683Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go协程调度以及协程运行的问题">
-<meta name="twitter:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，协程是非抢占式的，顺着这个知识，能够推到出该协">
+<meta name="twitter:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，顺着这个知识，">
+<meta name="twitter:image" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/image-20200616112325209.png">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -171,8 +173,8 @@ var _hmt = _hmt || [];
   
 
         
-        <a href="/2019/10/10/Go协程调度以及协程运行的问题/" class="archive-article-date">
-  	<time datetime="2019-10-10T02:40:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-10</time>
+        <a href="/2020/06/16/Go协程调度以及协程运行的问题/" class="archive-article-date">
+  	<time datetime="2020-06-16T02:40:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-16</time>
 </a>
         
       </header>
@@ -181,9 +183,32 @@ var _hmt = _hmt || [];
       
         <p>Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？</p>
 <p>这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。</p>
-<p>刚学习Goroutine时，就应该会看到一些文章说过，协程是非抢占式的，顺着这个知识，能够推到出该协程应该是运行在用户态线程中的，那其中的奥妙是什么呢，协程与用户线程和内核线程的关系是个啥呢。</p>
-<p>我需要点时间，准备更为详细的内容，先拿出来占位。</p>
-<p>未完待续</p>
+<p>刚学习Goroutine时，就应该会看到一些文章说过，<code>goroutine</code>是非抢占式的，顺着这个知识，能够推到出该协程是运行在用户态线程中的，那其中的奥妙是什么呢，协程与用户线程和内核线程的关系是个啥呢。</p>
+<a id="more"></a>
+<p><a href="https://zhuanlan.zhihu.com/p/60613088" target="_blank" rel="noopener">如图</a>：</p>
+<p><code>M</code>指的是<code>Machine</code>，一个<code>M</code>直接关联了一个物理内核线程，是真正干活的。由操作系统管理。</p>
+<p><code>P</code>指的是”processor”，代表了<code>M</code>所需的上下文环境，也是处理用户级代码逻辑的处理器。它负责衔接M和G的调度上下文，将等待执行的G与M对接，G的<code>上下文</code>和<code>队列</code>都在P上，离开P，G不能独立运行。</p>
+<p><code>G</code>指的是<code>Goroutine</code>，其实本质上也是一种轻量级的线程。包括了调用栈，重要的调度信息，例如channel等。</p>
+<p>M代表OS线程。P代表Go代码执行时需要的资源。</p>
+<p><img src="image-20200616112325209.png" alt="image-20200616112325209"></p>
+<p>P的数量由环境变量中的<code>GOMAXPROCS</code>决定，通常来说它是和核心数对应。</p>
+<p>实际运行的M是有限的（<code>始终保持有GOMAXPROCS个工作线程在干活</code>）。</p>
+<p>G是可以不断生成的，只要用户调用<code>go</code>，就检查当前M中的P，是否有可用的结构体G。如果有，则直接从中取一个，否则，需要分配一个新的结构体G。如果分配了新的G，需要将它挂到runtime的相关队列中。</p>
+<p>要运行P时，调度器会试着寻找一个可用的M来绑定P，M少于<code>GOMAXPROCS</code>，将新建M。</p>
+<blockquote>
+<p>也就是说M一直不会被休眠，它一直在运行，即使被阻塞，只要有需要，也会创建一个新的M。这样有M就可以一直消费G（在系统资源无限的情况下）。</p>
+</blockquote>
+<hr>
+<p><strong>系统调用</strong></p>
+<p><strong>进入系统调用</strong></p>
+<p>某个G运行过程中，碰到某个系统调用阻塞，则M与P进行解绑，goroutine进入<code>Gsyscall</code>状态，让出CPU。</p>
+<p>每个P中都挂了一个可执行的G的队列，如果这个队列不为空，即如果P中还有G需要执行，则让P与某个M绑定后立刻去执行，否则将P挂到<code>idlep</code>队列中。</p>
+<p><strong>系统调用完成</strong></p>
+<p>调度器检查当前m的P和它状态，如果P不空且状态为<code>Psyscall</code>(<code>在非阻塞的系统调用P状态中只是被设置成Psyscall，不会将M与P进行解绑</code>)，则说明是从一个非阻塞的系统调用中返回的，这时是仍然有CPU可用的。继续执行G就好了。否则，M时从阻塞的系统调用中返回的，M与P已经完成解绑了，需要检查是否有idle的P，有则与当前M绑定。</p>
+<p>没有则挂到全局的就绪G队列中，然后停止当前m并调用schedule函数。</p>
+<blockquote>
+<p>参考：<a href="https://tiancaiamao.gitbooks.io/go-internals/content/zh/05.2.html" target="_blank" rel="noopener">5.2 goroutine的生老病死</a></p>
+</blockquote>
 
       
 
@@ -269,7 +294,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-	< img src="http://bshare.optimix.asia/barCode?site=weixin&url=http:chunlife.top/2019/10/10/Go协程调度以及协程运行的问题/" alt="微信分享二维码">
+	< img src="http://bshare.optimix.asia/barCode?site=weixin&url=http:chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -283,18 +308,9 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/2019/10/14/计算机大小端/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          计算机大小端
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/09/27/MongoDB多表查询/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">MongoDB多表查询</div>
+    <a href="/2020/06/09/部署配置中心之Apollo服务/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">部署配置中心之Apollo服务</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -365,7 +381,7 @@ if(true){
   	repo: 'younglifestyle.github.io',
   	owner: 'younglifestyle',
   	admin: ['younglifestyle'],
-  	id: 'Thu Oct 10 2019 10:40:03 GMT+0800',
+  	id: 'Tue Jun 16 2020 10:40:03 GMT+0800',
   	distractionFreeMode: 'true'
 })
 gitalk.render('gitalk-container') 

@@ -157,6 +157,101 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-linux-windows-go打开应用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/05/linux-windows-go打开应用/">linux-windows-go打开系统各类应用</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/05/linux-windows-go打开应用/" class="archive-article-date">
+  	<time datetime="2019-11-05T02:59:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>日常做了个任务，需要在Go语言中打开windows上的软件，由于网上查询到的并不都是正确的，这里将代码记录下来。</p>
+<p>打开应用的命令。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"windows"</span>: <span class="string">"start"</span>,</span><br><span class="line">    <span class="attr">"darwin"</span>:  <span class="string">"open"</span>,</span><br><span class="line">    <span class="attr">"linux"</span>:   <span class="string">"xdg-open"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cmd</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">windows</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/go//" class="article-tag-list-link color3">go</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/05/linux-windows-go打开应用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-MySQL存储JSON——Gorm———go编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -506,73 +601,6 @@ var _hmt = _hmt || [];
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/10/14/计算机大小端/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Go协程调度以及协程运行的问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/10/Go协程调度以及协程运行的问题/">Go协程调度以及协程运行的问题</a>
-    </h1>
-  
-
-        
-        <a href="/2019/10/10/Go协程调度以及协程运行的问题/" class="archive-article-date">
-  	<time datetime="2019-10-10T02:40:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Go调度器，Goroutine是如何调度的，Go协程运行在用户态线程还是内核态线程？</p>
-<p>这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。</p>
-<p>刚学习Goroutine时，就应该会看到一些文章说过，协程是非抢占式的，顺着这个知识，能够推到出该协程应该是运行在用户态线程中的，那其中的奥妙是什么呢，协程与用户线程和内核线程的关系是个啥呢。</p>
-<p>我需要点时间，准备更为详细的内容，先拿出来占位。</p>
-<p>未完待续</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/10/Go协程调度以及协程运行的问题/">展开全文 >></a>
         </p>
       
 
