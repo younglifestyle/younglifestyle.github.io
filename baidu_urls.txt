@@ -1,3 +1,4 @@
+chunlife.top/2020/06/17/训练模型中的引入测试数据集/
 chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/
 chunlife.top/2020/06/09/部署配置中心之Apollo服务/
 chunlife.top/2020/06/04/使用etcd搭建OTA服务/
@@ -17,4 +18,3 @@ chunlife.top/2020/03/15/go-mod-支持-http-的方式/
 chunlife.top/2020/03/02/6-824-Lab-1-MapReduce/
 chunlife.top/2020/03/02/使用GO导出JIRA项目到excel/
 chunlife.top/2020/02/18/B站源码中的log-agent/
-chunlife.top/2020/02/12/Go-gin单元测试/
