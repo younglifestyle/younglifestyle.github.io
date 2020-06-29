@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>mysql操作(不定时持续补充) | Pure Life</title>
+  <title>mysql操作 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题 ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
 <meta name="keywords" content="Go,MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql操作(不定时持续补充)">
+<meta property="og:title" content="mysql操作">
 <meta property="og:url" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题 ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
@@ -21,9 +21,9 @@
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/3.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/count%E8%87%AA%E5%8A%A01.png">
 <meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1538015777465.png">
-<meta property="og:updated_time" content="2019-09-02T08:11:37.000Z">
+<meta property="og:updated_time" content="2020-06-29T07:08:39.080Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql操作(不定时持续补充)">
+<meta name="twitter:title" content="mysql操作">
 <meta name="twitter:description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题 ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
 <meta name="twitter:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1.png">
   
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      mysql操作(不定时持续补充)
+      mysql操作
     </h1>
   
 
@@ -259,7 +259,7 @@ var _hmt = _hmt || [];
 <p>将执行的语句打印出来。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Debug a single operation, show detailed log for this operation</span></span><br><span class="line">db.Debug().Where(<span class="string">"name = ?"</span>, <span class="string">"jinzhu"</span>).First(&amp;User&#123;&#125;)</span><br></pre></td></tr></table></figure>
 <h2 id="gorm拼接SQL语句">gorm拼接SQL语句</h2>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dt = dt.Table(models.TableRecords)</span><br><span class="line"></span><br><span class="line">scope := dt.NewScope(dt.Value)</span><br><span class="line">scope.InstanceSet(<span class="string">"skip_bindvar"</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">scope.Raw(fmt.Sprintf(<span class="string">"explain SELECT %v FROM %v %v"</span>, <span class="string">"count(*)"</span>,</span><br><span class="line">	scope.QuotedTableName(),</span><br><span class="line">	scope.CombinedConditionSql()))</span><br><span class="line"></span><br><span class="line">dbs.DbRecords.Raw(scope.SQL, scope.SQLVars...).Scan(&amp;test)</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dt = dt.Table(models.TableRecords)</span><br><span class="line"></span><br><span class="line">scope := dt.NewScope(dt.Value)</span><br><span class="line">scope.InstanceSet(<span class="string">"skip_bindvar"</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">scope.Raw(fmt.Sprintf(<span class="string">"explain SELECT %v FROM %v %v"</span>, <span class="string">"count(*)"</span>,</span><br><span class="line">                      scope.QuotedTableName(),</span><br><span class="line">                      scope.CombinedConditionSql()))</span><br><span class="line"></span><br><span class="line">dbs.DbRecords.Raw(scope.SQL, scope.SQLVars...).Scan(&amp;test)</span><br></pre></td></tr></table></figure>
 <p>Gorm的官方文档其实已经比较详细了，想跟深入的了解，可以直接去看官方文档：</p>
 <p><a href="http://gorm.io/docs/conventions.html#Timestamp-Tracking" target="_blank" rel="noopener">http://gorm.io/docs/conventions.html#Timestamp-Tracking</a></p>
 <p><a href="https://jasperxu.github.io/gorm-zh/" target="_blank" rel="noopener">https://jasperxu.github.io/gorm-zh/</a></p>
