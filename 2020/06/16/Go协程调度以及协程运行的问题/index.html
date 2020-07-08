@@ -9,6 +9,7 @@
   <title>Go协程调度以及协程运行的问题 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
+<meta name="keywords" content="go,goroutine">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go协程调度以及协程运行的问题">
 <meta property="og:url" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/index.html">
@@ -16,7 +17,7 @@
 <meta property="og:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/image-20200616112325209.png">
-<meta property="og:updated_time" content="2020-06-16T06:28:34.205Z">
+<meta property="og:updated_time" content="2020-07-08T06:23:15.934Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go协程调度以及协程运行的问题">
 <meta name="twitter:description" content="Go调度器，Goroutine是如何调度的，Go协程运行在用户态还是内核态？ 这篇文章大概是要解决这几个问题，整理起来有点麻烦，其实前面的问题，大神们已经讲了很多了，我主要是碰到其中最后一个问题，这算是一道面试题，很有意思的面试问题，估计很少有人会深入考虑这个问题，嗯，其中也包括了我。。。 刚学习Goroutine时，就应该会看到一些文章说过，goroutine是非抢占式的，或者称之为协作式抢占调">
@@ -244,7 +245,33 @@ var _hmt = _hmt || [];
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">go</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">goroutine</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/go//" class="article-tag-list-link color3">go</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
 
