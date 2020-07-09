@@ -1,3 +1,4 @@
+chunlife.top/2020/07/09/数据库操作不仅仅是CURD/
 chunlife.top/2020/07/08/errgroup-对一组子任务goroutine的同步-错误取消功能/
 chunlife.top/2020/06/28/rabbitMq知识小结/
 chunlife.top/2020/06/17/训练模型中的引入测试数据集/
@@ -17,4 +18,3 @@ chunlife.top/2020/04/01/json-解析int到string类型中/
 chunlife.top/2020/03/29/重新见面，请多指教/
 chunlife.top/2020/03/24/fsnotify在windows上出现两次event的问题/
 chunlife.top/2020/03/15/go-mod-支持-http-的方式/
-chunlife.top/2020/03/02/6-824-Lab-1-MapReduce/
