@@ -9,14 +9,14 @@
   <title>Go依赖管理 | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="依赖管理的选择 Go主要依赖管理工具包括dep，govendor，glide，gomodule。">
-<meta name="keywords" content="Go,Glide,包依赖管理">
+<meta name="keywords" content="Go,go mod,Glide,包依赖管理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go依赖管理">
 <meta property="og:url" content="chunlife.top/2018/10/18/go 依赖管理/index.html">
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="依赖管理的选择 Go主要依赖管理工具包括dep，govendor，glide，gomodule。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T10:03:30.000Z">
+<meta property="og:updated_time" content="2020-07-21T12:19:46.949Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go依赖管理">
 <meta name="twitter:description" content="依赖管理的选择 Go主要依赖管理工具包括dep，govendor，glide，gomodule。">
@@ -198,7 +198,7 @@ var _hmt = _hmt || [];
 <h3 id="使用Glide">使用Glide</h3>
 <p><strong>注意</strong>：Glide与其他利用Vendor特性的工具一样，工程项目必须要放在GOPATH目录下。</p>
 <h4 id="大概流程：">大概流程：</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入到项目目录</span></span><br><span class="line">cd ~/src/testDep</span><br><span class="line"><span class="meta">#</span><span class="bash">glide初始化，初始化配置文件glide.yaml</span></span><br><span class="line">glide init</span><br><span class="line"><span class="meta">#</span><span class="bash">glide加载依赖包，自动归档到vendor目录</span></span><br><span class="line">glide up -v</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>进入到项目目录</span><br><span class="line">cd ~/src/testDep</span><br><span class="line"><span class="meta">#</span>glide初始化，初始化配置文件glide.yaml</span><br><span class="line">glide init</span><br><span class="line"><span class="meta">#</span>glide加载依赖包，自动归档到vendor目录</span><br><span class="line">glide up -v</span><br></pre></td></tr></table></figure>
 <h4 id="示例：">示例：</h4>
 <p>在项目顶层目录运行：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ glide.exe init testDep  <span class="comment"># specify project name</span></span><br></pre></td></tr></table></figure>
@@ -219,7 +219,7 @@ var _hmt = _hmt || [];
 <h3 id="包被墙">包被墙</h3>
 <p>包若因为网络因素被墙，可使用glide的mirror命令绕过一些包访问的问题。</p>
 <p>例如https://golang.org/x/net。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> glide mirror <span class="built_in">set</span> https://golang.org/x/net https://github.com/golang/net --vcs git</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> glide mirror set https://golang.org/x/net https://github.com/golang/net --vcs git</span><br></pre></td></tr></table></figure>
 <p>然后使用update。</p>
 <p>这里glide无法处理包的子包，那可以参考：<a href="https://zhuanlan.zhihu.com/p/31402004" target="_blank" rel="noopener">让golang依赖也走mirror</a>，参考https://github.com/jokimina/glide-mirrors-yaml，一些常用的mirror，将文件放到~/.glide/。</p>
 <p>对包被墙的一些解决办法：<a href="https://blog.csdn.net/fenglailea/article/details/79107124" target="_blank" rel="noopener">golang 包管理工具</a>，综合来看，唯有代理才能彻底解决这个痛点。</p>
@@ -274,6 +274,10 @@ var _hmt = _hmt || [];
 			 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">go mod</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
