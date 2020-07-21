@@ -6,26 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="chunlife.top">
-  <title>mysql操作 | Pure Life</title>
+  <title>Tag: elastalert | Pure Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题 ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
-<meta name="keywords" content="Go,MySQL">
-<meta property="og:type" content="article">
-<meta property="og:title" content="mysql操作">
-<meta property="og:url" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Pure Life">
+<meta property="og:url" content="chunlife.top/tags/elastalert/index.html">
 <meta property="og:site_name" content="Pure Life">
-<meta property="og:description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题 ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1.png">
-<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/2.png">
-<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/3.png">
-<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/count%E8%87%AA%E5%8A%A01.png">
-<meta property="og:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1538015777465.png">
-<meta property="og:updated_time" content="2020-06-29T07:08:39.080Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql操作">
-<meta name="twitter:description" content="mysql操作是不区分大小写的。 Mysql安装后若出现问题 ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)">
-<meta name="twitter:image" content="chunlife.top/2018/09/14/mysql操作-不定时持续补充/1.png">
+<meta name="twitter:title" content="Pure Life">
   
     <link rel="alternative" href="/atom.xml" title="Pure Life" type="application/atom+xml">
   
@@ -166,320 +155,75 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mysql操作-不定时持续补充" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      mysql操作
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/03/27/es告警功能——elastalert/" class="archive-article-date">
+  	<time datetime="2019-03-27T08:39:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-27</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/03/27/es告警功能——elastalert/">es告警功能——elastalert</a>
     </h1>
   
 
-        
-        <a href="/2018/09/14/mysql操作-不定时持续补充/" class="archive-article-date">
-  	<time datetime="2018-09-14T09:40:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>mysql操作是不区分大小写的。</p>
-<h1>Mysql安装后若出现问题</h1>
-<p>ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/run/mysqld/mysqld.sock’ (2)</p>
-<a id="more"></a>
-<p>解决方式：</p>
-<p>touch /var/run/mysqld/mysqld.sock</p>
-<p>ls -lart /var/run/mysqld/</p>
-<p>chown -R mysql /var/run/mysqld</p>
-<p>ls -lart /var/run/mysqld/</p>
-<p>mysql restart</p>
-<p>/etc/init.d/mysql restart</p>
-<h1>基础操作</h1>
-<p>1 添加表字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter table table1 add transactor varchar(10) not Null;</span><br><span class="line"></span><br><span class="line">alter table table1 add id int unsigned not Null auto_increment primary key</span><br></pre></td></tr></table></figure>
-<p>2 如果要删除某一字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE mytable DROP 字段名;</span><br></pre></td></tr></table></figure>
-<p>3 修改数据表字段的默认值：</p>
-<p>修改字段默认值：role_id默认值设置为：1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter table users_info alter column role_id set default 1;</span><br></pre></td></tr></table></figure>
-<p>修改字段默认值语法：</p>
-<p>alter table 表名 alter column 字段名 drop default; (若本身存在默认值，则先删除)</p>
-<p>alter table 表名 alter column 字段名 set default 默认值;(若本身不存在则可以直接设定)</p>
-<h1>预处理</h1>
-<p><a href="https://cloud.tencent.com/developer/article/1066988" target="_blank" rel="noopener">数据库操作, 关于stmt, prepare</a></p>
-<h1>JOIN</h1>
-<p>使用Join， Inner join取得两表间类似的数据，<a href="https://blog.csdn.net/w348399060/article/details/70158125" target="_blank" rel="noopener">链接</a></p>
-<p><img src="1.png" alt="命令"></p>
-<p><img src="2.png" alt="432"></p>
-<h1>mysql隐式转换</h1>
-<p>mysql隐式转换，会造成SQL慢查询，因为SQL转化后，即使使用索引查询，SQL也不会认为其是索引。</p>
-<p>也就是说，若字段为字符串数字，则需要使用字符串类型作为<code>where</code>查询条件去查询数据，若使用整型数据，则会发生隐式转换，这相当于在字段前加上了<code>to_int(xxx)</code>，类似于：<code>where to_int(xxx) = xxx</code>，在字段前加函数，其将无法使用索引，这是条准则。</p>
-<p><a href="http://xiaorui.cc/2018/04/13/%e8%ae%b0%e4%b8%80%e6%ac%a1%e9%9a%90%e5%bc%8f%e8%bd%ac%e6%8d%a2%e5%bc%95%e8%b5%b7%e7%9a%84sql%e6%85%a2%e6%9f%a5%e8%af%a2/" target="_blank" rel="noopener">记一次隐式转换引起的sql慢查询</a></p>
-<h1>日期索引</h1>
-<p><a href="https://blog.csdn.net/spider_zhcl/article/details/53323166" target="_blank" rel="noopener">Mysql 索引问题-日期索引使用</a></p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在查询数据条数约占总条数五分之一以下时能够使用到索引，但超过五分之一时，则使用全表扫描了。</span><br></pre></td></tr></table></figure>
-<h1>查询缓存</h1>
-<p><a href="https://www.cnblogs.com/gimin/p/5459689.html" target="_blank" rel="noopener">MySQL查询缓存打开、设置、参数查询、性能变量</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW VARIABLES LIKE &apos;%query_cache%&apos;;</span><br><span class="line">+------------------------------+---------+</span><br><span class="line">| Variable_name                | Value   |</span><br><span class="line">+------------------------------+---------+</span><br><span class="line">| have_query_cache             | YES     |</span><br><span class="line">| query_cache_limit            | 1048576 |</span><br><span class="line">| query_cache_min_res_unit     | 4096    |</span><br><span class="line">| query_cache_size             | 1048576 |</span><br><span class="line">| query_cache_type             | OFF     |</span><br><span class="line">| query_cache_wlock_invalidate | OFF     |</span><br><span class="line">+------------------------------+---------+</span><br><span class="line"></span><br><span class="line">mysql&gt; show global status like &apos;QCache%&apos;;</span><br><span class="line">+-------------------------+---------+</span><br><span class="line">| Variable_name           | Value   |</span><br><span class="line">+-------------------------+---------+</span><br><span class="line">| Qcache_free_blocks      | 1       |</span><br><span class="line">| Qcache_free_memory      | 1031832 |</span><br><span class="line">| Qcache_hits             | 0       |</span><br><span class="line">| Qcache_inserts          | 0       |</span><br><span class="line">| Qcache_lowmem_prunes    | 0       |</span><br><span class="line">| Qcache_not_cached       | 106     |</span><br><span class="line">| Qcache_queries_in_cache | 0       |</span><br><span class="line">| Qcache_total_blocks     | 1       |</span><br><span class="line">+-------------------------+---------+</span><br></pre></td></tr></table></figure>
-<h1>mysql调试</h1>
-<p>慢查询可以将mysql执行慢的语句记录下来。</p>
-<p><a href="http://blog.51yip.com/mysql/972.html%3E" target="_blank" rel="noopener">linux下开启mysql慢查询，分析查询语句</a></p>
-<p><a href="http://www.cnblogs.com/luyucheng/p/6265594.html" target="_blank" rel="noopener">http://www.cnblogs.com/luyucheng/p/6265594.html</a></p>
-<p>慢查询使用pt-query-digest进行分析：</p>
-<p>安装过程：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# wget percona.com/get/pt-query-digest</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# chmod u+x pt-query-digest</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# mv /root/pt-query-digest /usr/bin/</span><br></pre></td></tr></table></figure>
-<p>开启慢查询后，会有慢查询的日志，对日志使用工具：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pt-query-digest --explain h=127.0.0.1,u=root,p=123 mysql_slow.log &gt; pt.ref</span><br></pre></td></tr></table></figure>
-<p>开启实时查询，能够得到每一次SQL语句的完整执行语句。</p>
-<p><a href="https://blog.csdn.net/qidaif/article/details/80931703" target="_blank" rel="noopener">MySQL查看实时执行的SQL语句</a></p>
-<h1>mysql插入CSV文件</h1>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOAD DATA LOCAL INFILE &apos;./dbtestdata.csv&apos; INTO TABLE production_recorder.6 CHARACTER SET UTF8 FIELDS TERMINATED BY &apos;,&apos; LINES TERMINATED BY &apos;\n&apos;;</span><br></pre></td></tr></table></figure>
-<h1>GORM使用</h1>
-<h2 id="查找最大值">查找最大值</h2>
-<p><img src="3.png" alt="查询"></p>
-<h2 id="时间戳跟踪">时间戳跟踪</h2>
-<p>Gorm里面有个结构体：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// gorm.Model definition</span></span><br><span class="line"><span class="keyword">type</span> Model <span class="keyword">struct</span> &#123;</span><br><span class="line">  ID        <span class="keyword">uint</span> <span class="string">`gorm:"primary_key"`</span></span><br><span class="line">  CreatedAt time.Time</span><br><span class="line">  UpdatedAt time.Time</span><br><span class="line">  DeletedAt *time.Time</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这四个参数是Gorm固定的参数，例如，如果结构体中有“ID”成员，那么建表时它就是表中的主键。</p>
-<p>CreatedAt：也就是插入值时默认添加的时间戳；</p>
-<p>UpdatedAt：更新时添加的时间戳；</p>
-<p>DeletedAt：被删除时添加的时间戳。（有一个软删除的概念）</p>
-<p>GORM默认是使用蛇形命名，也就是CreatedAt成员将被命名为“created_at”。</p>
-<p>select * from production_recorder.6  WHERE errcode like “86:54:37%” LIMIT 1000000,10;</p>
-<h2 id="子查询">子查询</h2>
-<p><a href="https://stackoverflow.com/questions/46807891/using-a-subquery-in-from-in-gorm?rq=1" target="_blank" rel="noopener">https://stackoverflow.com/questions/46807891/using-a-subquery-in-from-in-gorm?rq=1</a></p>
-<p><img src="count%E8%87%AA%E5%8A%A01.png" alt="count自加1"></p>
-<p><img src="1538015777465.png" alt="子查询"></p>
-<p>从手册上摘出来的子查询使用方法：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.Where(<span class="string">"amount &gt; ?"</span>, DB.Table(<span class="string">"orders"</span>).Select(<span class="string">"AVG(amount)"</span>).Where(<span class="string">"state = ?"</span>, <span class="string">"paid"</span>).QueryExpr()).Find(&amp;orders)</span><br><span class="line"><span class="comment">// SELECT * FROM "orders"  WHERE "orders"."deleted_at" IS NULL AND (amount &gt; (SELECT AVG(amount) FROM "orders"  WHERE (state = 'paid')));</span></span><br></pre></td></tr></table></figure>
-<h2 id="打印Gorm执行语句（包含时间）">打印Gorm执行语句（包含时间）</h2>
-<p>将执行的语句打印出来。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Debug a single operation, show detailed log for this operation</span></span><br><span class="line">db.Debug().Where(<span class="string">"name = ?"</span>, <span class="string">"jinzhu"</span>).First(&amp;User&#123;&#125;)</span><br></pre></td></tr></table></figure>
-<h2 id="gorm拼接SQL语句">gorm拼接SQL语句</h2>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dt = dt.Table(models.TableRecords)</span><br><span class="line"></span><br><span class="line">scope := dt.NewScope(dt.Value)</span><br><span class="line">scope.InstanceSet(<span class="string">"skip_bindvar"</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">scope.Raw(fmt.Sprintf(<span class="string">"explain SELECT %v FROM %v %v"</span>, <span class="string">"count(*)"</span>,</span><br><span class="line">                      scope.QuotedTableName(),</span><br><span class="line">                      scope.CombinedConditionSql()))</span><br><span class="line"></span><br><span class="line">dbs.DbRecords.Raw(scope.SQL, scope.SQLVars...).Scan(&amp;test)</span><br></pre></td></tr></table></figure>
-<p>Gorm的官方文档其实已经比较详细了，想跟深入的了解，可以直接去看官方文档：</p>
-<p><a href="http://gorm.io/docs/conventions.html#Timestamp-Tracking" target="_blank" rel="noopener">http://gorm.io/docs/conventions.html#Timestamp-Tracking</a></p>
-<p><a href="https://jasperxu.github.io/gorm-zh/" target="_blank" rel="noopener">https://jasperxu.github.io/gorm-zh/</a></p>
-<div><br><hr><h1 style="margin-top:0.7em; margin-bottom:0.7em">推荐文章<span style="font-size:0.45em; color:gray">（由<a href="https://github.com/huiwang/hexo-recommended-posts">hexo文章推荐插件</a>驱动）</span></h1><ul><li><a href="chunlife.top/2020/04/09/服务器文件分片合并下载/">服务器文件分片合并下载</a></li><li><a href="chunlife.top/2020/04/01/json-tag-中的inline属性/">json tag 中的inline属性</a></li><li><a href="chunlife.top/2020/04/01/json-解析int到string类型中/">json 解析int到string类型中</a></li><li><a href="https://abelsu7.top/2019/11/10/gops-intro/">gops：Go 程序查看和诊断分析工具简介</a></li></ul></div>
-      
-
-      
-
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我喝茶<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/img/weixin.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">elasticsearch</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">elastalert</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/MySQL//" class="article-tag-list-link color1">MySQL</a>
+        			<a href="/categories/Elastic-Search//" class="article-tag-list-link color5">Elastic Search</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-	< img src="http://bshare.optimix.asia/barCode?site=weixin&url=http:chunlife.top/2018/09/14/mysql操作-不定时持续补充/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/09/22/网关选择/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          网关选择
-        
-      </div>
-    </a>
   
   
-    <a href="/2018/09/14/interface对结构体数组/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">interface转换结构体数组</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">1.</span> <span class="toc-text">Mysql安装后若出现问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">2.</span> <span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">3.</span> <span class="toc-text">预处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">JOIN</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">5.</span> <span class="toc-text">mysql隐式转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">6.</span> <span class="toc-text">日期索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">7.</span> <span class="toc-text">查询缓存</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">8.</span> <span class="toc-text">mysql调试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">9.</span> <span class="toc-text">mysql插入CSV文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">10.</span> <span class="toc-text">GORM使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查找最大值"><span class="toc-number">10.1.</span> <span class="toc-text">查找最大值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间戳跟踪"><span class="toc-number">10.2.</span> <span class="toc-text">时间戳跟踪</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#子查询"><span class="toc-number">10.3.</span> <span class="toc-text">子查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打印Gorm执行语句（包含时间）"><span class="toc-number">10.4.</span> <span class="toc-text">打印Gorm执行语句（包含时间）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gorm拼接SQL语句"><span class="toc-number">10.5.</span> <span class="toc-text">gorm拼接SQL语句</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">11.</span> <span class="toc-text">推荐文章（由hexo文章推荐插件驱动）</span></a></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<!-- ads -->
-	<ins class="adsbygoogle"
-		 style="display:block"
-		 data-ad-client="ca-pub-2375091422289560"
-		 data-ad-slot="5287134821"
-		 data-ad-format="auto"
-		 data-full-width-responsive="true"></ins>
-	<script>
-		 (adsbygoogle = window.adsbygoogle || []).push({});
-	</script>
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
-  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div> 
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-<script type="text/javascript">
-
-if(true){
-	var gitalk = new Gitalk({
-  	clientID: '01eb77bfd18de524243f',
-  	clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
-  	repo: 'younglifestyle.github.io',
-  	owner: 'younglifestyle',
-  	admin: ['younglifestyle'],
-  	id: 'Fri Sep 14 2018 17:40:39 GMT+0800',
-  	distractionFreeMode: 'true'
-})
-gitalk.render('gitalk-container') 
-}
-</script>
-  
-
-  
-
+    
 
 
           </div>
@@ -502,9 +246,9 @@ gitalk.render('gitalk-container')
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
@@ -1333,6 +1077,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">微服务组件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">context</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">elastalert</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
             
             <div class="clearfix"></div>
