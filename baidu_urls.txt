@@ -1,3 +1,4 @@
+chunlife.top/2020/08/03/启动server，自动监听可用端口/
 chunlife.top/2020/08/01/使用ETCD的分布式锁/
 chunlife.top/2020/07/09/数据库操作不仅仅是CURD/
 chunlife.top/2020/07/08/errgroup-对一组子任务goroutine的同步-错误取消功能/
@@ -17,4 +18,3 @@ chunlife.top/2020/04/09/服务器文件分片合并下载/
 chunlife.top/2020/04/01/json-tag-中的inline属性/
 chunlife.top/2020/04/01/json-解析int到string类型中/
 chunlife.top/2020/03/29/mysql操作-不定时持续补充/
-chunlife.top/2020/03/29/重新见面，请多指教/
