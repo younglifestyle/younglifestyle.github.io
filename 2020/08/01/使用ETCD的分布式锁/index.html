@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="此文的目的是我在使用etcd分布式锁的一些记录。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-08-01T14:27:54.757Z">
+<meta property="og:updated_time" content="2020-08-04T02:35:02.598Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用ETCD的分布式锁">
 <meta name="twitter:description" content="此文的目的是我在使用etcd分布式锁的一些记录。">
@@ -194,6 +194,10 @@ var _hmt = _hmt || [];
 <h3 id="TryLock-Lock">TryLock\Lock</h3>
 <p>可以看到这里有两个上锁方式：<code>TryLock</code> \ <code>Lock</code>。</p>
 <p><code>TryLock</code>比<code>Lock</code>，多调用了一个<code>waitDeletes </code>函数，这个函数模拟了一种公平的先来后到的排队逻辑，等待所有当前比当前 key 的 revision 小的 key 被删除后，锁释放后才返回。</p>
+<hr>
+<blockquote>
+<p>本文并未对源码，以及相关联知识进行延申的描述，这里贴上我认为对ETCD分布式锁讲解的比较好的博客：<a href="https://pandaychen.github.io/2019/10/24/ETCD-DISTRIBUTED-LOCK/" target="_blank" rel="noopener">Etcd 应用开发之分布式锁</a>。</p>
+</blockquote>
 
       
 
