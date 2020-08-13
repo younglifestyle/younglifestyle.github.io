@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="Go语言中，获取IP地址一般操作是：">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-08-13T06:45:40.436Z">
+<meta property="og:updated_time" content="2020-08-13T08:07:38.420Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多网卡，多IP，如何拿到真实IP地址（主IP）">
 <meta name="twitter:description" content="Go语言中，获取IP地址一般操作是：">
@@ -197,7 +197,7 @@ var _hmt = _hmt || [];
 <p>将属于链路本地地址的IP，全部拔除。</p>
 <hr>
 <p><strong>若是需要获取到机器现在使用的主IP地址，这需要怎么获得呢？</strong></p>
-<p>这里可以使用以下程序获取到当前机器的主IP，由于使用的是<code>UDP</code>协议，不会需要<code>握手</code>，所以不需要担心访问不到<code>8.8.8.8:8</code>。</p>
+<p>这里可以使用以下程序获取到当前机器的主IP，由于使用的是<code>UDP</code>协议，不会需要<code>握手</code>，所以不需要担心访问不到<code>8.8.8.8:8</code>（或者这样说，这里随便填一个IP地址都可以，反正不会去访问）。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">conn, err := net.Dial(<span class="string">"udp"</span>, <span class="string">"8.8.8.8:8"</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">defer</span> conn.Close()</span><br><span class="line">localAddr := conn.LocalAddr().(*net.UDPAddr)</span><br><span class="line">fmt.Println(localAddr.String())</span><br></pre></td></tr></table></figure>
 
       
