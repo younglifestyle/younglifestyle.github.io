@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="前因 之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-07-21T12:31:40.390Z">
+<meta property="og:updated_time" content="2020-08-26T09:14:27.793Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="copy-on-write技术">
 <meta name="twitter:description" content="前因 之所以突然去了解这块内容，是因为是之前做了关于gateway的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。">
@@ -183,7 +183,7 @@ var _hmt = _hmt || [];
         <h2 id="前因">前因</h2>
 <p>之所以突然去了解这块内容，是因为是之前做了关于<a href="https://github.com/fagongzi/gatewa" target="_blank" rel="noopener">gateway</a>的一些笔记，想趁着笔记还未落灰，把它里头的代码抠出来看看，加深下了解，毕竟貌似有用的到的地方。</p>
 <a id="more"></a>
-<p>看到Gateway中有介绍说使用写时复制（COW）技术，可以减少锁的操作。这项技术于我并不陌生，在写linux驱动的时候，<code>研究</code>（貌似说的有点过，学习）内核时就经常听到这个词汇，毕竟不管是文件系统，还是进程操作都会看见它的身影。</p>
+<p>看到Gateway中有介绍说使用写时复制（<a href="https://github.com/fagongzi/manba/blob/master/pkg/proxy/dispatcher_meta.go#L333" target="_blank" rel="noopener">COW</a>）技术，可以减少锁的操作。这项技术于我并不陌生，在写linux驱动的时候，<code>研究</code>（貌似说的有点过，学习）内核时就经常听到这个词汇，毕竟不管是文件系统，还是进程操作都会看见它的身影。</p>
 <h2 id="Copy-On-Write">Copy-On-Write</h2>
 <p>引用维基百科的定义：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">写入时复制（英语：Copy-on-write，简称COW）是一种计算机程序设计领域的优化策略。</span><br><span class="line"></span><br><span class="line">其核心思想是，如果有多个调用者（callers）同时请求相同资源（如内存或磁盘上的数据存储），他们会共同获取相同的指针指向相同的资源，直到某个调用者试图修改资源的内容时，系统才会真正复制一份专用副本（private copy）给该调用者，而其他调用者所见到的最初的资源仍然保持不变。这过程对其他的调用者都是透明的（transparently）。此作法主要的优点是如果调用者没有修改该资源，就不会有副本（private copy）被创建，因此多个调用者只是读取操作时可以共享同一份资源。</span><br></pre></td></tr></table></figure>
@@ -231,6 +231,24 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>这里讲解的更为详细，若需要详细了解，可以参考这篇博客，<a href="https://juejin.im/post/5bd96bcaf265da396b72f855" target="_blank" rel="noopener">COW奶牛！Copy On Write机制了解一下</a></p>
 </blockquote>
+<h2 id="2020-08-26-Go中指针赋值是否是原子的？">2020/08/26 Go中指针赋值是否是原子的？</h2>
+<p>群里今天有人讨论，指针赋值是否是原子的，如果不是原子的，同时读写，就会出现<code>data race</code>，发生panic。而且因为使用go race去检测，是会报出<code>data race</code>警告的。</p>
+<p>这让我又想起了<code>bilibili</code>微服务框架上的一个issue，是B站大佬毛剑关于这个问题和网友的讨论。</p>
+<p><a href="https://github.com/Terry-Mao/gopush-cluster/issues/44" target="_blank" rel="noopener">golang中多goroutine操作map时直接赋值不用加锁？</a>。</p>
+<blockquote>
+<p>data race，只是警告，不代表就真正会panic。因为编译器还是识别不出真正意图的，另外你发的链接和我这里也完全不一样，他是有一个人写，其他人在读，这块data race检查，如果不出意外，应该是根据function的栈地址不同，根据变量的读写来判断警告的，不是100%精准。</p>
+<p>那么问题来了，我的map始终只有读。</p>
+<p>我的写操作，始终只是对变量map的指针赋值，<br>
+a 如果一开始指向1，我修改成3，这个操作是原子的，即使是脏读，也不会出现影响，因为我对1，也只有读操作，那么赋值的是谁呢？是临时对象3，因为只有一个人在写他，是变量的拥有者。最终是把 a 从1 改成 3，而这部原子，这个技术大量使用在很多很多地方。</p>
+<p>那么唯一有风险的地方是什么呢，是memory barrier。就是如果存在CPU L1/2 之类的cache，在多核下变量不更新（参考nginx的time更新），可以使用内敛汇编指示该处需要:::memory，需要屏障，另外过期内存。</p>
+<p>然后问题又来了，golang 的memory model 不存在这个问题。</p>
+<p>另外建议看看Java的ConcencyHashMap的实现，核心也是COW，就是先复制副本再替换。话说内核的fork也是COW 实现的，另外nginx的cycle 对象也是同样的远离，即变量（8字节 64bit）操作是原子的。代码中如果是直接操作 r.Clients就有问题了，我看了weedfs的代码，他就犯错了，再另外，Java的Hashmap为什么他们都犯错了，都是用的同一个对象（那怕只有一个人写），也是不行的。</p>
+<p>你会发现ConcencyHashMap 为什么需要volatile来做这个事情，这就是memory barrier的故事，C代码需要依赖内联汇编，让其他的pthread可见更新<strong>asm</strong> <strong>volatile</strong> (&quot;&quot; ::: “memory”)，我之前担心golang会有类似问题，后来看了内存模型，确认不会出现。</p>
+</blockquote>
+<p>最后的结论是，当前是原子操作，但Go规范中，没有明确指出，所以，此处是一个不确定态，如果改变，所有这样的操作都是有风险的。</p>
+<p>另外<a href="https://github.com/chrislusf/seaweedfs" target="_blank" rel="noopener">seaweedfs</a>已经接受了这个PR，加了锁，即使是一个goroutine 在写，其他 goroutine 在读，如果不是原子的，同样有风险。</p>
+<p>这里有相关的讨论：<a href="http://yanyiwu.com/work/2015/02/07/golang-concurrency-safety.html" target="_blank" rel="noopener">谈谈go语言编程的并发安全</a>。</p>
+<p>综合来看，虽然它是一个不确定的状态，但是使用COW，就是为了避免使用锁，所以现在在还未发生改变的情况下，还是默认认为其是原子操作。</p>
 
       
 
@@ -394,7 +412,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前因"><span class="toc-number">1.</span> <span class="toc-text">前因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write"><span class="toc-number">2.</span> <span class="toc-text">Copy-On-Write</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write实现"><span class="toc-number">3.</span> <span class="toc-text">Copy-On-Write实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write应用场景以及读写锁"><span class="toc-number">4.</span> <span class="toc-text">Copy-On-Write应用场景以及读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write缺点"><span class="toc-number">5.</span> <span class="toc-text">Copy-On-Write缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write-Linux下的一些应用"><span class="toc-number">6.</span> <span class="toc-text">Copy-On-Write Linux下的一些应用</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前因"><span class="toc-number">1.</span> <span class="toc-text">前因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write"><span class="toc-number">2.</span> <span class="toc-text">Copy-On-Write</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write实现"><span class="toc-number">3.</span> <span class="toc-text">Copy-On-Write实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write应用场景以及读写锁"><span class="toc-number">4.</span> <span class="toc-text">Copy-On-Write应用场景以及读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write缺点"><span class="toc-number">5.</span> <span class="toc-text">Copy-On-Write缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-On-Write-Linux下的一些应用"><span class="toc-number">6.</span> <span class="toc-text">Copy-On-Write Linux下的一些应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-08-26-Go中指针赋值是否是原子的？"><span class="toc-number">7.</span> <span class="toc-text">2020/08/26 Go中指针赋值是否是原子的？</span></a></li></ol>
                     </div>
                 </span>
             </div>
