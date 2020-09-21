@@ -17,7 +17,7 @@
 <meta property="og:description" content="对于优先级队列和时间轮的了解，是始于一个issue：Add expirable LRU implementation。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2020/09/18/优先级队列和时间轮/shark_v1%E7%9A%84%E5%89%AF%E6%9C%AC-21-812020.jpeg">
-<meta property="og:updated_time" content="2020-09-18T08:38:32.619Z">
+<meta property="og:updated_time" content="2020-09-21T08:04:28.638Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="优先级队列">
 <meta name="twitter:description" content="对于优先级队列和时间轮的了解，是始于一个issue：Add expirable LRU implementation。">
@@ -200,7 +200,8 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>作者的意思是，基本上，不会出现巨大量的定时任务，而且任务一秒钟最多只能激活一次，没必要花费这个功夫把代码搞复杂。</p>
 </blockquote>
-<p>我倒是理解作者的意思，在我看的另一个博客中（<a href="http://xiaorui.cc/archives/6955" target="_blank" rel="noopener">技术分享之golang构建分布式任务系统</a>），作者采用的是一种宽范围的定时器。</p>
+<p>我倒是理解作者的意思，这在他看来并不是性能瓶颈，没有必要做这些修改或过度的优化操作；</p>
+<p>在我看的另一个博客中（<a href="http://xiaorui.cc/archives/6955" target="_blank" rel="noopener">技术分享之golang构建分布式任务系统</a>），作者采用的是一种宽范围的定时器。</p>
 <blockquote>
 <p>高性能定时器的实现，这里没有再使用时间轮，而是采用类似rocketmq定时器的实现。根据不同时间间隔的定时器放到不同的队列里。由于定时器的需求在于任务超时控制及数据清理，所以定时器的精度可粗化。</p>
 <p><img src="shark_v1%E7%9A%84%E5%89%AF%E6%9C%AC-21-812020.jpeg" alt="img"></p>
