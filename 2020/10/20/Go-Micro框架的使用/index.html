@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Pure Life">
 <meta property="og:description" content="部署开发环境  Golang环境 安装 gRPC 安装 Micro  Micro目前V3版本未稳定，使用V2版本进行学习和开发使用。  Micro已经出了V3版本，不过最近asim发言称，V3是最后一个版本了，Micro也属于Micro团队维护项目了，它将回归于个人项目。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-10-20T03:38:28.922Z">
+<meta property="og:updated_time" content="2020-10-21T02:53:33.247Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go Micro框架(v2.9.1)的使用">
 <meta name="twitter:description" content="部署开发环境  Golang环境 安装 gRPC 安装 Micro  Micro目前V3版本未稳定，使用V2版本进行学习和开发使用。  Micro已经出了V3版本，不过最近asim发言称，V3是最后一个版本了，Micro也属于Micro团队维护项目了，它将回归于个人项目。">
@@ -199,7 +199,7 @@ var _hmt = _hmt || [];
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">micro <span class="built_in">new</span> --help</span><br></pre></td></tr></table></figure>
 <h2 id="Micro-Handler介绍">Micro Handler介绍</h2>
 <p>在micro的系统中，有许多资源类型，作为框架对服务的一种抽象归类，比如常用的有：api、fnc（函数）、srv、web。其中经常需要使用的是api、srv、web，<a href="https://github.com/micro-in-cn/questions/issues/15" target="_blank" rel="noopener">关于web，api，srv这三种服务的疑问</a>，可以查看该Issue。</p>
-<p>例如，在本公司的使用中，我的理解是，简化分类，使用web，srv作为整体架构，web处理HTTP请求，srv提供特定的服务，例如，登录，验证，访问数据等操作。</p>
+<p>例如，在实际使用中，我的理解是，简化分类，使用web，srv作为整体架构，web处理HTTP请求，srv提供特定的服务，例如，登录，验证，访问数据等操作。</p>
 <p>web框架代码生成：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">micro new --namespace=mu.micro.book --type=web --alias=order micro_learn/orders-web</span><br></pre></td></tr></table></figure>
 <p>service框架代码生成：</p>
