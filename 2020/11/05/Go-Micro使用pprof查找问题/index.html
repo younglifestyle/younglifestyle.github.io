@@ -23,7 +23,7 @@
 <meta property="og:image" content="chunlife.top/2020/11/05/Go-Micro使用pprof查找问题/gin_pprof6.png">
 <meta property="og:image" content="chunlife.top/2020/11/05/Go-Micro使用pprof查找问题/gin_pprof7.png">
 <meta property="og:image" content="chunlife.top/2020/11/05/Go-Micro使用pprof查找问题/gin_pprof8.png">
-<meta property="og:updated_time" content="2020-11-05T09:07:52.941Z">
+<meta property="og:updated_time" content="2020-11-05T09:12:45.717Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go Micro使用pprof查找问题">
 <meta name="twitter:description" content="pprof 是用于可视化和分析性能分析数据的工具。 当服务出现异常CPU占用，或者内存出现爆炸式增长时，我们可以使用pprof来帮助我们进行分析。">
@@ -203,6 +203,7 @@ var _hmt = _hmt || [];
 <p>程序中，修改<code>DefaultAddress</code>，调用<code>NewProfile</code>既能完成部署工作，非常简单吧。</p>
 <p>以上是，对pprof单独启动一个server端口，若是如我一样，使用Gin框架，则可以直接使用<code>github.com/gin-contrib/pprof</code>，将接口集成进去。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app := gin.Default()</span><br><span class="line"></span><br><span class="line">pprof.Register(app) <span class="comment">// 性能</span></span><br></pre></td></tr></table></figure>
+<p>这样调试功能还是很有作用的，例如，我们在业务中的实现就是，在调试阶段，将pprof开启，后端管理界面的后端程序，可以直接获取指定服务的pprof，将其显示到大盘界面上，这样可以不用单独拉出来去访问这些接口，而是将这些给集成到一起。</p>
 <hr>
 <blockquote>
 <p>以下内容均来自：<a href="http://liumurong.org/2019/12/gin_pprof/" target="_blank" rel="noopener">Gin框架中使用pprof</a></p>
