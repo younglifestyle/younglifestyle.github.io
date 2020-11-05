@@ -1,3 +1,4 @@
+chunlife.top/2020/11/05/Go-Micro使用pprof查找问题/
 chunlife.top/2020/11/04/块设备在Linux上读写直接使用IO/
 chunlife.top/2020/10/22/docker-desktop启动超时错误/
 chunlife.top/2020/10/20/Go-Micro框架的使用/
@@ -17,4 +18,3 @@ chunlife.top/2020/06/09/部署配置中心之Apollo服务/
 chunlife.top/2020/06/04/使用etcd搭建OTA服务/
 chunlife.top/2020/05/22/Go-context源码学习/
 chunlife.top/2020/05/08/基于etcd3的访问序列化及分布式软事务内存/
-chunlife.top/2020/04/27/使工作集中的图书馆噪音/
