@@ -17,7 +17,7 @@
 <meta property="og:description" content="不知道最近怎么了，GitHub Pages一点都访问不到，必须搭梯子，以前还觉得没必要挂在国内，现在不得不找个国内的平台也挂接一下页面才行了，由于我的域名是在阿里购买的，不过操控台应该是大差不差的，所以没啥区别： 这里主要是域名解析相关的，至于coding和GitHub上的搭建静态页面应该是很多的，Hexo + GitHub (Coding) Pages 搭建博客。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="chunlife.top/2020/09/18/Github-Pages-和-Coding-Pages双绑定域名，方便国内外访问/image-20200918154704469.png">
-<meta property="og:updated_time" content="2020-09-18T09:13:04.899Z">
+<meta property="og:updated_time" content="2020-11-16T08:27:54.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Github Pages 和 Coding Pages双绑定域名，方便国内外访问">
 <meta name="twitter:description" content="不知道最近怎么了，GitHub Pages一点都访问不到，必须搭梯子，以前还觉得没必要挂在国内，现在不得不找个国内的平台也挂接一下页面才行了，由于我的域名是在阿里购买的，不过操控台应该是大差不差的，所以没啥区别： 这里主要是域名解析相关的，至于coding和GitHub上的搭建静态页面应该是很多的，Hexo + GitHub (Coding) Pages 搭建博客。">
@@ -191,6 +191,10 @@ var _hmt = _hmt || [];
 <p>另外，如果coding报错：<code>urn:acme:error:unauthorized: Invalid response from http://xxxxx/</code>。</p>
 <p>则<a href="https://blog.csdn.net/qq_36759224/article/details/100890801" target="_blank" rel="noopener">解决方法</a>如下：</p>
 <p>先去域名 DNS 把 GitHub 的解析暂停掉，然后再重新申请 SSL 证书，等待申请成功再恢复 GitHub 的解析。</p>
+<p><strong>Now</strong></p>
+<blockquote>
+<p>我设置的解析中，将GitHub的解析线路设置为<code>境外</code>，所以只要是大陆地区就无法访问，额，这是我脑阔有问题，我中间尝试了CF、Gitee、腾讯的存储服务，搞了一系列花里胡哨的操作，尴尬，算是静态页面各类操作都试过了，不过我的感受是，基本还是GitHub Pages最为方便且不要钱，架上CF加速（虽然大陆还是不怎么快），强行挽尊，我测试下来，现在单GitHub速度还可以，至于收录到百度或者国内的搜索引擎，我这边需求不大，主要是国内即使是Gitee，体验都不好，希望Gitee赚钱后把自动部署给免费了。</p>
+</blockquote>
 
       
 
