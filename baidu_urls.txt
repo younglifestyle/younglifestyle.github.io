@@ -1,3 +1,4 @@
+chunlife.top/2020/11/17/golang-fmt-Fscanf-读取文件数据异常问题/
 chunlife.top/2020/11/13/Go-Micro性能测试/
 chunlife.top/2020/11/05/Go-Micro使用pprof查找问题/
 chunlife.top/2020/11/04/块设备在Linux上读写直接使用IO/
@@ -17,4 +18,3 @@ chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/
 chunlife.top/2020/06/09/部署配置中心之Apollo服务/
 chunlife.top/2020/06/04/使用etcd搭建OTA服务/
 chunlife.top/2020/05/22/Go-context源码学习/
-chunlife.top/2020/05/08/基于etcd3的访问序列化及分布式软事务内存/
