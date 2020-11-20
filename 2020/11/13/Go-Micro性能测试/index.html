@@ -20,7 +20,7 @@
 <meta property="og:image" content="chunlife.top/2020/11/13/Go-Micro性能测试/image-20201113101113139.png">
 <meta property="og:image" content="chunlife.top/2020/11/13/Go-Micro性能测试/image-20201113095737703.png">
 <meta property="og:image" content="chunlife.top/2020/11/13/Go-Micro性能测试/image-20201113100854270.png">
-<meta property="og:updated_time" content="2020-11-16T03:45:49.790Z">
+<meta property="og:updated_time" content="2020-11-20T09:27:54.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go Micro性能测试">
 <meta name="twitter:description" content="基于我对网上搜索过后的结果，大多数对Micro的测试都是基于V1版本的，当然V1版本的性能也确实拉跨，被吊打的不得了，那V2版本是否有相应的进步呢？这点没有在网上搜索到，那就只能自己动手改造一个了。">
@@ -187,7 +187,7 @@ var _hmt = _hmt || [];
       
         <p>基于我对网上搜索过后的结果，大多数对Micro的测试都是基于V1版本的，当然V1版本的性能也确实拉跨，被吊打的不得了，那V2版本是否有相应的进步呢？这点没有在网上搜索到，那就只能自己动手改造一个了。</p>
 <a id="more"></a>
-<p>看这篇博文中，<a href="https://colobu.com/2020/01/21/benchmark-2019-spring-of-popular-rpc-frameworks/" target="_blank" rel="noopener">2020 新春流行的RPC框架性能大比拼</a>。Micro RPC性能可以说是垫底了，根据之前的仓库，进行更改后，<a href="https://github.com/younglifestyle/rpcx-benchmark%EF%BC%8C%E5%BE%97%E5%88%B0Micro" target="_blank" rel="noopener">https://github.com/younglifestyle/rpcx-benchmark，得到Micro</a> V2版本的测试代码。</p>
+<p>看这篇博文中，<a href="https://colobu.com/2020/01/21/benchmark-2019-spring-of-popular-rpc-frameworks/" target="_blank" rel="noopener">2020 新春流行的RPC框架性能大比拼</a>。Micro RPC性能可以说是垫底了，根据之前的仓库，进行更改后，<a href="https://github.com/younglifestyle/rpcx-benchmark" target="_blank" rel="noopener">https://github.com/younglifestyle/rpcx-benchmark</a> ， 得到Micro V2版本的测试代码。</p>
 <p><img src="image-20201113101051999.png" alt="image-20201113101051999"></p>
 <p>与之对应的Go RPC原生RPC性能则是：</p>
 <p><img src="image-20201113101113139.png" alt="image-20201113101113139"></p>
@@ -206,10 +206,29 @@ var _hmt = _hmt || [];
 </ul>
 </blockquote>
 <p><strong>后续</strong></p>
-<p>在博主的博文<a href="https://codeleading.com/article/21301597392/" target="_blank" rel="noopener">micro/go-micro 介绍与源代码分析（五）：回显测试分析网络性能</a>，有提到过对Micro性能提出的issue，不过官方似乎并没改进，我提过issue，得到asim哥的回答是：</p>
+<p>在博主的博文<a href="https://codeleading.com/article/21301597392/" target="_blank" rel="noopener">micro/go-micro 介绍与源代码分析（五）：回显测试分析网络性能</a>，有提到过对Micro性能提出的issue，不过官方似乎并没改进。（该博主对go micro的性能进行过优化）</p>
+<p>我提过issue，得到asim哥的回答是：</p>
 <blockquote>
 <p><a href="https://github.com/asim/nitro/issues/2075#issuecomment-725903901" target="_blank" rel="noopener">https://github.com/asim/nitro/issues/2075#issuecomment-725903901</a></p>
 <p>V2 is unsupported. V3 is non-commercial. Performance is not my concern at this time.</p>
+</blockquote>
+<p>这里我还找到一个issue，asim回答别人提高性能的一个解答，至于实际效果怎么样，我有时间将会进行一波尝试。</p>
+<blockquote>
+<p><a href="https://github.com/asim/nitro/issues/129#issuecomment-256572499" target="_blank" rel="noopener">https://github.com/asim/nitro/issues/129#issuecomment-256572499</a></p>
+<p>Each request does the following:</p>
+<ol>
+<li>Lookup service discovery for service</li>
+<li>Select node from service list</li>
+<li>Create new connection to node</li>
+<li>Make request</li>
+<li>Teardown connection</li>
+</ol>
+<p>If you want more performance you can use the caching selector <a href="https://godoc.org/github.com/micro/go-micro/selector/cache" target="_blank" rel="noopener">https://godoc.org/github.com/micro/go-micro/selector/cache</a> and client side connection pooling <a href="https://godoc.org/github.com/micro/go-micro/client#PoolSize" target="_blank" rel="noopener">https://godoc.org/github.com/micro/go-micro/client#PoolSize</a>.</p>
+<p>You can either do this in code or with flags like so:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; --selector=cache # enables in memory caching of discovered nodes</span><br><span class="line">&gt; --client_pool_size=10 # enables the client side connection pool</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>If you want to discuss further please join the slack.</p>
 </blockquote>
 
       
