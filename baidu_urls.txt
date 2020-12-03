@@ -1,3 +1,4 @@
+chunlife.top/2020/12/03/Go中的nil和interface/
 chunlife.top/2020/12/01/go-micro-config包解读/
 chunlife.top/2020/11/17/golang-fmt-Fscanf-读取文件数据异常问题/
 chunlife.top/2020/11/13/Go-Micro性能测试/
@@ -17,4 +18,3 @@ chunlife.top/2020/06/28/rabbitMq知识小结/
 chunlife.top/2020/06/17/训练模型中的引入测试数据集/
 chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/
 chunlife.top/2020/06/09/部署配置中心之Apollo服务/
-chunlife.top/2020/06/04/使用etcd搭建OTA服务/
