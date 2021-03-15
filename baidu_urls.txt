@@ -1,3 +1,4 @@
+chunlife.top/2021/03/15/Golang插件使用/
 chunlife.top/2020/12/10/Go-Modules设置私有库，以及支持HTTP的私有库操作/
 chunlife.top/2020/12/03/Go中的nil和interface/
 chunlife.top/2020/12/01/go-micro-config包解读/
@@ -17,4 +18,3 @@ chunlife.top/2020/07/09/数据库操作不仅仅是CURD/
 chunlife.top/2020/07/08/errgroup-对一组子任务goroutine的同步-错误取消功能/
 chunlife.top/2020/06/28/rabbitMq知识小结/
 chunlife.top/2020/06/17/训练模型中的引入测试数据集/
-chunlife.top/2020/06/16/Go协程调度以及协程运行的问题/
