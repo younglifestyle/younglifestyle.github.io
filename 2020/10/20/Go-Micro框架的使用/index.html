@@ -93,6 +93,8 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GetService(xxxxxxxxxxxxx)</span><br><span class="line">.....</span><br><span class="line">	rsp, err := e.client.Get(ctx, servicePath(name)+<span class="string">"/"</span>, clientv3.WithPrefix(), clientv3.WithSerializable())</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">........</span><br></pre></td></tr></table></figure>
 <p><code>WithPrefix</code>，将会把传入的<code>name</code>作为前缀的key全部取下来，所以<code>GetService</code>才会返回的是一个数组。</p>
 <p>另外，<code>ListServices</code>则是把服务信息全部返回。</p>
+<p>Micro工具获取服务信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">micro.exe --registry=etcd --registry_address="192.xx.xx.xxx:2379" get service "xxxxxxxxxxxx"</span><br></pre></td></tr></table></figure>
 <h2><span id="教程中的问题">教程中的问题：</span></h2>
 <h3><span id="一-版本更迭web-handler无法使用">一、版本更迭，web handler无法使用</span></h3>
 <p>造成问题，micro api，POST /user/login HTTP/1.1&quot; 500 0。问题是使用了最新的稳定版本micro。</p>
