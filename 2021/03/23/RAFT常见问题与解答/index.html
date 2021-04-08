@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;default&quot;]"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>RAFT常见问题与解答 | Pure Life</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'e155b64355fa51e2e8a4ca9edc59e825';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">RAFT常见问题与解答</h1><a id="logo" href="/.">Pure Life</a><p class="description">我的博客天下</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">RAFT常见问题与解答</h1><div class="post-meta">2021-03-23<span> | </span><span class="category"><a href="/categories/Go/">Go</a></span></div><div class="post-content"><p>Raft FAQ1</p>
+<p>Q: Does Raft sacrifice anything for simplicity?</p>
+<p>A: Raft gives up some performance in return for clarity; for example:</p>
+<ul>
+<li>
+<p>Every operation must be written to disk for persistence; performance<br>
+probably requires batching many operations into each disk write.</p>
+</li>
+<li>
+<p>There can only usefully be a single AppendEntries in flight from the<br>
+leader to each follower: followers reject out-of-order<br>
+AppendEntries, and the sender’s nextIndex[] mechanism requires<br>
+one-at-a-time. A provision for pipelining many AppendEntries would<br>
+be better.</p>
+</li>
+<li>
+<p>The snapshotting design is only practical for relatively small<br>
+states, since it writes the entire state to disk. If the state is<br>
+big (e.g. if it’s a big database), you’d want a way to write just<br>
+parts of the state that have changed recently.</p>
+</li>
+<li>
+<p>Similarly, bringing recovering replicas up to date by sending them a<br>
+complete snapshot will be slow, needlessly so if the replica already<br>
+has an old snapshot.</p>
+</li>
+<li>
+<p>Servers may not be able to take much advantage of multi-core because<br>
+operations must be executed one at a time (in log order).</p>
+</li>
+</ul>
+<p>These could be fixed by modifying Raft, but the result might have less<br>
+value as a tutorial.</p>
+<p>Q: Is Raft used in real-world software, or do companies generally roll<br>
+their own flavor of Paxos (or use a different consensus protocol)?</p>
+<p>A: There are several real-world users of Raft: Docker<br>
+(<a href="https://docs.docker.com/engine/swarm/raft/" target="_blank" rel="noopener">https://docs.docker.com/engine/swarm/raft/</a>), etcd (<a href="https://etcd.io" target="_blank" rel="noopener">https://etcd.io</a>),<br>
+and MongoDB. Other systems said to be using Raft include CockroachDB,<br>
+RethinkDB, and TiKV. Maybe you can find more starting at<br>
+<a href="http://raft.github.io/" target="_blank" rel="noopener">http://raft.github.io/</a></p>
+<p>On the other hand, my impression is that most state-machine<br>
+replication systems are based on the Multi-Paxos and Viewstamped<br>
+Replication protocols.</p>
+<p>Q: What is Paxos? In what sense is Raft simpler?</p>
+<p>A: There is a protocol called Paxos that allows a set of servers to<br>
+agree on a single value. While Paxos requires some thought to<br>
+understand, it is far simpler than Raft. Here’s an easy-to-read paper<br>
+about Paxos:</p>
+<p><a href="http://css.csail.mit.edu/6.824/2014/papers/paxos-simple.pdf" target="_blank" rel="noopener">http://css.csail.mit.edu/6.824/2014/papers/paxos-simple.pdf</a></p>
+<p>However, Paxos solves a much smaller problem than Raft. To build a<br>
+real-world replicated service, the replicas need to agree on an<br>
+indefinite sequence of values (the client commands), and they need<br>
+ways to efficiently recover when servers crash and restart or miss<br>
+messages. People have built such systems with Paxos as the starting<br>
+point; look up Google’s Chubby and Paxos Made Live papers, and<br>
+ZooKeeper/ZAB. There is also a protocol called Viewstamped<br>
+Replication; it’s a good design, and similar to Raft, but the paper<br>
+about it is hard to understand.</p>
+<p>These real-world protocols are complex, and (before Raft) there was<br>
+not a good introductory paper describing how they work. The Raft<br>
+paper, in contrast, is relatively easy to read and fairly detailed.<br>
+That’s a big contribution.</p>
+<p>Whether the Raft protocol is inherently easier to understand than<br>
+something else is not clear. The issue is clouded by a lack of good<br>
+descriptions of other real-world protocols. In addition, Raft<br>
+sacrifices performance for clarity in a number of ways; that’s fine<br>
+for a tutorial but not always desirable in a real-world protocol.</p>
+<p>Q: How long had Paxos existed before the authors created Raft?</p>
+<p>A: Paxos was invented in the late 1980s. Raft was developed around<br>
+2012.</p>
+<p>Raft closely resembles a protocol called Viewstamped Replication,<br>
+originally published in 1988. There were replicated fault-tolerant file<br>
+servers built on top of Viewstamped Replication in the early 1990s,<br>
+though not in production use.</p>
+<p>A bunch of real-world systems are derived from Paxos: Chubby, Spanner,<br>
+Megastore, and Zookeeper/ZAB. Starting in the early 2000s big web<br>
+sites and cloud providers needed fault-tolerant services, and Paxos<br>
+was more or less re-discovered at that time and put into production<br>
+use.</p>
+<p>Q: How does Raft’s performance compare to Paxos in real-world applications?</p>
+<p>A: The fastest Paxos-derived protocols are probably faster than<br>
+Raft as described in the paper; have a look at ZAB/ZooKeeper and Paxos<br>
+Made Live. On the other hand, etcd3 (using Raft) claims to have<br>
+achieved better performance than zookeeper and many Paxos-based<br>
+implementations (<a href="https://www.youtube.com/watch?v=hQigKX0MxPw" target="_blank" rel="noopener">https://www.youtube.com/watch?v=hQigKX0MxPw</a>).</p>
+<p>There are situations where Raft’s leader is not so great. If the<br>
+datacenters containing replicas and clients are distant from each<br>
+other, people sometimes use agreement protocols derived from original<br>
+Paxos. The reason is that Paxos has no leader; any replica can start<br>
+an agreement; so clients can talk to the replica in their local<br>
+datacenter rather than having to talk to a leader in a distant<br>
+datacenter. ePaxos is an example.</p>
+<p>Q: Why are we learning/implementing Raft instead of Paxos?</p>
+<p>A: We’re using Raft in 6.824 because there is a paper that clearly<br>
+describes how to build a complete replicated service using Raft. I<br>
+know of no satisfactory paper that describes how to build a complete<br>
+replicated server system based on Paxos.</p>
+<p>Q: Are there systems like Raft that can survive and continue to<br>
+operate when only a minority of the cluster is active?</p>
+<p>A: Not with Raft’s properties. But you can do it with different<br>
+assumptions, or different client-visible semantics. The basic problem<br>
+is split-brain – the possibility of multiple diverging copies of the<br>
+state, caused by multiple subsets of the replicas mutating the state<br>
+without being aware of each other. There are two solution approaches<br>
+that I know of.</p>
+<p>If somehow clients and servers can learn exactly which servers are live<br>
+and which are dead (as opposed to live but unreachable due to network<br>
+failure), then one can build a system that can function as long as one<br>
+is alive, picking (say) the lowest-numbered server known to be alive.<br>
+However, it’s hard for one computer to decide if another computer is<br>
+dead, as opposed to the network losing the messages between them. One<br>
+way to do it is to have a human decide – the human can inspect each<br>
+server and decide which are alive and dead.</p>
+<p>The other approach is to allow split-brain operation, and to have a<br>
+way for servers to reconcile the resulting diverging state after<br>
+partitions are healed. This can be made to work for some kinds of<br>
+services, but has complex client-visible semantics (usually called<br>
+“eventual consistency”). Have a look at the COPS, FuzzyLog, and<br>
+Bitcoin papers which are assigned later in the course.</p>
+<p>Q: In Raft, the service which is being replicated is not available to<br>
+the clients during an election process. In practice how much of a<br>
+problem does this cause?</p>
+<p>A: The client-visible pause seems likely to be on the order of a tenth of a<br>
+second. The authors expect failures (and thus elections) to be rare,<br>
+since they only happen if machines or the network fails. Many servers<br>
+and networks stay up continuously for months or even years at a time, so<br>
+this doesn’t seem like a huge problem for many applications.</p>
+<p>Q: Are there other consensus systems that don’t have leader-election<br>
+pauses?</p>
+<p>A: There are versions of Paxos-based replication that do not have a leader<br>
+or elections, and thus don’t suffer from pauses during elections.<br>
+Instead, any server can effectively act as leader at any time. The cost<br>
+of not having a leader is that more messages are required for each<br>
+agreement.</p>
+<p>Q: How are Raft and VMware FT related?</p>
+<p>A: Raft has no single point of failure, while VMware FT does have a<br>
+single point of failure in the form of the test-and-set server. In<br>
+that sense Raft is fundamentally more fault-tolerant than VMware FT.<br>
+One could fix this by implementing FT’s test-and-set server as a<br>
+replicated service using Raft or Paxos.</p>
+<p>VMware-FT can replicate any virtual machine guest, and thus any<br>
+server-style software. Raft can only replicate software designed<br>
+specifically for replication for Raft. For such software, Raft would<br>
+likely be more efficient than VMware-FT.</p>
+<p>Q: Why can’t a malicious person take over a Raft server, or forge<br>
+incorrect Raft messages?</p>
+<p>A: Raft doesn’t include defenses against attacks like this. It assumes<br>
+that all participants are following the protocol, and that only the<br>
+correct set of servers is participating.</p>
+<p>A real deployment would have to keep out malicious attackers. The most<br>
+straightforward option is to place the servers behind a firewall to<br>
+filter out packets from random people on the Internet, and to ensure<br>
+that all computers and people inside the firewall are trustworthy.</p>
+<p>There may be situations where Raft has to operate on the same network as<br>
+potential attackers. In that case a good plan would be to authenticate<br>
+the Raft packets with some cryptographic scheme. For example, give each<br>
+legitimate Raft server a public/private key pair, have it sign all the<br>
+packets it sends, give each server a list of the public keys of<br>
+legitimate Raft servers, and have the servers ignore packets that aren’t<br>
+signed by a key on that list.</p>
+<p>Q: The paper mentions that Raft works under all non-Byzantine<br>
+conditions. What are Byzantine conditions and why could they make Raft<br>
+fail?</p>
+<p>A: “Non-Byzantine conditions” means that the servers are fail-stop:<br>
+they either follow the Raft protocol correctly, or they halt. For<br>
+example, most power failures are non-Byzantine because they cause<br>
+computers to simply stop executing instructions; if a power failure<br>
+occurs, Raft may stop operating, but it won’t send incorrect results<br>
+to clients.</p>
+<p>Byzantine failure refers to situations in which some computers execute<br>
+incorrectly, because of bugs or because someone malicious is<br>
+controlling the computers. If a failure like this occurs, Raft may<br>
+send incorrect results to clients.</p>
+<p>Most of 6.824 is about tolerating non-Byzantine faults. Correct<br>
+operation despite Byzantine faults is more difficult; we’ll touch on<br>
+this topic at the end of the term.</p>
+<p>Q: In Figure 1, what does the interface between client and server look<br>
+like?</p>
+<p>A: Typically an RPC interface to the server. For a key/value storage<br>
+server such as you’ll build in Lab 3, it’s Put(key,value) and<br>
+Get(value) RPCs. The RPCs are handled by a key/value module in the<br>
+server, which calls Raft.Start() to ask Raft to put a client RPC in<br>
+the log, and reads the applyCh to learn of newly committed log<br>
+entries.</p>
+<p>Q: What if a client sends a request to a leader, but the leader<br>
+crashes before sending the client request to all followers, and the<br>
+new leader doesn’t have the request in its log? Won’t that cause the<br>
+client request to be lost?</p>
+<p>A: Yes, the request may be lost. If a log entry isn’t committed, Raft<br>
+may not preserve it across a leader change.</p>
+<p>That’s OK because the client could not have received a reply to its<br>
+request if Raft didn’t commit the request. The client will know (by<br>
+seeing a timeout or leader change) that its request may have been<br>
+lost, and will re-send it.</p>
+<p>The fact that clients can re-send requests means that the system has<br>
+to be on its guard against duplicate requests; you’ll deal with this<br>
+in Lab 3.</p>
+<p>Q: If there’s a network partition, can Raft end up with two leaders<br>
+and split brain?</p>
+<p>A: No. There can be at most one active leader.</p>
+<p>A new leader can only be elected if it can contact a majority of servers<br>
+(including itself) with RequestVote RPCs. So if there’s a partition, and<br>
+one of the partitions contains a majority of the servers, that one<br>
+partition can elect a new leader. Other partitions must have only a<br>
+minority, so they cannot elect a leader. If there is no majority<br>
+partition, there will be no leader (until someone repairs the network<br>
+partition).</p>
+<p>Q: Suppose a new leader is elected while the network is partitioned,<br>
+but the old leader is in a different partition. How will the old<br>
+leader know to stop committing new entries?</p>
+<p>A: The old leader will either not be able to get a majority of<br>
+successful responses to its AppendEntries RPCs (if it’s in a minority<br>
+partition), or if it can talk to a majority, that majority must<br>
+overlap with the new leader’s majority, and the servers in the overlap<br>
+will tell the old leader that there’s a higher term. That will cause<br>
+the old leader to switch to follower.</p>
+<p>Q: When some servers have failed, does “majority” refer to a majority<br>
+of the live servers, or a majority of all servers (even the dead<br>
+ones)?</p>
+<p>A: Always a majority of all servers. So if there are 5 Raft peers in<br>
+total, but two have failed, a candidate must still get 3 votes<br>
+(including itself) in order to elected leader.</p>
+<p>There are many reasons for this. It could be that the two “failed”<br>
+servers are actually up and running in a different partition. From<br>
+their point of view, there are three failed servers. If they were<br>
+allowed to elect a leader using just two votes (from just the two<br>
+live-looking servers), we would get split brain. Another reason is<br>
+that we need the majorities of any two leader to overlap at at least<br>
+one server, to guarantee that a new leader sees the previous term<br>
+number and any log entries committed in previous terms; this requires<br>
+a majority out of all servers, dead and alive.</p>
+<p>Q: What if the election timeout is too short? Will that cause Raft to<br>
+malfunction?</p>
+<p>A: A bad choice of election timeout does not affect safety, it only<br>
+affects liveness.</p>
+<p>If the election timeout is too small, then followers may repeatedly<br>
+time out before the leader has a chance to send out any AppendEntries.<br>
+In that case Raft may spend all its time electing new leaders, and no<br>
+time processing client requests. If the election timeout is too large,<br>
+then there will be a needlessly large pause after a leader failure<br>
+before a new leader is elected.</p>
+<p>Q: Why randomize election timeouts?</p>
+<p>A: To reduce the chance that two peers simultaneously become<br>
+candidates and split the votes evenly between them, preventing anyone<br>
+from being elected.</p>
+<p>Q: Can a candidate declare itself the leader as soon as it receives<br>
+votes from a majority, and not bother waiting for further RequestVote<br>
+replies?</p>
+<p>A: Yes – a majority is sufficient. It would be a mistake to wait<br>
+longer, because some peers might have failed and thus not ever reply.</p>
+<p>Q: Can a leader in Raft ever stop being a leader except by crashing?</p>
+<p>A: Yes. If a leader’s CPU is slow, or its network connection breaks,<br>
+or loses too many packets, or delivers packets too slowly, the other<br>
+servers won’t see its AppendEntries RPCs, and will start an election.</p>
+<p>Q: When are followers’ log entries sent to their state machines?</p>
+<p>A: Only after the leader says that an entry is committed, using the<br>
+leaderCommit field of the AppendEntries RPC. At that point the<br>
+follower can execute (or apply) the log entry, which for us means send<br>
+it on the applyCh.</p>
+<p>Q: Should the leader wait for replies to AppendEntries RPCs?</p>
+<p>A: The leader should send the AppendEntries RPCs concurrently, without<br>
+waiting. As replies come back, the leader should count them, and mark<br>
+the log entry as committed only when it has replies from a majority of<br>
+servers (including itself).</p>
+<p>One way to do this in Go is for the leader to send each AppendEntries<br>
+RPC in a separate goroutine, so that the leader sends the RPCs<br>
+concurrently. Something like this:</p>
+<p>for each server {<br>
+go func() {<br>
+send the AppendEntries RPC and wait for the reply<br>
+if reply.success == true {<br>
+increment count<br>
+if count == nservers/2 + 1 {<br>
+this entry is committed<br>
+}<br>
+}<br>
+} ()<br>
+}</p>
+<p>Q: What happens if a half (or more) of the servers die?</p>
+<p>A: The service can’t make any progress; it will keep trying to elect a<br>
+leader over and over. If/when enough servers come back to life with<br>
+persistent Raft state intact, they will be able to elect a leader and<br>
+continue.</p>
+<p>Q: Why is the Raft log 1-indexed?</p>
+<p>A: You should view it as zero-indexed, but starting out with one entry<br>
+(at index=0) that has term 0. That allows the very first AppendEntries<br>
+RPC to contain 0 as PrevLogIndex, and be a valid index into the log.</p>
+<p>Q: When network partition happens, wouldn’t client requests in<br>
+minority partitions be lost?</p>
+<p>A: Yes, only the partition with a majority of servers can commit and<br>
+execute client operations. The servers in the minority partition(s)<br>
+won’t be able to commit client operations, so they won’t reply to<br>
+client requests. Clients will keep re-sending the requests until they<br>
+can contact a majority Raft partition.</p>
+<p>Q: Is the argument in 5.4.3 a complete proof?</p>
+<p>A: 5.4.3 is not a complete proof. Here are some places to look:</p>
+<p><a href="http://ramcloud.stanford.edu/~ongaro/thesis.pdf" target="_blank" rel="noopener">http://ramcloud.stanford.edu/~ongaro/thesis.pdf</a><br>
+<a href="http://verdi.uwplse.org/raft-proof.pdf" target="_blank" rel="noopener">http://verdi.uwplse.org/raft-proof.pdf</a></p>
+<p>Q: Are there any limitations to what applications can be built on top of Raft?</p>
+<p>A: I think that in order to fit cleanly into a replicated state<br>
+machine framework like Raft, the replicated service has to be<br>
+self-contained – it can have private state, and accept commands from<br>
+clients that update the state, but it can’t contact outside entities<br>
+without special precautions. If the replicated application interacts<br>
+with the outside world, the outside world has to be able to deal<br>
+correctly with repeated requests (due to replication and replay of<br>
+logs after reboot), and it has to never contradict itself (i.e. it has<br>
+to be careful to send exactly the same answer to all replicas, and to<br>
+all re-executions of log entries). That in turn seems to require that<br>
+any outside entity that a Raft-based application contacts must itself<br>
+be fault-tolerant, i.e. probably has to use Raft or something like it.<br>
+That’s fairly limiting.</p>
+<p>As an example, imagine a replicated online ordering system sending<br>
+credit card charging requests to some external credit card processor<br>
+service. That external processor will see repeated requests (one or more<br>
+from each replica). Will it respond exactly the same way to each<br>
+request? Will it charge the credit card more than once? If it does do<br>
+the right thing, will it still do the right thing if it crashes and<br>
+reboots at an awkward time?</p>
+</div><div id="donate"><link rel="stylesheet" type="text/css" href="/css/donate.css"><script type="text/javascript" src="/js/donate.js" successtext="复制成功!"></script><a class="pos-f tr3" id="github" href="https://github.com/Kaiyuan/donate-page" arget="_blank" title="Github"></a><div id="DonateText">Donate</div><ul class="list pos-f" id="donateBox"><li id="PayPal"><a href="https://paypal.me/zanghong" target="_blank"></a></li><li id="AliPay" qr="/img/zhifubao.png"></li><li id="WeChat" qr="/img/weixin.png"></li></ul><div class="pos-f left-100" id="QRBox"><div id="MainBox"></div></div></div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css"><p><span>本文标题：</span>RAFT常见问题与解答</p><p><span>文章作者：</span>小师</p><p><span>发布时间：</span>2021-03-23</p><p><span>最后更新：</span>2021-04-08</p><p><span>原始链接：</span><a href="/2021/03/23/RAFT常见问题与解答/">chunlife.top/2021/03/23/RAFT常见问题与解答/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="chunlife.top/2021/03/23/RAFT常见问题与解答/"></i></span></p><p><span>版权声明：</span>本站所有文章均采用知识共享署名4.0国际许可协议进行许可</p></div><br><div class="tags"><a href="/tags/微服务/"><i class="fa fa-tag"></i>微服务</a><a href="/tags/raft/"><i class="fa fa-tag"></i>raft</a></div><div class="post-nav"><a class="pre" href="/2021/04/08/轻量化日志服务Loki分享/">轻量化日志服务Loki分享</a><a class="next" href="/2021/03/17/raft扩展论文-中文/">raft扩展论文(中文)</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=1.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=1.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=1.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: '01eb77bfd18de524243f',
+  clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
+  repo: 'younglifestyle.github.io',
+  owner: 'younglifestyle',
+  admin: ['younglifestyle'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-client="ca-pub-2375091422289560" data-ad-slot="8776143066" data-ad-format="fluid" data-ad-layout="in-article" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="chunlife.top"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Axure/">Axure</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C语言/">C语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Elastic-Search/">Elastic Search</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Go/">Go</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MongoDB/">MongoDB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/QT/">QT</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/VxWorks/">VxWorks</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/etcd/">etcd</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/实用工具/">实用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/嵌入式/">嵌入式</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/翻译/">翻译</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/论文/">论文</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/随笔/">随笔</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/项目/">项目</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/随笔/" style="font-size: 15px;">随笔</a> <a href="/tags/简历/" style="font-size: 15px;">简历</a> <a href="/tags/高并发/" style="font-size: 15px;">高并发</a> <a href="/tags/6-824/" style="font-size: 15px;">6.824</a> <a href="/tags/object-Object/" style="font-size: 15px;">[object Object]</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/Bigtable/" style="font-size: 15px;">Bigtable</a> <a href="/tags/结构化数据存储系统/" style="font-size: 15px;">结构化数据存储系统</a> <a href="/tags/Axure/" style="font-size: 15px;">Axure</a> <a href="/tags/微信和小程序/" style="font-size: 15px;">微信和小程序</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/macOS/" style="font-size: 15px;">macOS</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Windows/" style="font-size: 15px;">Windows</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/bilibili源码/" style="font-size: 15px;">bilibili源码</a> <a href="/tags/bilibili-code/" style="font-size: 15px;">bilibili code</a> <a href="/tags/便笺/" style="font-size: 15px;">便笺</a> <a href="/tags/Sticky-Notes/" style="font-size: 15px;">Sticky Notes</a> <a href="/tags/elasticsearch/" style="font-size: 15px;">elasticsearch</a> <a href="/tags/Go/" style="font-size: 15px;">Go</a> <a href="/tags/Gateway/" style="font-size: 15px;">Gateway</a> <a href="/tags/搭建博客/" style="font-size: 15px;">搭建博客</a> <a href="/tags/github-pages/" style="font-size: 15px;">github pages</a> <a href="/tags/coding-Pages/" style="font-size: 15px;">coding Pages</a> <a href="/tags/apidoc/" style="font-size: 15px;">apidoc</a> <a href="/tags/Goroutine/" style="font-size: 15px;">Goroutine</a> <a href="/tags/Go-Micro/" style="font-size: 15px;">Go Micro</a> <a href="/tags/微服务/" style="font-size: 15px;">微服务</a> <a href="/tags/OpenTrace/" style="font-size: 15px;">OpenTrace</a> <a href="/tags/Prometheus/" style="font-size: 15px;">Prometheus</a> <a href="/tags/调试/" style="font-size: 15px;">调试</a> <a href="/tags/pprof/" style="font-size: 15px;">pprof</a> <a href="/tags/go-mod/" style="font-size: 15px;">go mod</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/MapReduce/" style="font-size: 15px;">MapReduce</a> <a href="/tags/Google-MapReduce/" style="font-size: 15px;">Google MapReduce</a> <a href="/tags/context/" style="font-size: 15px;">context</a> <a href="/tags/gin/" style="font-size: 15px;">gin</a> <a href="/tags/go-test/" style="font-size: 15px;">go test</a> <a href="/tags/httptest/" style="font-size: 15px;">httptest</a> <a href="/tags/plugin/" style="font-size: 15px;">plugin</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/lantern/" style="font-size: 15px;">lantern</a> <a href="/tags/chromium-谷歌访问助手/" style="font-size: 15px;">chromium 谷歌访问助手</a> <a href="/tags/nil-compare-interface/" style="font-size: 15px;">nil compare interface</a> <a href="/tags/Shell/" style="font-size: 15px;">Shell</a> <a href="/tags/exec/" style="font-size: 15px;">exec</a> <a href="/tags/goroutine/" style="font-size: 15px;">goroutine</a> <a href="/tags/基础/" style="font-size: 15px;">基础</a> <a href="/tags/读写文件/" style="font-size: 15px;">读写文件</a> <a href="/tags/Jetbrains/" style="font-size: 15px;">Jetbrains</a> <a href="/tags/Goland/" style="font-size: 15px;">Goland</a> <a href="/tags/Freescale/" style="font-size: 15px;">Freescale</a> <a href="/tags/C语言/" style="font-size: 15px;">C语言</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/后台运行/" style="font-size: 15px;">后台运行</a> <a href="/tags/nohub/" style="font-size: 15px;">nohub</a> <a href="/tags/MongoDB/" style="font-size: 15px;">MongoDB</a> <a href="/tags/文件共享-邮件/" style="font-size: 15px;">文件共享_邮件</a> <a href="/tags/markdown/" style="font-size: 15px;">markdown</a> <a href="/tags/explain/" style="font-size: 15px;">explain</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Gorm/" style="font-size: 15px;">Gorm</a> <a href="/tags/json/" style="font-size: 15px;">json</a> <a href="/tags/存储/" style="font-size: 15px;">存储</a> <a href="/tags/翻页/" style="font-size: 15px;">翻页</a> <a href="/tags/mongodb/" style="font-size: 15px;">mongodb</a> <a href="/tags/QT/" style="font-size: 15px;">QT</a> <a href="/tags/raft/" style="font-size: 15px;">raft</a> <a href="/tags/串口/" style="font-size: 15px;">串口</a> <a href="/tags/PCI/" style="font-size: 15px;">PCI</a> <a href="/tags/索引/" style="font-size: 15px;">索引</a> <a href="/tags/优化/" style="font-size: 15px;">优化</a> <a href="/tags/OpenSSL/" style="font-size: 15px;">OpenSSL</a> <a href="/tags/RSA加密解密/" style="font-size: 15px;">RSA加密解密</a> <a href="/tags/UDP/" style="font-size: 15px;">UDP</a> <a href="/tags/TCP/" style="font-size: 15px;">TCP</a> <a href="/tags/GFS/" style="font-size: 15px;">GFS</a> <a href="/tags/The-Google-File-System/" style="font-size: 15px;">The Google File System</a> <a href="/tags/函数/" style="font-size: 15px;">函数</a> <a href="/tags/ARM/" style="font-size: 15px;">ARM</a> <a href="/tags/Tiny6410/" style="font-size: 15px;">Tiny6410</a> <a href="/tags/bufio/" style="font-size: 15px;">bufio</a> <a href="/tags/ReadLine-ReadBytes/" style="font-size: 15px;">ReadLine - ReadBytes</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/Copy-On-Write/" style="font-size: 15px;">Copy-On-Write</a> <a href="/tags/COW-写时复制/" style="font-size: 15px;">COW - 写时复制</a> <a href="/tags/pxc/" style="font-size: 15px;">pxc</a> <a href="/tags/Percona-XtraDB-Cluster/" style="font-size: 15px;">Percona XtraDB Cluster</a> <a href="/tags/errgroup/" style="font-size: 15px;">errgroup</a> <a href="/tags/overlay/" style="font-size: 15px;">overlay</a> <a href="/tags/跨宿主机/" style="font-size: 15px;">跨宿主机</a> <a href="/tags/elastalert/" style="font-size: 15px;">elastalert</a> <a href="/tags/etcd备份/" style="font-size: 15px;">etcd备份</a> <a href="/tags/etcd/" style="font-size: 15px;">etcd</a> <a href="/tags/乐观锁/" style="font-size: 15px;">乐观锁</a> <a href="/tags/distributed-lock-分布式锁/" style="font-size: 15px;">distributed lock - 分布式锁</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/04/08/轻量化日志服务Loki分享/">轻量化日志服务Loki分享</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/03/23/RAFT常见问题与解答/">RAFT常见问题与解答</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/03/17/raft扩展论文-中文/">raft扩展论文(中文)</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/03/17/raft设置结构体的建议-6-824/">raft设置结构体的建议(6.824)</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/03/16/raft使用锁的建议-6-824/">raft使用锁的建议(6.824)</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/03/15/Golang插件使用/">Golang插件使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/12/10/Go-Modules设置私有库，以及支持HTTP的私有库操作/">Go Modules设置私有库，以及支持HTTP的私有库操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/12/03/Go中的nil和interface/">Go中的nil和interface</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/12/01/go-micro-config包解读/">go-micro config包解读</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/11/17/golang-fmt-Fscanf-读取文件数据异常问题/">golang fmt.Fscanf()读取文件数据异常问题</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://purelife.gitbook.io/little-design-powerpoint/" title="PowerPoint设计小册" target="_blank">PowerPoint设计小册</a><ul></ul><a href="https://masuit.com" title="懒得勤快的博客" target="_blank">懒得勤快的博客</a><ul></ul><a href="http://jiablog.top/" title="安防、监控、互联网全栈博客" target="_blank">安防、监控、互联网全栈博客</a><ul></ul><a href="https://yechenglin.top/" title="K8S大牛博客" target="_blank">K8S大牛博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">Pure Life.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
