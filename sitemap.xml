@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>chunlife.top/2021/04/08/%E8%BD%BB%E9%87%8F%E5%8C%96%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1Loki%E5%88%86%E4%BA%AB/</loc>
+    <loc>chunlife.top/2021/04/09/RAFT%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E7%AD%94/</loc>
     
-    <lastmod>2021-04-08T08:52:30.741Z</lastmod>
+    <lastmod>2021-04-09T08:06:56.793Z</lastmod>
     
   </url>
   
   <url>
-    <loc>chunlife.top/2021/03/23/RAFT%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E7%AD%94/</loc>
+    <loc>chunlife.top/2019/08/07/Go%E8%AF%AD%E8%A8%80GoLand%E2%80%94%E2%80%94%E6%8A%80%E5%B7%A7/</loc>
     
-    <lastmod>2021-04-08T02:32:14.890Z</lastmod>
+    <lastmod>2021-04-09T02:25:06.969Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>chunlife.top/2021/04/08/%E8%BD%BB%E9%87%8F%E5%8C%96%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1Loki%E5%88%86%E4%BA%AB/</loc>
+    
+    <lastmod>2021-04-08T08:52:30.741Z</lastmod>
     
   </url>
   
@@ -1129,13 +1136,6 @@
   </url>
   
   <url>
-    <loc>chunlife.top/2019/08/07/Go%E8%AF%AD%E8%A8%80GoLand%E2%80%94%E2%80%94%E6%8A%80%E5%B7%A7/</loc>
-    
-    <lastmod>2020-04-29T13:59:52.055Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>chunlife.top/2020/04/18/The-Google-File-System%E4%B8%AD%E6%96%87%E7%89%88/</loc>
     
     <lastmod>2020-04-20T03:11:34.318Z</lastmod>
@@ -1206,14 +1206,14 @@
   </url>
   
   <url>
-    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/</loc>
+    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0stack/</loc>
     
     <lastmod>2019-06-24T01:50:38.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0stack/</loc>
+    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/</loc>
     
     <lastmod>2019-06-24T01:50:38.000Z</lastmod>
     

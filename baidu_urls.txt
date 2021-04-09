@@ -1,5 +1,5 @@
+chunlife.top/2021/04/09/RAFT常见问题与解答/
 chunlife.top/2021/04/08/轻量化日志服务Loki分享/
-chunlife.top/2021/03/23/RAFT常见问题与解答/
 chunlife.top/2021/03/17/raft扩展论文-中文/
 chunlife.top/2021/03/17/raft设置结构体的建议-6-824/
 chunlife.top/2021/03/16/raft使用锁的建议-6-824/
