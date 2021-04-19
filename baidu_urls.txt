@@ -1,3 +1,4 @@
+chunlife.top/2021/04/19/根据Git-Commit生成Change-log/
 chunlife.top/2021/04/12/etcd中一致性读的一些理解/
 chunlife.top/2021/04/09/RAFT常见问题与解答/
 chunlife.top/2021/04/08/轻量化日志服务Loki分享/
@@ -17,4 +18,3 @@ chunlife.top/2020/10/20/win10-Linux子系统使用docker/
 chunlife.top/2020/09/23/golang实现的zip实用库/
 chunlife.top/2020/09/18/Github-Pages-和-Coding-Pages双绑定域名，方便国内外访问/
 chunlife.top/2020/09/18/优先级队列和时间轮/
-chunlife.top/2020/08/12/多网卡，多IP，如何拿到真实IP地址（主IP）/
