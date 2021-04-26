@@ -9,6 +9,7 @@
 <p>在实际的使用的这类服务中，写操作可能是比读操作少的，当我们需要优化读写性能时，就需要做一些功夫了。</p>
 <p>和ETCD中很像的zookeeper，两者定位可以说都是非常相似的，在zk中，当zk节点越多，读性能相对越强，而在ETCD中，明显和这种情况不同，因为读写请求都需要leader进行响应，且还需要做一个Raft Log同步的操作，这也就会造成，节点多了，反而会导致性能下降。<code>zk</code>使用的<code>zap</code>协议，类似Raft一般，也是去维护日志，但却不影响<code>zk</code>的读取性能。为什么会造成这一现象呢？</p>
 <p>ETCD是读操作是一致性读，不允许从不同节点读数据出现不一致的情况，所以即使是读数据的请求，也会被转发到leader节点来处理，这是已知的。<code>zk</code>则舍弃了这一点，允许client从节点读取数据，也就是说，允许出现数据与leader不一致的情况出现，但这个允许又是不太一样的。</p>
+<h3><span id="一致性">一致性</span></h3>
 <p><code>zk</code>的<a href="https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html" target="_blank" rel="noopener">官方文档</a>中，有对一致性保证的介绍：</p>
 <p><img src="image-20210425213435861.png" alt="Consistency Guarantees"></p>
 <p>来自于<a href="http://www.crazyant.net/2120.html" target="_blank" rel="noopener">翻译</a>。</p>
@@ -27,7 +28,8 @@
 <p>因此，ZooKeeper本身不保证所有服务器上同步发生变化，但ZooKeeper原语可用于构建更高级的函数，提供有用的客户端同步。</p>
 <p>zk的sync方法的解释：异步的实现当前进程与leader之间的指定path的数据同步；</p>
 </blockquote>
-<p>那一致性保证：</p>
+<h3><span id="解释">解释</span></h3>
+<p>那<code>zk</code>一致性保证的是：</p>
 <ul>
 <li>写请求是线性一致性的，读不是；</li>
 <li>任何给定的client操作的执行顺序是由client来决定的，其称之为FIFO Client Order；</li>
@@ -42,7 +44,35 @@
 <p>FIFO client order会应用于单个client的所有请求，如果执行了一个client端的写请求，将这个写请求发送给leader，leader还没有来得及对它进行处理或者提交，然后，再将一个读请求发送给了一个replica，为了保证FIFO client order，对于这个读请求的处理可能会延后处理，这个读请求可能得等到直到这个client看到并执行完前一个写请求才行，这就是FIFO client order所带来的影响——读的顺序和写的顺序一致。</p>
 <p>比较简单理解就是，如果我将某个变量的值设为17，然后读取该变量的值，如果它的值并不是17，那么这就很奇怪了，那么这就表明，这系统完全没按照顺序来执行我的请求。当client发送一个读请求，client知道client发送给leader的上一个写请求所携带该数据的<code>zxid</code>之类的信息，这个replica必须等到它在leader中看到这个<code>zxid</code>才能执行该读请求。</p>
 <p>以上就是，文档中所说的，<code>zk</code>没有保证<strong>跨客户端的强一致性</strong>。当然，我们也可以通过**sync()**函数，来保证我们读到最新值。其他时候，我们的读操作都不是一致性的。</p>
-</div><div id="donate"><link rel="stylesheet" type="text/css" href="/css/donate.css"><script type="text/javascript" src="/js/donate.js" successtext="复制成功!"></script><a class="pos-f tr3" id="github" href="https://github.com/Kaiyuan/donate-page" arget="_blank" title="Github"></a><div id="DonateText">Donate</div><ul class="list pos-f" id="donateBox"><li id="PayPal"><a href="https://paypal.me/zanghong" target="_blank"></a></li><li id="AliPay" qr="/img/zhifubao.png"></li><li id="WeChat" qr="/img/weixin.png"></li></ul><div class="pos-f left-100" id="QRBox"><div id="MainBox"></div></div></div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css"><p><span>本文标题：</span>zookeeper中的一致性</p><p><span>文章作者：</span>小师</p><p><span>发布时间：</span>2021-04-25</p><p><span>最后更新：</span>2021-04-25</p><p><span>原始链接：</span><a href="/2021/04/25/zookeeper中的一致性/">chunlife.top/2021/04/25/zookeeper中的一致性/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="chunlife.top/2021/04/25/zookeeper中的一致性/"></i></span></p><p><span>版权声明：</span>本站所有文章均采用知识共享署名4.0国际许可协议进行许可</p></div><br><div class="tags"></div><div class="post-nav"><a class="next" href="/2021/04/19/根据Git-Commit生成Change-log/">根据Git Commit生成Change log</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=1.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=1.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=1.0.0"></script><script>var gitalk = new Gitalk({
+<h3><span id="理论">理论</span></h3>
+<p>在理论计算机科学中，<strong>CAP定理</strong>（CAP theorem），又被称作<strong>布鲁尔定理</strong>（Brewer’s theorem），它指出对于一个分布式计算系统来说，不可能同时满足以下三点：</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E4%B8%80%E8%87%B4%E6%80%A7" target="_blank" rel="noopener">一致性</a>（Consistence) （分布式环境中，一致性是指多个副本之间，在同一时刻能否有同样的值）</li>
+<li>可用性（<a href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%94%A8%E6%80%A7" target="_blank" rel="noopener">Availability</a>）（系统提供的服务必须一直处于可用的状态。即使集群中一部分节点故障。）</li>
+<li>分区容错性（<a href="https://zh.wikipedia.org/w/index.php?title=Partition_tolerance&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">Network partitioning</a>）（以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择。）</li>
+</ul>
+<p>根据定理，分布式系统只能满足三项中的两项而不可能满足全部三项。理解CAP理论的最简单方式是想象两个节点分处分区两侧。允许至少一个节点更新状态会导致数据不一致，即丧失了C性质。如果为了保证数据一致性，将分区一侧的节点设置为不可用，那么又丧失了A性质。除非两个节点可以互相通信，才能既保证C又保证A，这又会导致丧失P性质。</p>
+<p>根据以上的<code>zk</code>的表现，我们可以了解一些<code>zk</code>分布式设计的倾向性。CAP定理，这是一个归纳总结出来的理论，这三者不可能被一个系统同时满足，不同的server有不同的倾向性，对于分布式系统，P（分区容错）是必须要满足的，系统在C、A之间进行取舍，例如，ETCD就是满足CP，不满足A(ETCD不能时刻保持响应，例如选举时)，同理，<code>zk</code>也是一个CP系统。</p>
+<p>而在实际的应用中，我们其实一般不怎么参考CAP理论去设计应用架构，因为我们有着很多分布式的基础组件，我们的服务不是分布式的，但我们用上了分布式的组件时，就可以借助它们从而实现分布式的特性。</p>
+<p>这里又要拉出一个理论了——<code>BASE</code>理论，它是三个词组的首字母缩写，即：</p>
+<ul>
+<li>基本可用（basically available），允许损失部分可用性，保证整体可用性；</li>
+</ul>
+<p>例如一个服务有问题，尝试失败后，进行熔断操作。</p>
+<ul>
+<li>
+<p>软状态（soft state），允许状态同步延迟（例如副本数据不一样），不会影响系统即可。</p>
+</li>
+<li>
+<p>最终一致性（eventually consistent），经过一段时间后，系统能够达到一致性。</p>
+</li>
+</ul>
+<p>在实际的设计中，有这两个需要注意一下的：</p>
+<ul>
+<li>架构进行简化，减少有状态的服务，尽量达到最终一致性。强一致性对服务来说设计比较复杂；</li>
+<li>服务异常能被自我修复；（人工修复，软件重启，异常发现等等操作。。。）</li>
+</ul>
+</div><div id="donate"><link rel="stylesheet" type="text/css" href="/css/donate.css"><script type="text/javascript" src="/js/donate.js" successtext="复制成功!"></script><a class="pos-f tr3" id="github" href="https://github.com/Kaiyuan/donate-page" arget="_blank" title="Github"></a><div id="DonateText">Donate</div><ul class="list pos-f" id="donateBox"><li id="PayPal"><a href="https://paypal.me/zanghong" target="_blank"></a></li><li id="AliPay" qr="/img/zhifubao.png"></li><li id="WeChat" qr="/img/weixin.png"></li></ul><div class="pos-f left-100" id="QRBox"><div id="MainBox"></div></div></div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css"><p><span>本文标题：</span>zookeeper中的一致性</p><p><span>文章作者：</span>小师</p><p><span>发布时间：</span>2021-04-25</p><p><span>最后更新：</span>2021-04-26</p><p><span>原始链接：</span><a href="/2021/04/25/zookeeper中的一致性/">chunlife.top/2021/04/25/zookeeper中的一致性/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="chunlife.top/2021/04/25/zookeeper中的一致性/"></i></span></p><p><span>版权声明：</span>本站所有文章均采用知识共享署名4.0国际许可协议进行许可</p></div><br><div class="tags"></div><div class="post-nav"><a class="next" href="/2021/04/19/根据Git-Commit生成Change-log/">根据Git Commit生成Change log</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=1.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=1.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=1.0.0"></script><script>var gitalk = new Gitalk({
   clientID: '01eb77bfd18de524243f',
   clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
   repo: 'younglifestyle.github.io',
