@@ -14,6 +14,8 @@
 <p>那这个时候就应该从工程性的角度去解决这个问题了。</p>
 <h3><span id="error的分类">Error的分类</span></h3>
 <p><img src="Error%E5%AD%A6%E4%B9%A0.png" alt="Error分类"></p>
+<p>以上概念大多出自dave的博客：<a href="https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully" target="_blank" rel="noopener">dont-just-check-errors-handle-them-gracefully</a></p>
+<p>dave不仅是pkg/errors包的开发者，也是Go小组的成员，所以在Go Error的发展进程中，都可以看到他对error处理的思想和预设的轨迹。</p>
 <h3><span id="grpc的error设计">gRPC的Error设计</span></h3>
 <p><a href="https://github.com/go-kratos/kratos" target="_blank" rel="noopener">kratos</a>和Go-Micro中有一种Error的设计，也就是将Error返回值也定义为pb文件，让其参与协议的传输。</p>
 <p>Server——&gt; <code>gRPC</code>——&gt;Server，类似于这样的传输。</p>
