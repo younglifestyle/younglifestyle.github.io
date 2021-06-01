@@ -1,4 +1,3 @@
-chunlife.top/2021/06/01/gRPC中错误的传递实践/Error学习/
 chunlife.top/2021/05/31/gRPC中错误的传递实践/
 chunlife.top/2021/04/30/MySQL事务中的MVCC/
 chunlife.top/2021/04/27/MySQL简单索引总结汇/
@@ -18,3 +17,4 @@ chunlife.top/2020/11/17/golang-fmt-Fscanf-读取文件数据异常问题/
 chunlife.top/2020/11/13/Go-Micro性能测试/
 chunlife.top/2020/11/05/Go-Micro使用pprof查找问题/
 chunlife.top/2020/11/04/块设备在Linux上读写直接使用IO/
+chunlife.top/2020/10/20/Go-Micro框架的使用/
