@@ -18,6 +18,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" -i -E --grep="^(\[INTERNAL\]|\[FEATURE\]|\[FIX\]|\[DOC\])"</span><br></pre></td></tr></table></figure>
 <p>仅导出特定的Label</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" -i -E --grep="^(\[INTERNAL\]|\[FEATURE\]|\[FIX\]|\[DOC\])*\[FEATURE\]"</span><br></pre></td></tr></table></figure>
+<p>指定两个Label</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:&quot;%s&quot; -i -E --grep=&quot;^(\[INTERNAL\]|\[FEATURE\]|\[FIX\]|\[DOC\])*\[FEATURE\]|\[FIX\]&quot;</span><br></pre></td></tr></table></figure>
 <p>$(git describe --tags --abbrev=0)…HEAD</p>
 <p>$(git describe --tags --abbrev=0)：提取最近的一次tag</p>
 <p>HEAD：则是最新的Commit</p>
