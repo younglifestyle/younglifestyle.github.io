@@ -20,6 +20,7 @@
 <blockquote>
 <p>图自：<a href="https://tech.meituan.com/2017/01/05/mgw.html" target="_blank" rel="noopener">https://tech.meituan.com/2017/01/05/mgw.html</a></p>
 </blockquote>
+<p>L4负载均衡，更准确的术语是“第 3/4 层负载平衡”——因为负载平衡器的决定基于两个 IP 地址源服务器和目标服务器（第 3 层）以及应用程序的 TCP 端口号（第 4 层）。“第 7 层负载平衡”更准确的术语可能是“第 5 层到第 7 层负载平衡”，因为 HTTP 结合了 OSI 第 5、6 和 7 层的功能。</p>
 <ul>
 <li>
 <p>问：图中为什么经过L4转发是直连到后端server，L7不是？</p>
@@ -134,6 +135,7 @@
 <p><a href="https://blog.csdn.net/ugly_girl/article/details/80901887" target="_blank" rel="noopener">冲突域和广播域的区分</a></p>
 <p><a href="https://blog.csdn.net/q235990/article/details/88177202" target="_blank" rel="noopener">网络: 快速理解NAT与NAPT的区别</a></p>
 <p><a href="https://blog.csdn.net/qq_35733751/article/details/80053091" target="_blank" rel="noopener">11-ICMP差错报告报文</a></p>
+<p><a href="https://www.nginx.com/resources/glossary/layer-4-load-balancing/" target="_blank" rel="noopener">What Is Layer 4 Load Balancing?</a></p>
 </div><div id="donate"><link rel="stylesheet" type="text/css" href="/css/donate.css"><script type="text/javascript" src="/js/donate.js" successtext="复制成功!"></script><a class="pos-f tr3" id="github" href="https://github.com/Kaiyuan/donate-page" arget="_blank" title="Github"></a><div id="DonateText">Donate</div><ul class="list pos-f" id="donateBox"><li id="PayPal"><a href="https://paypal.me/zanghong" target="_blank"></a></li><li id="AliPay" qr="/img/zhifubao.png"></li><li id="WeChat" qr="/img/weixin.png"></li></ul><div class="pos-f left-100" id="QRBox"><div id="MainBox"></div></div></div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css"><p><span>本文标题：</span>网络知识第一序章</p><p><span>文章作者：</span>小师</p><p><span>发布时间：</span>2022-03-17</p><p><span>最后更新：</span>2022-03-18</p><p><span>原始链接：</span><a href="/2022/03/17/网络知识第一序章/">chunlife.top/2022/03/17/网络知识第一序章/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="chunlife.top/2022/03/17/网络知识第一序章/"></i></span></p><p><span>版权声明：</span>本站所有文章均采用知识共享署名4.0国际许可协议进行许可</p></div><br><div class="tags"><a href="/tags/网络/"><i class="fa fa-tag"></i>网络</a></div><div class="post-nav"><a class="next" href="/2022/03/10/从Linux架构中学习开发/">从Linux架构中学习开发</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=1.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=1.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=1.0.0"></script><script>var gitalk = new Gitalk({
   clientID: '01eb77bfd18de524243f',
   clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
