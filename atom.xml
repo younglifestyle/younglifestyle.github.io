@@ -6,7 +6,7 @@
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
-  <updated>2022-03-28T13:49:55.646Z</updated>
+  <updated>2022-04-06T11:55:58.905Z</updated>
   <id>chunlife.top/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>服务治理——监控</title>
+    <link href="chunlife.top/2022/04/06/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E2%80%94%E2%80%94%E7%9B%91%E6%8E%A7/"/>
+    <id>chunlife.top/2022/04/06/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E2%80%94%E2%80%94%E7%9B%91%E6%8E%A7/</id>
+    <published>2022-04-06T09:35:56.000Z</published>
+    <updated>2022-04-06T11:55:58.905Z</updated>
+    
+    <content type="html"><![CDATA[<p>本篇将演示如何简单的搭建起整个监控平台。当前服务主要使用语言为Go，所以下面均用Go作为后端服务。</p><p>看下服务治理的大概定义：</p><blockquote><p><strong>1、服务注册与发现。</strong></p><p><strong>2、可观测性。</strong></p><p><strong>3、流量管理。</strong></p><p><strong>4、安全。</strong></p><p><strong>5、控制。</strong></p><p><a href="https://www.zhihu.com/question/56125281/answer/1099439237" target="_blank" rel="noopener">https://www.zhihu.com/question/56125281/answer/1099439237</a></p></blockquote><p>那监控就属于服务治理中的<code>可观测性</code>——常见的包括监控（Metrics）、日志（Logging）、调用追踪（Trace）。而本篇则是着重讲述监控这一点。</p><p>服务在运行时，会产生很多数据指标（CPU、内存占用，QPS等），而这些数据的产生则可由服务本身记录，例如发送一个HTTP请求，就加<code>1</code>，与逻辑无关，却又是与数据相关的搜集代码就是埋点操作。普通服务状态下，我们使用微服务框架去封装以及分层这一步操作。</p><h2 id="框架">框架</h2><p>对常见协议的Metrics收集，HTTP/GRPC。</p><p>目前业务上使用的是<a href="https://github.com/asim/go-micro" target="_blank" rel="noopener">Go-Micro</a>，不过Go-Micro没写HTTP的指标收集，这个比较简单，需要自己添加一下，使用gin自带的也可以。</p><p><a href="https://github.com/go-kratos/kratos" target="_blank" rel="noopener">Kratos</a>和<a href="https://github.com/zeromicro/go-zero" target="_blank" rel="noopener">go-zero</a>都自带了，比较省心。</p><h2 id="服务组件">服务组件</h2><p>使用docker-compose将服务一次性全部启动。</p><p><a href="https://github.com/Einsteinish/Docker-Compose-Prometheus-and-Grafana/blob/master/docker-compose.yml" target="_blank" rel="noopener">地址</a></p><p>在<code>docker-compose.yml</code>中加入，钉钉通知插件。</p><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#钉钉插件</span></span><br><span class="line">  webhook:</span><br><span class="line">    image: timonwong/prometheus-webhook-dingtalk:v1.<span class="number">4.0</span></span><br><span class="line">    restart: <span class="string">"always"</span></span><br><span class="line">    ports:</span><br><span class="line">      - <span class="number">8060</span>:<span class="number">8060</span></span><br><span class="line">    container_name: <span class="string">"dingtalk"</span>           </span><br><span class="line">    volumes:</span><br><span class="line">      - /etc/localtime:/etc/localtime:ro</span><br><span class="line">    command:</span><br><span class="line">      - <span class="string">'--ding.profile=webhook1=https://oapi.dingtalk.com/robot/send?access_token=xxxxxxxxxxx'</span> <span class="comment">#token指定钉钉</span></span><br><span class="line">    networks:</span><br><span class="line">      - monitor-net</span><br></pre></td></tr></table></figure><blockquote><p>Token从钉钉群里的自定义机器人中获取</p><p>另外注意，dingtalk组件版本为v1.4.0，v2版本后此启动方式将报错。V2版本<a href="https://github.com/timonwong/prometheus-webhook-dingtalk/issues/167#issuecomment-964741026" target="_blank" rel="noopener">使用</a>。</p><p>‘config.yml’ does not exist, try --help</p></blockquote><p><code>alertmanager/config.yml</code>修改：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">route:</span></span><br><span class="line"><span class="attr">    receiver:</span> <span class="string">'webhook'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">receivers:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">'webhook'</span></span><br><span class="line"><span class="attr">      webhook_configs:</span></span><br><span class="line"><span class="attr">          - send_resolved:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">            url:</span> <span class="string">'http://dingtalk:8060/dingtalk/webhook1/send'</span></span><br></pre></td></tr></table></figure><p><code>prometheus</code>的配置文件中，指定了<code>alertmanager</code>的地址，以及报警规则的文件位置：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Load and evaluate rules in this file every 'evaluation_interval' seconds.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">"alert.rules"</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line"><span class="attr">  alertmanagers:</span></span><br><span class="line"><span class="attr">  - scheme:</span> <span class="string">http</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">    - targets:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">'alertmanager:9093'</span></span><br></pre></td></tr></table></figure><p><code>alert.rules</code>文件：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">groups:</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">targets</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - alert:</span> <span class="string">monitor_service_down</span></span><br><span class="line"><span class="attr">    expr:</span> <span class="string">up</span> <span class="string">==</span> <span class="number">0</span></span><br><span class="line"><span class="attr">    for:</span> <span class="number">30</span><span class="string">s</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      severity:</span> <span class="string">critical</span></span><br><span class="line"><span class="attr">    annotations:</span></span><br><span class="line"><span class="attr">      summary:</span> <span class="string">"监控报警 - Monitor service non-operational"</span></span><br><span class="line"><span class="attr">      description:</span> <span class="string">"Service <span class="template-variable">&#123;&#123; $labels.instance &#125;&#125;</span> is down."</span></span><br></pre></td></tr></table></figure><p><code>grafana</code>需要饼图插件的话，可以下命令获取：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo docker <span class="built_in">exec</span> -it -u root grafana grafana-cli plug</span></span><br><span class="line">ins install grafana-piechart-panel</span><br></pre></td></tr></table></figure><h2 id="资料">资料</h2><h3 id="prometheus">prometheus</h3><p>prometheus服务自发现，不需要手动去修改文件，指定prometheus的监控程序。</p><p><a href="https://prometheus.io/blog/2018/07/05/implementing-custom-sd/" target="_blank" rel="noopener">https://prometheus.io/blog/2018/07/05/implementing-custom-sd/</a></p><p><a href="https://github.com/KatePang13/prometheus_docs/blob/main/content/blog/2015-08-17-service-discovery-with-etcd.md" target="_blank" rel="noopener">https://github.com/KatePang13/prometheus_docs/blob/main/content/blog/2015-08-17-service-discovery-with-etcd.md</a></p><p>简单实现：<a href="https://github.com/fabxc/prom_sd_example" target="_blank" rel="noopener">https://github.com/fabxc/prom_sd_example</a></p><p>promQL的语法：<a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-query-language" target="_blank" rel="noopener">https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-query-language</a></p><p>非常全的对prometheus各组件采集的文档：<a href="https://erdong.site/prometheus-notes/" target="_blank" rel="noopener">https://erdong.site/prometheus-notes/</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;本篇将演示如何简单的搭建起整个监控平台。当前服务主要使用语言为Go，所以下面均用Go作为后端服务。&lt;/p&gt;
+&lt;p&gt;看下服务治理的大概定义：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;1、服务注册与发现。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2、可观</summary>
+      
+    
+    
+    
+    <category term="微服务" scheme="chunlife.top/categories/微服务/"/>
+    
+    
+    <category term="monitor" scheme="chunlife.top/tags/monitor/"/>
+    
+    <category term="prometheus" scheme="chunlife.top/tags/prometheus/"/>
+    
+  </entry>
   
   <entry>
     <title>docker基础命令以及多阶段编译</title>
@@ -476,31 +506,6 @@
     
     
     <category term="protocol buffer" scheme="chunlife.top/tags/protocol-buffer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>etcd终于解决冲突了</title>
-    <link href="chunlife.top/2021/06/17/etcd%E7%BB%88%E4%BA%8E%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81%E4%BA%86/"/>
-    <id>chunlife.top/2021/06/17/etcd%E7%BB%88%E4%BA%8E%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81%E4%BA%86/</id>
-    <published>2021-06-17T14:51:16.000Z</published>
-    <updated>2021-06-17T15:10:34.769Z</updated>
-    
-    <content type="html"><![CDATA[<p>如题，etcd终于解决了一个老大难的问题，就是依赖问题，它简直不要让人再多痛苦了。</p><p>在新发布的etcd 3.5中，已经解决了对Go Module 的支持，并将之前大的 etcd 模块按功能进行了拆分，实现了 etcd 的模块化等，解决了各种 “go get fail”、依赖复杂、循环依赖、以及强制依赖过低的 <code>gRPC</code> 版本等问题，使用起来更简单了。</p><p>当然其还有其他各项改进，这里我并不关心。。。</p><p>如果你遇到过这样的问题：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> get <span class="keyword">go</span>.etcd.io/etcd/</span><br><span class="line"><span class="keyword">go</span> get: github.com/coreos/bbolt@none updating to</span><br><span class="line"> github.com/coreos/bbolt@v1<span class="number">.3</span><span class="number">.6</span>: parsing <span class="keyword">go</span>.mod:</span><br><span class="line"> module declares its path as: <span class="keyword">go</span>.etcd.io/bbolt</span><br><span class="line">         but was required as: github.com/coreos/bbolt</span><br><span class="line"><span class="keyword">go</span>.etcd.io/etcd imports</span><br><span class="line"> github.com/coreos/etcd/etcdmain imports</span><br><span class="line"> github.com/coreos/etcd/proxy/grpcproxy imports</span><br><span class="line"> google.golang.org/grpc/naming: cannot find module providing <span class="keyword">package</span> google.golang.org/grpc/naming</span><br></pre></td></tr></table></figure><p>或者还需要在go.mod中加入：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">replace google.golang.org/grpc =&gt; google.golang.org/grpc v1<span class="number">.26</span><span class="number">.0</span></span><br></pre></td></tr></table></figure><p>请直接出门使用<code>v3.5.0</code>这个千呼万唤始出来的版本。</p><hr><p>在之前的使用中，由于遇到了太多这样的问题，所以我参照了k8s的go.mod，其是这样使用的：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span>.etcd.io/etcd =&gt; <span class="keyword">go</span>.etcd.io/etcd v0<span class="number">.5</span><span class="number">.0</span>-alpha<span class="number">.5</span><span class="number">.0</span><span class="number">.20200910180754</span>-dd1b699fc489 <span class="comment">// ae9734ed278b is the SHA for git tag v3.4.13</span></span><br></pre></td></tr></table></figure><p>但这样的版本定义也只是一个权宜之计，在我看到etcd更新的时候，我再去看k8s，其也已经替换掉了之前的这个定义，使用v3.5.0版本了，不可以说是非常的清爽了。</p><p>社区提出了模块化的解决方案，也就是将 etcd 整个大的模块，按角色与功能拆分成 client、server、raft、api、tests、etcdctl、etcdutl 相关的子模块，具体如下图。</p><p><img src="image-20210617230730264-1623942452264.png" alt="示例"></p><p><img src="image-20210617230756892.png" alt="代码"></p><p>实际导入代码使用时，引入的包是这样的：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span>.etcd.io/etcd/api/v3 v3<span class="number">.5</span><span class="number">.0</span></span><br><span class="line"><span class="keyword">go</span>.etcd.io/etcd/client/v3 v3<span class="number">.5</span><span class="number">.0</span></span><br></pre></td></tr></table></figure><p>也就是说需要使用哪个模块，go get哪个具体模块就行：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get go.etcd.io/etcd/etcdctl/v3</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;如题，etcd终于解决了一个老大难的问题，就是依赖问题，它简直不要让人再多痛苦了。&lt;/p&gt;
-&lt;p&gt;在新发布的etcd 3.5中，已经解决了对Go Module 的支持，并将之前大的 etcd 模块按功能进行了拆分，实现了 etcd 的模块化等，解决了各种 “go get f</summary>
-      
-    
-    
-    
-    <category term="go" scheme="chunlife.top/categories/go/"/>
-    
-    
-    <category term="etcd" scheme="chunlife.top/tags/etcd/"/>
     
   </entry>
   
