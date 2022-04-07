@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>chunlife.top/2020/03/02/6-824-Lab-1-MapReduce/</loc>
+    
+    <lastmod>2022-04-07T03:25:59.118Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>chunlife.top/2022/01/03/Frangipani-A-Scalable-Distributed-File-System/</loc>
+    
+    <lastmod>2022-04-07T03:25:47.618Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>chunlife.top/2022/04/06/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E2%80%94%E2%80%94%E7%9B%91%E6%8E%A7/</loc>
+    
+    <lastmod>2022-04-07T03:25:35.659Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>chunlife.top/2020/08/01/%E4%BD%BF%E7%94%A8ETCD%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
+    
+    <lastmod>2022-04-07T03:25:27.323Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>chunlife.top/2020/05/08/%E5%9F%BA%E4%BA%8Eetcd3%E7%9A%84%E8%AE%BF%E9%97%AE%E5%BA%8F%E5%88%97%E5%8C%96%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%BD%AF%E4%BA%8B%E5%8A%A1%E5%86%85%E5%AD%98/</loc>
     
     <lastmod>2022-04-07T03:15:50.634Z</lastmod>
@@ -562,13 +590,6 @@
   </url>
   
   <url>
-    <loc>chunlife.top/2020/08/01/%E4%BD%BF%E7%94%A8ETCD%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
-    
-    <lastmod>2022-04-07T02:53:53.063Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>chunlife.top/2019/04/01/etcd%E5%88%86%E5%B8%83%E5%BC%8F%E4%B9%90%E8%A7%82%E9%94%81/</loc>
     
     <lastmod>2022-04-07T02:53:13.069Z</lastmod>
@@ -621,13 +642,6 @@
     <loc>chunlife.top/2018/09/14/mysql%E6%93%8D%E4%BD%9C-%E4%B8%8D%E5%AE%9A%E6%97%B6%E6%8C%81%E7%BB%AD%E8%A1%A5%E5%85%85/</loc>
     
     <lastmod>2022-04-07T02:50:37.582Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/03/02/6-824-Lab-1-MapReduce/</loc>
-    
-    <lastmod>2022-04-07T02:50:07.033Z</lastmod>
     
   </url>
   
@@ -1304,23 +1318,9 @@
   </url>
   
   <url>
-    <loc>chunlife.top/2022/01/03/Frangipani-A-Scalable-Distributed-File-System/</loc>
-    
-    <lastmod>2022-04-07T02:13:51.336Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>chunlife.top/2021/03/15/Golang%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8/</loc>
     
     <lastmod>2022-04-07T02:13:06.637Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2022/04/06/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E2%80%94%E2%80%94%E7%9B%91%E6%8E%A7/</loc>
-    
-    <lastmod>2022-04-07T02:12:20.992Z</lastmod>
     
   </url>
   
@@ -1332,114 +1332,9 @@
   </url>
   
   <url>
-    <loc>chunlife.top/2021/05/31/gRPC%E4%B8%AD%E9%94%99%E8%AF%AF%E7%9A%84%E4%BC%A0%E9%80%92%E5%AE%9E%E8%B7%B5/</loc>
-    
-    <lastmod>2021-06-01T03:55:17.453Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>chunlife.top/about/index.html</loc>
     
     <lastmod>2021-06-01T02:42:10.349Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2021/03/17/raft%E6%89%A9%E5%B1%95%E8%AE%BA%E6%96%87-%E4%B8%AD%E6%96%87/</loc>
-    
-    <lastmod>2021-03-17T06:57:42.441Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2019/05/28/%E8%A7%A3%E6%9E%90Content-Disposition%EF%BC%8C%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%90%8D/</loc>
-    
-    <lastmod>2021-03-16T03:00:39.550Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2019/08/15/usUSBMS%E5%A4%A7%E5%AE%B9%E9%87%8F%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87%E6%95%B0%E6%8D%AE%E9%80%9A%E4%BF%A1/</loc>
-    
-    <lastmod>2021-03-16T03:00:06.899Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2019/10/21/%E4%B8%80%E6%AC%A1Go%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%AE%B2%E8%A7%A3%EF%BC%88%E5%86%85%E9%83%A8%E5%88%86%E4%BA%AB%EF%BC%89/</loc>
-    
-    <lastmod>2021-03-16T02:53:36.110Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2019/11/05/linux-windows-go%E6%89%93%E5%BC%80%E5%BA%94%E7%94%A8/</loc>
-    
-    <lastmod>2020-07-21T12:31:35.292Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2019/12/05/%E6%9F%A5%E7%9C%8Blinux%E5%BD%93%E5%89%8Dshell/</loc>
-    
-    <lastmod>2020-07-21T12:30:51.666Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2019/06/27/%E6%A0%B9%E6%8D%AE%E4%B8%9A%E5%8A%A1%E6%94%B9%E9%80%A0ops-update/</loc>
-    
-    <lastmod>2020-07-21T12:30:10.867Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/01/29/%E9%80%9A%E8%BF%87%E6%96%B9%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%86%94%E6%96%AD%E5%99%A8/</loc>
-    
-    <lastmod>2020-07-21T12:29:57.688Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/02/09/%E6%A0%B9%E6%8D%AESQL%E6%96%87%E4%BB%B6%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90Markdown/</loc>
-    
-    <lastmod>2020-07-21T12:29:25.636Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/03/02/%E4%BD%BF%E7%94%A8GO%E5%AF%BC%E5%87%BAJIRA%E9%A1%B9%E7%9B%AE%E5%88%B0excel/</loc>
-    
-    <lastmod>2020-07-21T12:27:35.789Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/01/14/%E5%85%B3%E4%BA%8E%E6%B5%8B%E8%AF%95%E7%9A%84%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E5%BB%BA%E8%AE%AE/</loc>
-    
-    <lastmod>2020-07-21T12:25:52.325Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/04/18/The-Google-File-System%E4%B8%AD%E6%96%87%E7%89%88/</loc>
-    
-    <lastmod>2020-04-20T03:11:34.318Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/04/18/Bigtable%EF%BC%9A%E4%B8%80%E4%B8%AA%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E7%BB%93%E6%9E%84%E5%8C%96%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/</loc>
-    
-    <lastmod>2020-04-18T09:05:59.288Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>chunlife.top/2020/04/18/Google-MapReduce%E4%B8%AD%E6%96%87%E7%89%88/</loc>
-    
-    <lastmod>2020-04-18T09:00:21.773Z</lastmod>
     
   </url>
   
