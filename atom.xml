@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Pure Life</title>
   
-  <subtitle>young小师的一亩三分地</subtitle>
+  <subtitle>青天白日梦想之地</subtitle>
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
@@ -205,9 +205,9 @@
     <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
     
     
-    <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
-    
     <category term="论文" scheme="chunlife.top/tags/论文/"/>
+    
+    <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
     
   </entry>
   
@@ -307,9 +307,9 @@
     <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
     
     
-    <category term="幂等" scheme="chunlife.top/tags/幂等/"/>
-    
     <category term="Go" scheme="chunlife.top/tags/Go/"/>
+    
+    <category term="幂等" scheme="chunlife.top/tags/幂等/"/>
     
   </entry>
   
