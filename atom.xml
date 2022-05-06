@@ -6,7 +6,7 @@
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
-  <updated>2022-05-04T05:11:11.611Z</updated>
+  <updated>2022-05-06T08:52:08.099Z</updated>
   <id>chunlife.top/</id>
   
   <author>
@@ -17,11 +17,40 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>go-kratos HTTP方法支持以及FieldMask的使用简介</title>
+    <link href="chunlife.top/2022/05/06/go-kratos-HTTP%E6%96%B9%E6%B3%95%E6%94%AF%E6%8C%81%E4%BB%A5%E5%8F%8AFieldMask%E7%9A%84%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/"/>
+    <id>chunlife.top/2022/05/06/go-kratos-HTTP%E6%96%B9%E6%B3%95%E6%94%AF%E6%8C%81%E4%BB%A5%E5%8F%8AFieldMask%E7%9A%84%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/</id>
+    <published>2022-05-06T08:49:03.000Z</published>
+    <updated>2022-05-06T08:52:08.099Z</updated>
+    
+    <content type="html"><![CDATA[<p>kratos 的proto http 插件——<code>protoc-gen-go-http</code>，对body以及query参数只能选择其一支持，不论其<code>Method</code>为何种。query、vars支持同时存在。</p><p>源码可查：<code>go-kratos/kratos/cmd/protoc-gen-go-http/template.go</code>。</p><p>和<a href="https://cloud.google.com/apis/design/standard_methods?hl=zh-cn#create" target="_blank" rel="noopener">Google API 设计指南</a>上对方法的设计有点不一样。</p><table><thead><tr><th></th><th>GET</th><th>PUT</th><th>PUT</th><th>DELETE</th></tr></thead><tbody><tr><td>query (/hello?x=s)</td><td>支持( 不与body同时存在，后面同 )</td><td>支持</td><td>支持</td><td>支持</td></tr><tr><td>vars (/hello/{name})</td><td>支持( 不与body同时存在，后面同 )</td><td>支持</td><td>支持</td><td>支持</td></tr><tr><td>body</td><td>支持( 不与query同时存在，后面同 )</td><td>支持</td><td>支持</td><td>支持</td></tr></tbody></table><p>若当前工具不满足当下需求，可以选择以下两种方式进行解决。</p><h3 id="解决方式">解决方式</h3><h4 id="开发者自定义">开发者自定义</h4><p>对有需要query以及body的接口，不使用annotations注释对应接口，也就是不让工具生成胶水代码，由开发复制类似的胶水代码，在代码中自行写入HTTP router。</p><p>代码如下：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> _<span class="title">Greeter_PostHello0_HTTP_Handler</span><span class="params">(srv GreeterHTTPServer)</span> <span class="title">func</span><span class="params">(ctx http.Context)</span> <span class="title">error</span></span> &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(ctx http.Context)</span> <span class="title">error</span></span> &#123;</span><br><span class="line"><span class="keyword">var</span> in HelloRequest</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 在此处加入自定义的解析代码，其他代码修改极少</span></span><br><span class="line">        #########################################################</span><br><span class="line"><span class="keyword">if</span> err := ctx.BindQuery(&amp;in); err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> err := ctx.BindVars(&amp;in); err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">        ##############################################################</span><br><span class="line">        </span><br><span class="line">http.SetOperation(ctx, <span class="string">"/helloworld.Greeter/PostHello"</span>)</span><br><span class="line">h := ctx.Middleware(<span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context, req <span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span> &#123;</span><br><span class="line"><span class="keyword">return</span> srv.PostHello(ctx, req.(*HelloRequest))</span><br><span class="line">&#125;)</span><br><span class="line">out, err := h(ctx, &amp;in)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">reply := out.(*HelloReply)</span><br><span class="line"><span class="keyword">return</span> ctx.Result(<span class="number">200</span>, reply)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="修改工具">修改工具</h4><p>因<code>protoc-gen-go-http</code>的template中，对数据参数进行过判断，也就是我们需要把这里的判断删除，修改这个工具。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 让其不要是if else 判断，而是if， if 并行判断。</span></span><br><span class="line"><span class="keyword">var</span> in &#123;&#123;.Request&#125;&#125;</span><br><span class="line">&#123;&#123;- <span class="keyword">if</span> .HasBody&#125;&#125;</span><br><span class="line"><span class="keyword">if</span> err := ctx.Bind(&amp;in&#123;&#123;.Body&#125;&#125;); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123;- <span class="keyword">if</span> not (eq .Body <span class="string">""</span>)&#125;&#125;</span><br><span class="line"><span class="keyword">if</span> err := ctx.BindQuery(&amp;in); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">&#123;&#123;- end&#125;&#125;</span><br><span class="line">&#123;&#123;- <span class="keyword">else</span>&#125;&#125;</span><br><span class="line"><span class="keyword">if</span> err := ctx.BindQuery(&amp;in&#123;&#123;.Body&#125;&#125;); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">&#123;&#123;- end&#125;&#125;</span><br><span class="line">&#123;&#123;- <span class="keyword">if</span> .HasVars&#125;&#125;</span><br><span class="line"><span class="keyword">if</span> err := ctx.BindVars(&amp;in); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">&#123;&#123;- end&#125;&#125;</span><br></pre></td></tr></table></figure><p>由于这个工具是独立于<code>Kratos</code>存在的，所以，即使上游出现变动，也并不影响我们使用<code>Kratos</code>。</p><h3 id="header中解析数据">Header中解析数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// client发上来的header保存在此处</span><br><span class="line">transport.FromClientContext(ctx)</span><br><span class="line"></span><br><span class="line">transport.FromServerContext(ctx)</span><br><span class="line"></span><br><span class="line">和&quot;google.golang.org/grpc/metadata&quot;中的函数同：</span><br><span class="line">FromIncomingContext、FromOutgoingContext</span><br></pre></td></tr></table></figure><h3 id="请求中的参数解析">请求中的参数解析</h3><p>从test文件的示例可以看出，<code>github.com/go-kratos/kratos/encoding/form/form_test.go</code>，解析URL中的嵌套数据的方法：</p><h4 id="嵌套参数">嵌套参数</h4><figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">message HelloRequest &#123;</span><br><span class="line">  string name = 1;</span><br><span class="line">  message test &#123;</span><br><span class="line">    string one = 1;</span><br><span class="line">  &#125;</span><br><span class="line">  test ones = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>URL Query：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8000/helloworld?ones.one=1234</span><br></pre></td></tr></table></figure><h4 id="数组参数">数组参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Simples: []string&#123;&quot;3344&quot;, &quot;5566&quot;&#125;</span><br><span class="line"></span><br><span class="line">simples=3344&amp;simples=5566</span><br></pre></td></tr></table></figure><h4 id="fieldmask参数">FieldMask参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Field:     &amp;fieldmaskpb.FieldMask&#123;Paths: []string&#123;&quot;1&quot;, &quot;2&quot;&#125;&#125;</span><br><span class="line"></span><br><span class="line">field=1,2</span><br></pre></td></tr></table></figure><p><code>FieldMask</code>借助库：</p><p><a href="https://github.com/mennanov/fmutils" target="_blank" rel="noopener">https://github.com/mennanov/fmutils</a></p><p><a href="https://github.com/mennanov/fieldmask-utils" target="_blank" rel="noopener">https://github.com/mennanov/fieldmask-utils</a></p><p>不过当前Kratos对query中的<code>fieldmask</code>会进行大写转换，导致其字段无法进行有效的<code>Filter</code>。我提了一个<a href="https://github.com/go-kratos/kratos/issues/1969" target="_blank" rel="noopener">issue</a>。</p><p>fieldmask_utils是对字段名进行匹配，而不是tag名，而Kratos则会将Me ——&gt; _me，而其字段为<code>Me</code>，那库则无法将其正常过滤，正常GRPC协议不会出现此转换，此转换应该是Kratos HTTP decode request时发生的。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fieldmask_utils <span class="string">"github.com/mennanov/fieldmask-utils"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以对fieldmask做一下中间拦截，也可以直接返回</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">naming</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line"><span class="keyword">if</span> s == <span class="string">"foo"</span> &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="string">"Foo"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> s</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span> <span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">var</span> request UpdateUserRequest</span><br><span class="line">userDst := &amp;testproto.User&#123;&#125; <span class="comment">// a struct to copy to</span></span><br><span class="line">mask, _ := fieldmask_utils.MaskFromPaths(request.FieldMask.Paths, naming)</span><br><span class="line">fieldmask_utils.StructToStruct(mask, request.User, userDst)</span><br><span class="line"><span class="comment">// Only the fields mentioned in the field mask will be copied to userDst, other fields are left intact</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><code>FieldMask</code>用在response、request参数限制返回，以及指定参数的更新上。</p><p><a href="https://mp.weixin.qq.com/s/L7He7M4JWi84z1emuokjbQ" target="_blank" rel="noopener">Netflix API 设计实践: 使用FieldMask</a></p><p>request中指定paths，response根据paths mask参数，返回需要的字段。</p><p><a href="https://mp.weixin.qq.com/s/uRuejsJN37hdnCN4LLeBKQ" target="_blank" rel="noopener">Netflix API 设计实践(二): 使用FieldMask进行数据变更</a></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">message UpdateProductionRequest &#123;</span><br><span class="line">  ProductionUpdateOperation update = 1;</span><br><span class="line">  google.protobuf.FieldMask update_mask = 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">&quot;update&quot;: &#123;</span><br><span class="line">&quot;format&quot;: &quot;test&quot;</span><br><span class="line">&#125;</span><br><span class="line">&quot;update_mask&quot;: [</span><br><span class="line">&quot;format&quot;, </span><br><span class="line">&quot;schedule.planned_launch_date&quot;,</span><br><span class="line">]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>更新操作就会执行更新<code>format</code>，<code>schedule.planned_launch_date</code>两个字段，由于后者没有传值，变相的也就是将此字段置空。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;kratos 的proto http 插件——&lt;code&gt;protoc-gen-go-http&lt;/code&gt;，对body以及query参数只能选择其一支持，不论其&lt;code&gt;Method&lt;/code&gt;为何种。query、vars支持同时存在。&lt;/p&gt;
+&lt;p&gt;源码可查：&lt;co</summary>
+      
+    
+    
+    
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="go-kratos" scheme="chunlife.top/tags/go-kratos/"/>
+    
+    <category term="fieldmask" scheme="chunlife.top/tags/fieldmask/"/>
+    
+    <category term="Protobuff" scheme="chunlife.top/tags/Protobuff/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Meituan-Leaf Golang实现</title>
     <link href="chunlife.top/2022/05/04/Meituan-Leaf-Golang%E5%AE%9E%E7%8E%B0/"/>
     <id>chunlife.top/2022/05/04/Meituan-Leaf-Golang%E5%AE%9E%E7%8E%B0/</id>
     <published>2022-05-04T04:44:14.000Z</published>
-    <updated>2022-05-04T05:11:11.611Z</updated>
+    <updated>2022-05-06T08:50:42.180Z</updated>
     
     <content type="html"><![CDATA[<p>这一部分由于内部技术栈的问题，需要统一，同时，需要有更多的改造，接入公司内部RPC，导入一致的服务治理等需求，所以需要一个Go版本的发号器，搜了网上很多版本，发现并没有<code>Leaf</code>的替代版本，而Leaf的实现细节有很多文章都分析过了，这样看起来移植一下也不困难了。</p><p>美团Leaf的技术细节在官方文档中介绍的很详细，这里参考其技术实现细节<a href="https://tech.meituan.com/2017/04/21/mt-leaf.html" target="_blank" rel="noopener">Leaf——美团点评分布式ID生成系统</a>。</p><h3 id="遇到的问题">遇到的问题</h3><h4 id="号段模式">号段模式</h4><p>在号段模式时，碰到的问题主要有两个：</p><ul><li>锁竞的问题</li><li>context传递的问题</li></ul><p>锁竞争的问题是在请求中使用锁，但我在最初的版本中，当并发比较大时，就会出现死锁的问题。后面使用闭包+<code>defer</code>解决了此问题。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> value := <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int64</span></span> &#123;</span><br><span class="line">    cacheSegmentBuffer.RLock()</span><br><span class="line">    <span class="keyword">defer</span> cacheSegmentBuffer.RUnLock()</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">&#125;(); value != <span class="number">0</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>context传递的问题，这个其实在<code>gin</code>中就碰到过，在handler中开协程出去，若是将handler中的context传递过去，这里面就会出问题，因为handler中的context在handler主体执行完后，会执行context的cancel（若该上下文其为timeout context），也就会导致协程若是用到了这个上下文也会被cancel。</p><p>所以这里我改为在传递的时候传入<code>context.TODO()</code>。</p><h4 id="雪花算法">雪花算法</h4><p>这里面遇到的问题，就是在创建实例节点的时候，没有自增序号的问题，我这里借助<code>etcd</code>的迷你事务<code>TXN</code>，通过乐观锁形式的创建方式，去创建<code>key</code>，这样来防止创建重复的键值。</p><h3 id="输出">输出</h3><p><a href="https://github.com/younglifestyle/seg-server" target="_blank" rel="noopener">https://github.com/younglifestyle/seg-server</a></p><h3 id="参考">参考</h3><p><a href="https://blog.csdn.net/bskfnvjtlyzmv867/article/details/90175306" target="_blank" rel="noopener">美团Leaf源码——号段模式源码解析</a></p><p><a href="https://blog.csdn.net/bskfnvjtlyzmv867/article/details/90247036?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165120147516782184621735%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=165120147516782184621735&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-2-90247036.nonecase&amp;utm_term=leaf&amp;spm=1018.2226.3001.4450" target="_blank" rel="noopener">美团Leaf源码——snowflake模式源码解析</a></p><p><a href="https://blog.51cto.com/u_12497420/3357165" target="_blank" rel="noopener">美团Leaf snowflake模式详解</a></p>]]></content>
     
@@ -36,7 +65,9 @@
     <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
     
     
-    <category term="Go - Leaf" scheme="chunlife.top/tags/Go-Leaf/"/>
+    <category term="Go" scheme="chunlife.top/tags/Go/"/>
+    
+    <category term="Leaf" scheme="chunlife.top/tags/Leaf/"/>
     
   </entry>
   
@@ -229,9 +260,9 @@
     <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
     
     
-    <category term="论文" scheme="chunlife.top/tags/论文/"/>
-    
     <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
+    
+    <category term="论文" scheme="chunlife.top/tags/论文/"/>
     
   </entry>
   
@@ -331,9 +362,9 @@
     <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
     
     
-    <category term="Go" scheme="chunlife.top/tags/Go/"/>
-    
     <category term="幂等" scheme="chunlife.top/tags/幂等/"/>
+    
+    <category term="Go" scheme="chunlife.top/tags/Go/"/>
     
   </entry>
   
@@ -520,29 +551,6 @@
     
     
     <category term="GRPC" scheme="chunlife.top/tags/GRPC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>databus源码浅析</title>
-    <link href="chunlife.top/2021/08/03/databus%E5%AD%A6%E4%B9%A0/"/>
-    <id>chunlife.top/2021/08/03/databus%E5%AD%A6%E4%B9%A0/</id>
-    <published>2021-08-03T13:41:08.000Z</published>
-    <updated>2022-04-07T02:30:15.920Z</updated>
-    
-    <content type="html"><![CDATA[<p>消息队列一直是一个神兵利器，我之前也写过用于简化kafka消费和生产的中间件，其完整版也尝试在一些项目中使用。效果也还不错，这里也是巧然了解到可以增加Kafka单一<em>partition</em>并发消费能力的方法（为了保证partition而使用单一线程进行消费），也找到了解决方法，这里是对代码的一些分析，完整的注释解析就不放了。</p><a id="more"></a><p><img src="Databus%E5%AD%A6%E4%B9%A0.png" alt="Databus学习"></p><p>分片和链表的两者结合，分片可提高并发能力的同时，按链表顺序逐个回收数据，又能保证对不同shard的统一partition顺序保证，这样的设计还是非常巧妙的。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;消息队列一直是一个神兵利器，我之前也写过用于简化kafka消费和生产的中间件，其完整版也尝试在一些项目中使用。效果也还不错，这里也是巧然了解到可以增加Kafka单一&lt;em&gt;partition&lt;/em&gt;并发消费能力的方法（为了保证partition而使用单一线程进行消费），也找到了解决方法，这里是对代码的一些分析，完整的注释解析就不放了。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="消息队列" scheme="chunlife.top/tags/消息队列/"/>
-    
-    <category term="databus" scheme="chunlife.top/tags/databus/"/>
     
   </entry>
   

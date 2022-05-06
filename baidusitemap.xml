@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>chunlife.top/2022/05/06/go-kratos-HTTP%E6%96%B9%E6%B3%95%E6%94%AF%E6%8C%81%E4%BB%A5%E5%8F%8AFieldMask%E7%9A%84%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/</loc>
+    <lastmod>2022-05-06</lastmod>
+  </url>  <url>
     <loc>chunlife.top/2022/05/04/Meituan-Leaf-Golang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2022-05-04</lastmod>
+    <lastmod>2022-05-06</lastmod>
   </url>  <url>
     <loc>chunlife.top/2020/04/18/The-Google-File-System%E4%B8%AD%E6%96%87%E7%89%88/</loc>
     <lastmod>2022-04-08</lastmod>
@@ -619,10 +622,10 @@
     <loc>chunlife.top/2019/06/04/%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97%E2%80%94%E2%80%94Golang/</loc>
     <lastmod>2021-09-23</lastmod>
   </url>  <url>
-    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/</loc>
+    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0stack/</loc>
     <lastmod>2019-06-24</lastmod>
   </url>  <url>
-    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0stack/</loc>
+    <loc>chunlife.top/2019/06/23/go%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/</loc>
     <lastmod>2019-06-24</lastmod>
   </url>
 </urlset>
