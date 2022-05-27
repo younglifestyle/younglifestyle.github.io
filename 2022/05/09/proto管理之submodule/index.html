@@ -6,6 +6,11 @@
   s.parentNode.insertBefore(hm, s);
   })();
 </script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">proto管理之submodule</h1><a id="logo" href="/.">Pure Life</a><p class="description">青天白日梦想之地</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">proto管理之submodule</h1><div class="post-meta">2022-05-09<span> | </span><span class="category"><a href="/categories/编程技术/">编程技术</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#子仓目录"><span class="toc-number">1.</span> <span class="toc-text">子仓目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#项目引入"><span class="toc-number">2.</span> <span class="toc-text">项目引入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#proto文件"><span class="toc-number">3.</span> <span class="toc-text">proto文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-number">4.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实践例子"><span class="toc-number">5.</span> <span class="toc-text">实践例子</span></a></li></ol></div></div><div class="post-content"><p>使用Git Submodule方式管理proto文件，各项目直接依赖IDL文件本身，依赖源头均来自git子仓，保证依赖源的唯一性。对齐各服务间的proto文件版本。</p>
+<p>依赖问题引发的问题是很多的，对于依赖的管理也会出现很多，例如：</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Dependency_hell" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Dependency_hell</a></p>
+<p><a href="https://zh.m.wikipedia.org/zh-hans/%E7%9B%B8%E4%BE%9D%E6%80%A7%E5%9C%B0%E7%8B%B1" target="_blank" rel="noopener">https://zh.m.wikipedia.org/zh-hans/%E7%9B%B8%E4%BE%9D%E6%80%A7%E5%9C%B0%E7%8B%B1</a></p>
+</blockquote>
 <h2 id="子仓目录">子仓目录</h2>
 <p>参考Google家的库<a href="https://github.com/googleapis/googleapis" target="_blank" rel="noopener">googleapis</a>，定下自家目录格式：</p>
 <table>
@@ -59,6 +64,9 @@
 <p><code>option go_package</code>： protoc 编译时，生成的路径地址，可以用go_out设置生成的路径，使用<code>source_relative</code>让文件生成在相对路径中。</p>
 <p>proto文件语法以及版本追踪工具：</p>
 <ul>
+<li>
+<p><a href="https://github.com/bufbuild/buf" target="_blank" rel="noopener">buf</a> 推荐</p>
+</li>
 <li>
 <p><a href="https://github.com/nilslice/protolock" target="_blank" rel="noopener">protolock</a></p>
 </li>
