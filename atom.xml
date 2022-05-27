@@ -6,7 +6,7 @@
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
-  <updated>2022-05-07T01:55:37.932Z</updated>
+  <updated>2022-05-27T02:14:54.558Z</updated>
   <id>chunlife.top/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>proto管理之submodule</title>
+    <link href="chunlife.top/2022/05/09/proto%E7%AE%A1%E7%90%86%E4%B9%8Bsubmodule/"/>
+    <id>chunlife.top/2022/05/09/proto%E7%AE%A1%E7%90%86%E4%B9%8Bsubmodule/</id>
+    <published>2022-05-09T09:02:40.000Z</published>
+    <updated>2022-05-27T02:14:54.558Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用Git Submodule方式管理proto文件，各项目直接依赖IDL文件本身，依赖源头均来自git子仓，保证依赖源的唯一性。对齐各服务间的proto文件版本。</p><h2 id="子仓目录">子仓目录</h2><p>参考Google家的库<a href="https://github.com/googleapis/googleapis" target="_blank" rel="noopener">googleapis</a>，定下自家目录格式：</p><table><thead><tr><th>目录</th><th>举栗</th></tr></thead><tbody><tr><td>总目录（子仓）</td><td>xxxxxapis</td></tr><tr><td>项目名</td><td>cloud / ads / monitor</td></tr><tr><td>模块名</td><td>device / datacatalog / user</td></tr><tr><td>版本</td><td>v1 /  v2  /  v3</td></tr><tr><td>文件</td><td>service.proto、error.proto</td></tr></tbody></table><blockquote><p>子仓不保存IDL文件生成的中间文件，只保存原始文件。</p></blockquote><h2 id="项目引入">项目引入</h2><ul><li>引入子仓</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule add https://xxxx.com/xxxx/myapis</span><br></pre></td></tr></table></figure><p>子仓在引入后，不去更新，子仓会呈现固定的版本。</p><img src="image-20220510094907212.png" alt="目录结构" style="zoom: 80%;"><p>更新子仓，合并上游版本变化</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 进入子仓内，运行命令</span><br><span class="line">$ git fetch</span><br><span class="line">$ git merge origin/master</span><br><span class="line"></span><br><span class="line">// 也可以在主仓中，运行命令</span><br><span class="line">$ git submodule update --remote myapis</span><br></pre></td></tr></table></figure><p>更多关于子仓的操作命令，参考：<a href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97" target="_blank" rel="noopener">Git-工具-子模块</a>，也可参考下图。</p><p>脑图分享链接：<a href="https://naotu.baidu.com/file/df1c4f51d9617121e17b31ba6e577d3a?token=280c1c34c3b920e4" target="_blank" rel="noopener">https://naotu.baidu.com/file/df1c4f51d9617121e17b31ba6e577d3a?token=280c1c34c3b920e4</a></p><img src="Git-Sub子仓.png" alt="Git-Sub子仓" style="zoom:80%;"><h2 id="proto文件">proto文件</h2><p>proto文件中，<code>package</code>、<code>option go_package</code>，这两个参数是我们需要注意的：</p><p><code>package</code>：即别的proto文件在引用该文件后，其使用的索引前缀。</p><p><code>option go_package</code>： protoc 编译时，生成的路径地址，可以用go_out设置生成的路径，使用<code>source_relative</code>让文件生成在相对路径中。</p><p>proto文件语法以及版本追踪工具：</p><ul><li><p><a href="https://github.com/nilslice/protolock" target="_blank" rel="noopener">protolock</a></p></li><li><p><a href="https://github.com/googleapis/api-linter" target="_blank" rel="noopener">api-linter</a></p></li></ul><h2 id="编译">编译</h2><p>由于依赖原始文件，在拉取到子仓后，或是更新到最新子仓后，proto文件都应是再次编译，故在<code>Makefile</code>中，<code>build</code>命令中，需要加入重新编译proto文件的操作，让proto文件每次都保持最新状态，防止中间版本的出现。</p><blockquote><p>也可以使用例如<em>BAZEL</em>编译，声名依赖，指定proto文件。</p></blockquote><h2 id="实践例子">实践例子</h2><p>案例：<a href="https://github.com/younglifestyle/kratos-layout" target="_blank" rel="noopener">kratos-layout</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;使用Git Submodule方式管理proto文件，各项目直接依赖IDL文件本身，依赖源头均来自git子仓，保证依赖源的唯一性。对齐各服务间的proto文件版本。&lt;/p&gt;
+&lt;h2 id=&quot;子仓目录&quot;&gt;子仓目录&lt;/h2&gt;
+&lt;p&gt;参考Google家的库&lt;a href=&quot;htt</summary>
+      
+    
+    
+    
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="Protobuff" scheme="chunlife.top/tags/Protobuff/"/>
+    
+    <category term="submodule" scheme="chunlife.top/tags/submodule/"/>
+    
+  </entry>
   
   <entry>
     <title>go-kratos HTTP方法支持以及FieldMask的使用简介</title>
@@ -260,9 +288,9 @@
     <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
     
     
-    <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
-    
     <category term="论文" scheme="chunlife.top/tags/论文/"/>
+    
+    <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
     
   </entry>
   
@@ -521,36 +549,6 @@
     
     
     <category term="资料" scheme="chunlife.top/tags/资料/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>gRPC负载均衡</title>
-    <link href="chunlife.top/2021/08/29/%E5%AD%A6%E4%B9%A0gRPC%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
-    <id>chunlife.top/2021/08/29/%E5%AD%A6%E4%B9%A0gRPC%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</id>
-    <published>2021-08-29T13:45:16.000Z</published>
-    <updated>2022-04-07T02:28:28.091Z</updated>
-    
-    <content type="html"><![CDATA[<p>服务内部访问中，负载被均匀地分发给所有的后端服务，在任何时刻，最忙和最不忙的节点永远消耗同样数量的CPU。负载均衡（Load Balancing）是微服务可用性比较重要的一个技术，其目标：</p><ul><li><p>均衡的流量分发。</p></li><li><p>可靠的识别异常节点。</p></li><li><p>scale-out，增加同质节点扩容。</p></li><li><p>减少错误，提高可用性。</p></li></ul><p>一般我们选择后端通信协议为gRPC。</p><h2 id="为什么使用grpc">为什么使用gRPC</h2><p>gRPC是一个先进的RPC协议，它是基于HTTP/2实现的。HTTP/2是一个7层协议，运行在TCP协议之上。相比传统的HTTP/REST/JSON机制，gRPC有很多优点，如：</p><ol><li>它使用了二进制协议(HTTP/2)</li><li>在一个连接(HTTP/2)上复用多个请求</li><li>头部压缩(HTTP/2)</li><li>强类型服务和消息定义(Protobuf)</li><li>为多种语言实现了常用的客户端/服务器库</li></ol><p>此外，gRPC无缝集成了如服务发现，命名解析，负载均衡，追踪和监控等生态组件。</p><h2 id="负载均衡的分类介绍">负载均衡的分类介绍</h2><p><img src="image-20210829233327630.png" alt="负载均衡"></p><blockquote><p><a href="https://grpc.io/blog/grpc-load-balancing/" target="_blank" rel="noopener">https://grpc.io/blog/grpc-load-balancing/</a></p><p><a href="https://www.cnblogs.com/charlieroro/p/14312362.html" target="_blank" rel="noopener">https://www.cnblogs.com/charlieroro/p/14312362.html</a></p></blockquote><p>关于gRPC内置方案的介绍：</p><p><a href="https://github.com/grpc/grpc/blob/master/doc/load-balancing.md" target="_blank" rel="noopener">https://github.com/grpc/grpc/blob/master/doc/load-balancing.md</a></p><p>中文类的博客：</p><p><a href="https://pandaychen.github.io/2019/07/11/GRPC-SERVICE-DISCOVERY/" target="_blank" rel="noopener">https://pandaychen.github.io/2019/07/11/GRPC-SERVICE-DISCOVERY/</a></p><hr><h2 id="grpc-内置的方案">gRPC 内置的方案</h2><p>gRPC 的内置方案如下图所示：</p><p><img src="2107536928-58c636c2d6702_articlex" alt="内置方案"></p><p>gRPC 在官网文档中提供了实现 LB 的思路，并在不同语言的 gRPC 代码 API 中已提供了命名解析和负载均衡接口供扩展。默认提供了 <a href="https://github.com/gRPC/gRPC-go/blob/v1.8.0/resolver/resolver.go" target="_blank" rel="noopener">DNS-resolver 的实现</a>，接口相当规范，实现起来也不复杂，只需要实现服务注册（Registry）和服务监听 + 解析（Watcher+Resolver）的逻辑就行了，这里简单介绍其基本实现过程：</p><ol><li>构建注册中心，这里注册中心一般要求具备分布式一致性（满足 CAP 定理的 AP 或 CP）的高可用的组件集群，如 Zookeeper、Consul、Etcd 等</li><li>构建 gRPC 服务端的注册逻辑，服务启动后定时向注册中心注册自身的关键信息（一般开启新的 groutine 来完成），至少包含 IP 和端口，其他可选信息，如自身的负载信息（CPU 和 Memory）、当前实时连接数等，这些辅助信息有助于帮助系统更好的执行 LB 算法</li><li>gRPC 客户端向注册中心发出服务解析请求，注册中心将请求中关联的所有服务的信息返回给 gRPC 客户端，客户端与所有在线的服务建立起 HTTP2 长连接</li><li>gRPC 客户端发起 RPC 调用，根据 LB 均衡器中实现的负载均衡策略（gRPC 中默认提供的算法是 RoundRobin），选择其中一 HTTP2 长连接进行通信，即 LB 策略决定哪个子通道 - 即哪个 gRPC 服务器将接收请求</li></ol><h2 id="grpc-负载均衡的运行机制">gRPC 负载均衡的运行机制</h2><p>gRPC 提供了负载均衡实现的用户侧接口，我们可以非常方便的定制化业务的负载均衡策略，为了理解 gRPC 的负载均衡的实现机制，后续博客中我会分析下 <code>gRPC</code> 实现负载均衡的代码。</p><p><img src="image-20210829233910805-1630251552094.png" alt="grpc-lb-basic"></p><ol><li>Resolver<ul><li>解析器，用于从注册中心实时获取当前服务端的列表，同步发送给 Balancer</li></ul></li><li>Balancer<ul><li>平衡器，一是接收从 Resolver 发送的服务端列表，建立并维护（长）连接状态；二是每次当 Client 发起 Rpc 调用时，按照一定算法从连接池中选择一个连接进行 Rpc 调用</li></ul></li><li>Register<ul><li>注册，用于服务端初始化和在线时，将自己信息上报到注册中心，主要信息有 Ip，端口等</li></ul></li></ol><h2 id="负载均衡的算法及实现">负载均衡的算法及实现</h2><p>在实践中，如何选取负载均衡策略是一个很有趣的话题，例如 Nginx 的 <code>upstream</code> 机制中就有很多经典的 LB 策略，如带权重的轮询 <a href="https://github.com/nginx/nginx/blob/master/src/http/ngx_http_upstream_round_robin.c" target="_blank" rel="noopener">Weight-RoundRobin</a>，一般常用的负载均衡方法有如下几种：</p><ol><li>RoundRobin（轮询）</li><li>Weight-RoundRobin（加权轮询）<ul><li>不同的后端服务器可能机器的配置和当前系统的负载并不相同，因此它们的抗压能力也不相同。给配置高、负载低的机器配置更高的权重，而配置低、负载高的机器，给其分配较低的权重，降低其系统负载，加权轮询能很好地处理这一问题，并将请求顺序且按照权重分配到后端。</li></ul></li><li>Random（随机）</li><li>Weight-Random（加权随机）<ul><li>通过系统的随机算法，根据后端服务器的列表随机选取其中的一台服务器进行访问</li></ul></li><li>源地址哈希法<ul><li>源地址哈希的思想是根据获取客户端的 IP 地址，通过哈希函数计算得到的一个数值，用该数值对服务器列表的大小进行取模运算，得到的结果便是客服端要访问服务器的序号。采用源地址哈希法进行负载均衡，同一 IP 地址的客户端，当后端服务器列表不变时，它每次都会映射到同一台后端服务器进行访问</li></ul></li><li>最小连接数法<ul><li>最小连接数算法比较灵活和智能，由于后端服务器的配置不尽相同，对于请求的处理有快有慢，它是根据后端服务器当前的连接情况，动态地选取其中当前积压连接数最少的一台服务器来处理当前的请求，尽可能地提高后端服务的利用效率，将负责合理地分流到每一台服务器</li></ul></li><li>一致性哈希算法<ul><li>常见的是 <code>Ketama</code> 算法，该算法是用来解决 <code>cache</code> 失效导致的缓存穿透的问题的，当然也可以适用于 gRPC 长连接的场景</li></ul></li></ol><h2 id="负载均衡存在的问题">负载均衡存在的问题</h2><p>发现在 backend 之间的 load 差异比较大：</p><ul><li><p><em>每个请求的处理成本不同。</em></p></li><li><p><em>物理机环境的差异 :</em></p><ul><li><p><em>服务器很难强同质性。</em></p></li><li><p><em>存在共享资源争用（内存缓存、带宽、IO等）。</em></p></li></ul></li></ul><p>所以负载均衡的算法都是为了有效的考虑：负载+可用性。</p><p>这里我后期比较需要去了解的p2c算法，这个算法在kratos、go-zero以及Netflix中都有实现，且也是在基于gRPC这套接口实现。</p><hr><p>近期又学习到了有界负载均衡（consistent-hashing-with-bounded-loads），是谷歌推出的一种在一致性哈希算法的改良。</p><p>p2c是随机选两个server，根据cpu/mem等其他参考指标打分，选择分数高的。有界哈希则是限制一个最大负载，选择节点的时候，达到负载的节点将被跳过，转移到其他节点上。</p><p>当然，其在考量上，没有考虑到实际server的压力，仅通过请求负载来判断，没有p2c从server上的考量，但其终究只是一种一致性哈希算法的升级。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;服务内部访问中，负载被均匀地分发给所有的后端服务，在任何时刻，最忙和最不忙的节点永远消耗同样数量的CPU。负载均衡（Load Balancing）是微服务可用性比较重要的一个技术，其目标：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;均衡的流量分发。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;</summary>
-      
-    
-    
-    
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="GRPC" scheme="chunlife.top/tags/GRPC/"/>
     
   </entry>
   
