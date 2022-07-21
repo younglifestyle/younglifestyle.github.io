@@ -1,3 +1,4 @@
+chunlife.top/2022/07/21/Yapi的安装以及使用/
 chunlife.top/2022/06/24/MySQL-实战45讲-学习笔记/
 chunlife.top/2022/06/16/go-kratos写代码浅记/
 chunlife.top/2022/05/09/proto管理之submodule/
@@ -17,4 +18,3 @@ chunlife.top/2021/10/17/API幂等的模型简略/
 chunlife.top/2021/09/30/Go并发模型-pipeline中FAN模式-fanout，fanin/
 chunlife.top/2021/09/29/Go里面竟然还有单飞？—-singleflight/
 chunlife.top/2021/09/22/cache-aside模型保持数据一致性/
-chunlife.top/2021/09/16/使用docker-compose创建mongoDB副本集/
