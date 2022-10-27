@@ -6,7 +6,7 @@
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
-  <updated>2022-07-29T03:09:17.396Z</updated>
+  <updated>2022-10-27T08:12:41.613Z</updated>
   <id>chunlife.top/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Golang oracle使用</title>
+    <link href="chunlife.top/2022/10/27/Golang-oracle%E4%BD%BF%E7%94%A8/"/>
+    <id>chunlife.top/2022/10/27/Golang-oracle%E4%BD%BF%E7%94%A8/</id>
+    <published>2022-10-27T07:05:38.000Z</published>
+    <updated>2022-10-27T08:12:41.613Z</updated>
+    
+    <content type="html"><![CDATA[<p>在<code>Go</code>语言中，对<code>Oracle</code>进行操作，比访问其他常见DB可谓是要麻烦一些，显而易见的问题是库的选择，这里我尝试了两种库：</p><ul><li><p><a href="https://github.com/sijms/go-ora" target="_blank" rel="noopener">go-ora</a> + 官方库database/sql （<a href="http://github.com/jmoiron/sqlx%E3%80%81github.com/blockloop/scan" target="_blank" rel="noopener">github.com/jmoiron/sqlx、github.com/blockloop/scan</a> 辅助）</p></li><li><p><a href="https://github.com/mattn/go-oci8" target="_blank" rel="noopener">go-oci8</a> + <a href="https://gitea.com/xorm/xorm" target="_blank" rel="noopener">xorm</a></p></li></ul><h2 id="库的选择">库的选择</h2><p><code>go-ora</code>是原生Go实现的，不需要依赖CGo，相对比较方便，也比较易用，但在使用过程中，使用该库连接Oracle一段时间后，其会请求出错，我也对此提了<code>issue</code>，以及解决方法，但由于联系不上<code>maintainer</code>，所以无法确认解决方法是否靠谱了。</p><p><a href="https://github.com/sijms/go-ora/issues/240" target="_blank" rel="noopener">https://github.com/sijms/go-ora/issues/240</a></p><blockquote><p>也有人遇到了与我相似的问题，用我issue上提到的解决方式解决了该问题，但我依然不推荐这么操作。</p></blockquote><p><code>go-oci8</code>是使用了CGo实现了Oracle的客户端，虽然对环境有所依赖，好在库很稳定，不用担心出幺蛾子，且<code>xorm</code>实验性的支持，对只使用oracle基础功能来说，还是够用的。</p><p>推荐使用下面这种。</p><h2 id="sql使用">SQL使用</h2><h3 id="大小写">大小写</h3><p>在使用<code>oracle</code> Console时，输入表名、字段，不管大小写都可以识别。但其实这里有个误区。</p><p><code>Oracle默认是大写的</code>，也就是说在没有使用双引号<code>&quot;</code>对表名和列名进行限定的时候，表名不过是小写还是大写，最后都默认成了大写。</p><p>若是以<strong>双引号</strong>进行限定后，字段大小写就不再转化为默认的大写了。</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> department (</span><br><span class="line">     <span class="keyword">id</span>           <span class="built_in">NUMBER</span>(<span class="number">10</span>)    <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     DESCRIPTION  VARCHAR2(<span class="number">50</span>)  <span class="keyword">NOT</span> <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure><p>上面字段都会转化为大写，<code>DEPARTMENT</code>，<code>ID</code>，<code>DESCRIPTION</code>。</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> department;     √</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">ID</span> <span class="keyword">FROM</span> department;     √</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">"id"</span> <span class="keyword">FROM</span> department;   ×</span><br></pre></td></tr></table></figure><p>明白上述所述后，使用<code>xorm</code>时需要注意的是。</p><p>在使用xorm自动创建表时，其会根据你的注释的大小写，创建字段。这里就要区分一下了。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Info <span class="keyword">struct</span> &#123;</span><br><span class="line">Type <span class="keyword">int8</span> <span class="string">`json:"type,omitempty" xorm:"number(8) 'type'"`</span></span><br><span class="line">Sn <span class="keyword">string</span> <span class="string">`json:"sn,omitempty" xorm:"varchar2(64) 'sn'"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="时间">时间</h3><p>对时区的设置，这里是：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ALTER DATABASE SET TIME_ZONE=&apos;Asia/Shanghai&apos;;</span><br><span class="line">ALTER SESSION SET TIME_ZONE =&apos;Asia/Shanghai&apos;;</span><br></pre></td></tr></table></figure><p><code>update_time</code>、<code>created_time</code>常见的两个时间，保存时间戳是没有什么问题(<code>int64</code>)。但要保存time时间格式，估计会发现没法存进去。</p><p><code>update_time</code>可以使用raw sql：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE xxxx SET &quot;max_id&quot;=&quot;max_id&quot; + &quot;step&quot;, &quot;update_time&quot; = TO_TIMESTAMP(&apos;%s&apos;, &apos;YYYY-MM-DD HH24:MI:SS.FF6&apos;) WHERE &quot;biz_tag&quot;=&apos;123&apos;</span><br><span class="line"></span><br><span class="line">时间传入：time.Unix(time.Now().Unix(), 0).Format(&quot;2006-01-02 15:04:05.0000&quot;)</span><br></pre></td></tr></table></figure><hr><p><code>created_time</code> ：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &quot;xxxxxx&quot;(</span><br><span class="line">    &quot;id&quot; NUMBER DEFAULT 1,</span><br><span class="line">    &quot;created_time&quot; TIMESTAMP WITH LOCAL TIME ZONE DEFAULT CURRENT_TIMESTAMP,</span><br><span class="line"></span><br><span class="line">    PRIMARY KEY(&quot;id&quot;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type xxxxx struct &#123;</span><br><span class="line">CreatedTime      time.Time `json:&quot;created_time,omitempty&quot; xorm:&quot;TIMESTAMP(6) WITH LOCAL TIME ZONE default CURRENT_TIMESTAMP &apos;created_time&apos;&quot;` // 记录创建时间</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="主键">主键</h3><p>12版本以前没法像<code>MySQL</code>一样生成自增主键，需要一些曲线救国的方式。</p><p>使用<code>SYS_GUID()</code>，系统根据当前时间和机器码，生成全球唯一的一个序列号。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE department (</span><br><span class="line">     ID       varchar2(50)     default SYS_GUID() not null primary key,</span><br><span class="line">     DESCRIPTION  VARCHAR2(50)  NOT NULL);</span><br></pre></td></tr></table></figure><p>自增ID的实现：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Oracle 12c之前：</span><br><span class="line">-- 表定义</span><br><span class="line">CREATE TABLE departments (</span><br><span class="line">     ID           NUMBER(10)    NOT NULL,</span><br><span class="line">     DESCRIPTION  VARCHAR2(50)  NOT NULL);</span><br><span class="line"></span><br><span class="line">ALTER TABLE departments ADD (</span><br><span class="line">    CONSTRAINT dept_pk PRIMARY KEY (ID));</span><br><span class="line"></span><br><span class="line">CREATE SEQUENCE dept_seq START WITH 1;</span><br><span class="line"></span><br><span class="line">-- 触发器定义</span><br><span class="line">CREATE OR REPLACE TRIGGER dept_bir</span><br><span class="line">    BEFORE INSERT ON departments</span><br><span class="line">    FOR EACH ROW</span><br><span class="line"></span><br><span class="line">BEGIN</span><br><span class="line">    SELECT dept_seq.NEXTVAL</span><br><span class="line">    INTO   :new.id</span><br><span class="line">    FROM   dual;</span><br><span class="line">END;</span><br><span class="line"></span><br><span class="line">12c：</span><br><span class="line">CREATE TABLE MAPS</span><br><span class="line">(</span><br><span class="line">  MAP_ID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,</span><br><span class="line">  MAP_NAME VARCHAR(24) NOT NULL,</span><br><span class="line">  UNIQUE (MAP_ID, MAP_NAME)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在&lt;code&gt;Go&lt;/code&gt;语言中，对&lt;code&gt;Oracle&lt;/code&gt;进行操作，比访问其他常见DB可谓是要麻烦一些，显而易见的问题是库的选择，这里我尝试了两种库：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/sijms</summary>
+      
+    
+    
+    
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="oracle" scheme="chunlife.top/tags/oracle/"/>
+    
+  </entry>
   
   <entry>
     <title>Yapi的安装以及使用</title>
@@ -518,30 +545,6 @@
     <category term="Go" scheme="chunlife.top/tags/Go/"/>
     
     <category term="singleflight" scheme="chunlife.top/tags/singleflight/"/>
-    
-    <category term="cache" scheme="chunlife.top/tags/cache/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>cache aside模型保持数据一致性</title>
-    <link href="chunlife.top/2021/09/22/cache-aside%E6%A8%A1%E5%9E%8B%E4%BF%9D%E6%8C%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/"/>
-    <id>chunlife.top/2021/09/22/cache-aside%E6%A8%A1%E5%9E%8B%E4%BF%9D%E6%8C%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/</id>
-    <published>2021-09-22T03:16:06.000Z</published>
-    <updated>2022-04-07T02:17:40.658Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://ethanpark.blog.csdn.net/article/details/53179561" target="_blank" rel="noopener">Cache Aside 模型</a>中，读缓存 Miss 的回填操作，和修改数据同步更新缓存，包括消息队列的异步补偿缓存，都无法满足 “Happens Before”，会存在相互覆盖的情况。</p><p><img src="clip_image001.png" alt="cache aside"></p><blockquote><p>注：Happens Before既是明确的代码执行的先后关系</p></blockquote><p>DB数据被修改，缓存随即需要被修改，不过缓存一般采取直接删除的操作，不过这时就涉及到读写同时出现请求数据的问题。</p><h2 id="先删缓存再读db">先删缓存，再读DB</h2><p><img src="clip_image001-16322809336541.png" alt="读写缓存"></p><p>读/写同时操作：</p><ol><li>读操作，读缓存，缓存 MISS</li><li>读操作，读 DB，读取到数据</li><li>写操作，更新 DB 数据</li><li>写操作 SET/DELETE     Cache（可 Job 异步操作）</li><li>读操作，SET操作数据回写缓存（可 Job 异步操作）</li></ol><p>这种交互下，由于4和5操作步骤都是设置缓存，导致写入的值互相覆盖；并且操作的顺序性不确定，从而导致 cache 存在脏缓存的情况。</p><p><strong>改进：</strong></p><p><img src="clip_image001-16322809336541.png" alt="读写缓存"></p><p>读/写同时操作：</p><ol><li>读操作，读缓存，缓存     MISS</li><li>读操作，读 DB，读取到数据</li><li>写操作，更新 DB 数据</li><li>写操作 SET Cache（可异步 job 操作，Redis 可以使用 <strong>SETEX</strong> 操作）</li><li>读操作，ADD 操作数据回写缓存（可 Job异步操作，Redis 可以使用 <strong>SETNX</strong> 操作）</li></ol><p><strong>解决：读操作使用</strong> <strong>SETNX</strong> <strong>更新缓存，写操作才用 SETEX 写缓存。这样，即使读操作在缓存Miss至缓存设置中间时间发起，最终缓存一样被写操作覆盖，达成最终一致。</strong></p><p><em>注：setnx，不存在时才写；setex，写数据，带过期时间。</em></p><p>针对更新操作，service端直接使用“DEL”指令删除缓存，并重新写入，若service端失败，则是job进行补偿。</p><p>直接使用set更新key，若binlog订阅延迟，则数据容易出现A ——&gt; B ——&gt; A的情况。可能有一个操作是读了之前的数据的，被延迟投递到Kafka了。</p><p>对于缓存上，job的更新原则，采用&quot;<strong>best Effort</strong>&quot;，一定要投递完成此消息。</p><h2 id="先更新db再删除缓存">先更新DB，再删除缓存</h2><p><img src="clip_image001-16460416224681.png" alt="redis-cache-04"></p><p>此类型操作就有可能读到老数据。已更新的数据，需要等到A删除缓存后，<em>再来的请求，才会把缓存更新了。</em> 也就是说这中间出现的读请求，有可能会请求到旧数据。<strong>但最终缓存会达成一致</strong>。</p><h2 id="延迟双删">延迟双删</h2><p><img src="clip_image001-16460416729192.png" alt="延迟双删"></p><ol><li>删除缓存</li><li>更新数据库</li><li>延时 N 毫秒</li><li>删除缓存</li></ol><p>根据上述两种方式的实际情况来看，延迟双删就没啥必要了，其核心解决的就是最终一致性的问题。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://ethanpark.blog.csdn.net/article/details/53179561&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Cache Aside 模型&lt;/a&gt;中，读缓存 Miss 的回填操作，和修改数</summary>
-      
-    
-    
-    
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
     
     <category term="cache" scheme="chunlife.top/tags/cache/"/>
     
