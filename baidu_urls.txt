@@ -1,3 +1,4 @@
+chunlife.top/2023/02/22/SECS-GEM协议学习/
 chunlife.top/2022/10/27/Golang-oracle使用/
 chunlife.top/2022/07/21/Yapi的安装以及使用/
 chunlife.top/2022/06/24/MySQL-实战45讲-学习笔记/
@@ -17,4 +18,3 @@ chunlife.top/2021/11/19/兼容Redis协议的消息中间件服务/
 chunlife.top/2021/11/13/kong网关-http转grpc使用/
 chunlife.top/2021/10/17/API幂等的模型简略/
 chunlife.top/2021/09/30/Go并发模型-pipeline中FAN模式-fanout，fanin/
-chunlife.top/2021/09/29/Go里面竟然还有单飞？—-singleflight/

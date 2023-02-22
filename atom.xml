@@ -6,7 +6,7 @@
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
-  <updated>2022-10-27T08:51:22.645Z</updated>
+  <updated>2023-02-22T14:28:56.535Z</updated>
   <id>chunlife.top/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SECS/GEM协议学习</title>
+    <link href="chunlife.top/2023/02/22/SECS-GEM%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/"/>
+    <id>chunlife.top/2023/02/22/SECS-GEM%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/</id>
+    <published>2023-02-22T09:10:31.000Z</published>
+    <updated>2023-02-22T14:28:56.535Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="开源">开源</h3><p>SECS/GEM 的库市面上是有开源软件可选的。例如：</p><a id="more"></a><p>Python：</p><p><a href="https://github.com/bparzella/secsgem" target="_blank" rel="noopener">bparzella/secsgem</a></p><p><a href="https://github.com/kenta-shimizu/pysemisecs" target="_blank" rel="noopener">kenta-shimizu/pysemisecs</a></p><p>C#：</p><p><a href="https://github.com/mkjeff/secs4net" target="_blank" rel="noopener">mkjeff/secs4net</a></p><p>Java：</p><p><a href="https://github.com/kenta-shimizu/secs4java8" target="_blank" rel="noopener">kenta-shimizu/secs4java8</a></p><h3 id="资料">资料</h3><p>基础知识了解：<a href="https://blog.csdn.net/jxb_memory/category_9885599.html" target="_blank" rel="noopener">https://blog.csdn.net/jxb_memory/category_9885599.html</a></p><p>视频资料：<a href="https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18</a></p><h3 id="实践过程">实践过程</h3><p>对于新了解的协议还是比较好奇的，特别是Go中没有其实现。（工业软件中Go还是没有什么可以插足的）</p><p>闲来无事，对基础协议进行一定量的开发，算是对协议的一个了解过程。其中，解析协议内容使用库<a href="https://github.com/wolimst/lib-secs2-hsms-go" target="_blank" rel="noopener">wolimst/lib-secs2-hsms-go</a>。另外的操作就是对TCP连接的管理，以及针对协议中提到的几个Timeout时间，体现在协议中。在此基础就能实现大体协议的内容。</p><p>当前阶段需要改进的点：</p><p>① 库中解析数据的方式还是不太方便，可以进行改进；</p><p>② 仅实现了简单的会话，没把协议中涉及到的七种会话场景实现全。</p><hr><p>至于Go中直接调用Python，或其他语言编成库等形式，应该也是可以尝试的。</p>]]></content>
+    
+    
+    <summary type="html">&lt;h3 id=&quot;开源&quot;&gt;开源&lt;/h3&gt;
+&lt;p&gt;SECS/GEM 的库市面上是有开源软件可选的。例如：&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="Go" scheme="chunlife.top/tags/Go/"/>
+    
+    <category term="SECS/GEM" scheme="chunlife.top/tags/SECS-GEM/"/>
+    
+  </entry>
   
   <entry>
     <title>Golang oracle使用</title>
@@ -36,10 +60,6 @@
     
     
     
-    <category term="DB" scheme="chunlife.top/categories/DB/"/>
-    
-    
-    <category term="oracle" scheme="chunlife.top/tags/oracle/"/>
     
   </entry>
   
@@ -61,10 +81,6 @@
     
     
     
-    <category term="devops" scheme="chunlife.top/categories/devops/"/>
-    
-    
-    <category term="yapi" scheme="chunlife.top/tags/yapi/"/>
     
   </entry>
   
@@ -83,10 +99,6 @@
     
     
     
-    <category term="DB" scheme="chunlife.top/categories/DB/"/>
-    
-    
-    <category term="MySQL" scheme="chunlife.top/tags/MySQL/"/>
     
   </entry>
   
@@ -104,12 +116,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="go-kratos" scheme="chunlife.top/tags/go-kratos/"/>
-    
-    <category term="http" scheme="chunlife.top/tags/http/"/>
     
   </entry>
   
@@ -132,12 +138,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="Protobuff" scheme="chunlife.top/tags/Protobuff/"/>
-    
-    <category term="submodule" scheme="chunlife.top/tags/submodule/"/>
     
   </entry>
   
@@ -159,14 +159,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="go-kratos" scheme="chunlife.top/tags/go-kratos/"/>
-    
-    <category term="fieldmask" scheme="chunlife.top/tags/fieldmask/"/>
-    
-    <category term="Protobuff" scheme="chunlife.top/tags/Protobuff/"/>
     
   </entry>
   
@@ -187,12 +179,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="Go" scheme="chunlife.top/tags/Go/"/>
-    
-    <category term="Leaf" scheme="chunlife.top/tags/Leaf/"/>
     
   </entry>
   
@@ -217,12 +203,6 @@
     
     
     
-    <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
-    
-    
-    <category term="monitor" scheme="chunlife.top/tags/monitor/"/>
-    
-    <category term="prometheus" scheme="chunlife.top/tags/prometheus/"/>
     
   </entry>
   
@@ -253,10 +233,6 @@
     
     
     
-    <category term="devops" scheme="chunlife.top/categories/devops/"/>
-    
-    
-    <category term="docker" scheme="chunlife.top/tags/docker/"/>
     
   </entry>
   
@@ -281,10 +257,6 @@
     
     
     
-    <category term="系统" scheme="chunlife.top/categories/系统/"/>
-    
-    
-    <category term="网络" scheme="chunlife.top/tags/网络/"/>
     
   </entry>
   
@@ -303,10 +275,6 @@
     
     
     
-    <category term="系统" scheme="chunlife.top/categories/系统/"/>
-    
-    
-    <category term="网络" scheme="chunlife.top/tags/网络/"/>
     
   </entry>
   
@@ -328,10 +296,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="设计模式" scheme="chunlife.top/tags/设计模式/"/>
     
   </entry>
   
@@ -354,12 +318,6 @@
     
     
     
-    <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
-    
-    
-    <category term="论文" scheme="chunlife.top/tags/论文/"/>
-    
-    <category term="A Scalable Distributed File System" scheme="chunlife.top/tags/A-Scalable-Distributed-File-System/"/>
     
   </entry>
   
@@ -382,12 +340,6 @@
     
     
     
-    <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
-    
-    
-    <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
-    
-    <category term="论文" scheme="chunlife.top/tags/论文/"/>
     
   </entry>
   
@@ -405,10 +357,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="获取周别 - Go" scheme="chunlife.top/tags/获取周别-Go/"/>
     
   </entry>
   
@@ -430,12 +378,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="redis" scheme="chunlife.top/tags/redis/"/>
-    
-    <category term="kafka" scheme="chunlife.top/tags/kafka/"/>
     
   </entry>
   
@@ -457,12 +399,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="GRPC" scheme="chunlife.top/tags/GRPC/"/>
-    
-    <category term="KONG" scheme="chunlife.top/tags/KONG/"/>
     
   </entry>
   
@@ -484,12 +420,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="幂等" scheme="chunlife.top/tags/幂等/"/>
-    
-    <category term="Go" scheme="chunlife.top/tags/Go/"/>
     
   </entry>
   
@@ -511,42 +441,6 @@
     
     
     
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="Go" scheme="chunlife.top/tags/Go/"/>
-    
-    <category term="fanout" scheme="chunlife.top/tags/fanout/"/>
-    
-    <category term="fanin" scheme="chunlife.top/tags/fanin/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Go里面竟然还有单飞？—(singleflight)</title>
-    <link href="chunlife.top/2021/09/29/Go%E9%87%8C%E9%9D%A2%E7%AB%9F%E7%84%B6%E8%BF%98%E6%9C%89%E5%8D%95%E9%A3%9E%EF%BC%9F%E2%80%94-singleflight/"/>
-    <id>chunlife.top/2021/09/29/Go%E9%87%8C%E9%9D%A2%E7%AB%9F%E7%84%B6%E8%BF%98%E6%9C%89%E5%8D%95%E9%A3%9E%EF%BC%9F%E2%80%94-singleflight/</id>
-    <published>2021-09-29T14:17:11.000Z</published>
-    <updated>2022-04-07T02:23:04.163Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://pkg.go.dev/golang.org/x/sync/singleflight" target="_blank" rel="noopener">singleflight</a>，官方解释其为：<code>singleflight</code>提供了一个重复的函数调用抑制机制。</p><p>通俗的解释其作用是，若有多个协程运行某函数时，只让一个协程去处理，然后批量返回。非常适合来做并发控制。常见用于<code>缓存穿透</code>的情况。</p><p><code>缓存穿透</code>即为某个热门内容Key过期，或者突然暴热，请求均没有从cache中获取到数据，就会导致大量的同进程、跨进程的数据回源到存储层，可能会引起存储过载的情况。这个时候使用<code>singleflight</code>就能达到一种归并回源的效果了。</p><h2 id="源码解释">源码解释</h2><p>普通版本，无归并操作：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"errors"</span></span><br><span class="line"><span class="string">"log"</span></span><br><span class="line"><span class="string">"sync"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> errorNotExist = errors.New(<span class="string">"redis: key not found"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">wg.Add(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开启10个协程</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">defer</span> wg.Done()</span><br><span class="line">data, err := getData(<span class="string">"2000"</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">log.Print(err)</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">log.Println(data)</span><br><span class="line">&#125;()</span><br><span class="line">&#125;</span><br><span class="line">wg.Wait()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getData</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span> &#123;</span><br><span class="line">data, err := getDataFromCache(key)</span><br><span class="line"><span class="keyword">if</span> err == errorNotExist &#123;</span><br><span class="line"><span class="comment">// 穿透到 DB 捞取数据</span></span><br><span class="line">data, err = getDataFromDB(key)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">log.Println(err)</span><br><span class="line"><span class="keyword">return</span> <span class="string">""</span>, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回填数据到cache, 此处为模拟请求数差不多时间到达，还来不及回填cache</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="string">""</span>, err</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> data, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从cache中获取值，cache中无该值</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getDataFromCache</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span> &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="string">""</span>, errorNotExist</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从数据库中获取值</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getDataFromDB</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span> &#123;</span><br><span class="line">log.Printf(<span class="string">"get %s from database"</span>, key)</span><br><span class="line"><span class="keyword">return</span> <span class="string">"2000 in db"</span>, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>查看打印值：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br><span class="line">2021/09/29 23:45:27 get 2000 from database</span><br><span class="line">2021/09/29 23:45:27 2000 in db</span><br></pre></td></tr></table></figure><p>跟常见的cache-aside一个逻辑：1、先cache中拿取数据；2、取不到数据就从DB拿，再回填给cache；</p><p>但当请求来的比较快，cache是来不及回填的，也就会出现上述打印的现象，请求都从DB拿的数据。这个时候再来看看<code>singleflight</code>的官方介绍：</p><blockquote><p><code>singleflight</code>提供了一个重复的函数调用抑制机制。</p></blockquote><p>引入<code>singleflight</code>修改源码：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">"golang.org/x/sync/singleflight"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> singleFlightTest singleflight.Group</span><br><span class="line"></span><br><span class="line">.......</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getDataBySingleFlight</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span> &#123;</span><br><span class="line">data, err := getDataFromCache(key)</span><br><span class="line"><span class="keyword">if</span> err == errorNotExist &#123;</span><br><span class="line"><span class="comment">// 从db中获取数据</span></span><br><span class="line">v, err, _ := singleFlightTest.Do(key, <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span> &#123;</span><br><span class="line"><span class="keyword">return</span> getDataFromDB(key)</span><br><span class="line"><span class="comment">// set cache</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">log.Println(err)</span><br><span class="line"><span class="keyword">return</span> <span class="string">""</span>, err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data = v.(<span class="keyword">string</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// set cache</span></span><br><span class="line">        <span class="comment">// 可以在sl的wrapFunc中回填cache，也可以在外面回填数据，前者在go-zero的实例代码中可见，后者出现在bilibili的代码中</span></span><br><span class="line">        <span class="comment">// 读取的数据DB不存在，应该放置一个TTL标志位</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="string">""</span>, err</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> data, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>结果的打印如下，可以看到一个请求去捞取完数据后，其他请求也都拿到数据了。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> get <span class="number">2000</span> from database</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br><span class="line"><span class="number">2021</span>/<span class="number">09</span>/<span class="number">30</span> <span class="number">00</span>:<span class="number">14</span>:<span class="number">23</span> <span class="number">2000</span> in db</span><br></pre></td></tr></table></figure><h2 id="函数简略">函数简略</h2><p><img src="image-20210930001827917.png" alt="包简略"></p><p>包比较简单，网上也有很多分析代码的博客，我只在这里看下Do函数：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(g *Group)</span> <span class="title">Do</span><span class="params">(key <span class="keyword">string</span>, fn <span class="keyword">func</span>()</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span>) <span class="params">(v <span class="keyword">interface</span>&#123;&#125;, err error, shared <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">g.mu.Lock()</span><br><span class="line"><span class="comment">// 初始化进入此单飞集合的集合</span></span><br><span class="line"><span class="keyword">if</span> g.m == <span class="literal">nil</span> &#123;</span><br><span class="line">g.m = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]*call)</span><br><span class="line">&#125;</span><br><span class="line">    <span class="comment">// 相同的处理，做下累加操作，同时卡死在这里等待第一次执行的请求执行完，返回其数据</span></span><br><span class="line"><span class="keyword">if</span> c, ok := g.m[key]; ok &#123;</span><br><span class="line">c.dups++</span><br><span class="line">g.mu.Unlock()</span><br><span class="line">c.wg.Wait()</span><br><span class="line"><span class="keyword">return</span> c.val, c.err, <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 第一次过来的请求，做初始化处理</span></span><br><span class="line">c := <span class="built_in">new</span>(call)</span><br><span class="line">c.wg.Add(<span class="number">1</span>)</span><br><span class="line">g.m[key] = c</span><br><span class="line">g.mu.Unlock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行请求</span></span><br><span class="line">g.doCall(c, key, fn)</span><br><span class="line"><span class="keyword">return</span> c.val, c.err, c.dups &gt; <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>可以通过分析源码看到，相同的<code>key</code>，只有第一次进入的请求，才会执行；后面进入的请求，都会被<code>waitgroup</code>给锁住，原地等待第一次执行的请求执行完成，然后统一返回请求拿到的数据以及err信息。</p><h2 id="提到的资料">提到的资料</h2><p><a href="https://go-zero.dev/cn/redis-cache.html" target="_blank" rel="noopener">go-zero缓存设计之持久层缓存</a></p><p><a href="https://pkg.go.dev/golang.org/x/sync/singleflight" target="_blank" rel="noopener">https://pkg.go.dev/golang.org/x/sync/singleflight</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://pkg.go.dev/golang.org/x/sync/singleflight&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;singleflight&lt;/a&gt;，官方解释其为：&lt;code&gt;singleflight&lt;/co</summary>
-      
-    
-    
-    
-    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
-    
-    
-    <category term="Go" scheme="chunlife.top/tags/Go/"/>
-    
-    <category term="singleflight" scheme="chunlife.top/tags/singleflight/"/>
-    
-    <category term="cache" scheme="chunlife.top/tags/cache/"/>
     
   </entry>
   
