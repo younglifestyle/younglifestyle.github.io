@@ -16,13 +16,15 @@
 <p>Java：</p>
 <p><a href="https://github.com/kenta-shimizu/secs4java8" target="_blank" rel="noopener">kenta-shimizu/secs4java8</a></p>
 <h3 id="资料">资料</h3>
-<p>基础知识了解：<a href="https://blog.csdn.net/jxb_memory/category_9885599.html" target="_blank" rel="noopener">https://blog.csdn.net/jxb_memory/category_9885599.html</a></p>
-<p>视频资料：<a href="https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18</a></p>
+<p>基础知识了解：</p>
+<p><a href="https://blog.csdn.net/jxb_memory/category_9885599.html" target="_blank" rel="noopener">https://blog.csdn.net/jxb_memory/category_9885599.html</a></p>
+<p>视频资料：</p>
+<p><a href="https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18</a></p>
 <h3 id="实践过程">实践过程</h3>
 <p>对于新了解的协议还是比较好奇的，特别是Go中没有其实现。（工业软件中Go还是没有什么可以插足的）</p>
 <p>闲来无事，对基础协议进行一定量的开发，算是对协议的一个了解过程。其中，解析协议内容使用库<a href="https://github.com/wolimst/lib-secs2-hsms-go" target="_blank" rel="noopener">wolimst/lib-secs2-hsms-go</a>。另外的操作就是对TCP连接的管理，以及针对协议中提到的几个Timeout时间，体现在协议中。在此基础就能实现大体协议的内容。</p>
 <p>ID间的联系：</p>
-<p><img src="image-20230227100537493.png" alt="image-20230227100537493"></p>
+<p><img src="image-20230227100537493.png" alt="ID关系图示"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DeviceID(SessionID)：用于Host识别的设备号。</span><br><span class="line"></span><br><span class="line">CEID:event ID 即事件ID</span><br><span class="line"></span><br><span class="line">SVID:设备状态变量ID</span><br><span class="line"></span><br><span class="line">ECID:设备常量ID</span><br><span class="line"></span><br><span class="line">VID ：变量ID</span><br><span class="line"></span><br><span class="line">RPTID：report ID 即上报ID</span><br><span class="line"></span><br><span class="line">PPID：recipe ID 即配方ID（工艺ID）</span><br><span class="line"></span><br><span class="line">CHIPID：芯片ID</span><br></pre></td></tr></table></figure>
 <p>在实际做库的过程中，可以将各类数据都转化到一个层级进行管理，用各类map都搜集起来，这样数据的读和取都是统一对此层级负责的，也是只能从这层数据中拿到操作的，数据一致性也有所保证。</p>
 <hr>
