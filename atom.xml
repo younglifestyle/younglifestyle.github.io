@@ -6,7 +6,7 @@
   <link href="chunlife.top/atom.xml" rel="self"/>
   
   <link href="chunlife.top/"/>
-  <updated>2023-02-22T14:28:56.535Z</updated>
+  <updated>2023-02-27T02:10:26.790Z</updated>
   <id>chunlife.top/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="chunlife.top/2023/02/22/SECS-GEM%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/"/>
     <id>chunlife.top/2023/02/22/SECS-GEM%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/</id>
     <published>2023-02-22T09:10:31.000Z</published>
-    <updated>2023-02-22T14:28:56.535Z</updated>
+    <updated>2023-02-27T02:10:26.790Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="开源">开源</h3><p>SECS/GEM 的库市面上是有开源软件可选的。例如：</p><a id="more"></a><p>Python：</p><p><a href="https://github.com/bparzella/secsgem" target="_blank" rel="noopener">bparzella/secsgem</a></p><p><a href="https://github.com/kenta-shimizu/pysemisecs" target="_blank" rel="noopener">kenta-shimizu/pysemisecs</a></p><p>C#：</p><p><a href="https://github.com/mkjeff/secs4net" target="_blank" rel="noopener">mkjeff/secs4net</a></p><p>Java：</p><p><a href="https://github.com/kenta-shimizu/secs4java8" target="_blank" rel="noopener">kenta-shimizu/secs4java8</a></p><h3 id="资料">资料</h3><p>基础知识了解：<a href="https://blog.csdn.net/jxb_memory/category_9885599.html" target="_blank" rel="noopener">https://blog.csdn.net/jxb_memory/category_9885599.html</a></p><p>视频资料：<a href="https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18</a></p><h3 id="实践过程">实践过程</h3><p>对于新了解的协议还是比较好奇的，特别是Go中没有其实现。（工业软件中Go还是没有什么可以插足的）</p><p>闲来无事，对基础协议进行一定量的开发，算是对协议的一个了解过程。其中，解析协议内容使用库<a href="https://github.com/wolimst/lib-secs2-hsms-go" target="_blank" rel="noopener">wolimst/lib-secs2-hsms-go</a>。另外的操作就是对TCP连接的管理，以及针对协议中提到的几个Timeout时间，体现在协议中。在此基础就能实现大体协议的内容。</p><p>当前阶段需要改进的点：</p><p>① 库中解析数据的方式还是不太方便，可以进行改进；</p><p>② 仅实现了简单的会话，没把协议中涉及到的七种会话场景实现全。</p><hr><p>至于Go中直接调用Python，或其他语言编成库等形式，应该也是可以尝试的。</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="开源">开源</h3><p>SECS/GEM 的库市面上是有开源软件可选的。例如：</p><a id="more"></a><p>Python：</p><p><a href="https://github.com/bparzella/secsgem" target="_blank" rel="noopener">bparzella/secsgem</a></p><p><a href="https://github.com/kenta-shimizu/pysemisecs" target="_blank" rel="noopener">kenta-shimizu/pysemisecs</a></p><p>C#：</p><p><a href="https://github.com/mkjeff/secs4net" target="_blank" rel="noopener">mkjeff/secs4net</a></p><p>Java：</p><p><a href="https://github.com/kenta-shimizu/secs4java8" target="_blank" rel="noopener">kenta-shimizu/secs4java8</a></p><h3 id="资料">资料</h3><p>基础知识了解：<a href="https://blog.csdn.net/jxb_memory/category_9885599.html" target="_blank" rel="noopener">https://blog.csdn.net/jxb_memory/category_9885599.html</a></p><p>视频资料：<a href="https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1MU4y1v7hT/?spm_id_from=333.999.0.0&amp;vd_source=b670da3ecf6c8ddc9d65e67a875bde18</a></p><h3 id="实践过程">实践过程</h3><p>对于新了解的协议还是比较好奇的，特别是Go中没有其实现。（工业软件中Go还是没有什么可以插足的）</p><p>闲来无事，对基础协议进行一定量的开发，算是对协议的一个了解过程。其中，解析协议内容使用库<a href="https://github.com/wolimst/lib-secs2-hsms-go" target="_blank" rel="noopener">wolimst/lib-secs2-hsms-go</a>。另外的操作就是对TCP连接的管理，以及针对协议中提到的几个Timeout时间，体现在协议中。在此基础就能实现大体协议的内容。</p><p>ID间的联系：</p><p><img src="image-20230227100537493.png" alt="image-20230227100537493"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DeviceID(SessionID)：用于Host识别的设备号。</span><br><span class="line"></span><br><span class="line">CEID:event ID 即事件ID</span><br><span class="line"></span><br><span class="line">SVID:设备状态变量ID</span><br><span class="line"></span><br><span class="line">ECID:设备常量ID</span><br><span class="line"></span><br><span class="line">VID ：变量ID</span><br><span class="line"></span><br><span class="line">RPTID：report ID 即上报ID</span><br><span class="line"></span><br><span class="line">PPID：recipe ID 即配方ID（工艺ID）</span><br><span class="line"></span><br><span class="line">CHIPID：芯片ID</span><br></pre></td></tr></table></figure><p>在实际做库的过程中，可以将各类数据都转化到一个层级进行管理，用各类map都搜集起来，这样数据的读和取都是统一对此层级负责的，也是只能从这层数据中拿到操作的，数据一致性也有所保证。</p><hr><p>至于Go中直接调用Python，或其他语言编成库等形式，应该也是可以尝试的。</p>]]></content>
     
     
     <summary type="html">&lt;h3 id=&quot;开源&quot;&gt;开源&lt;/h3&gt;
@@ -60,6 +60,10 @@
     
     
     
+    <category term="DB" scheme="chunlife.top/categories/DB/"/>
+    
+    
+    <category term="oracle" scheme="chunlife.top/tags/oracle/"/>
     
   </entry>
   
@@ -81,6 +85,10 @@
     
     
     
+    <category term="devops" scheme="chunlife.top/categories/devops/"/>
+    
+    
+    <category term="yapi" scheme="chunlife.top/tags/yapi/"/>
     
   </entry>
   
@@ -99,6 +107,10 @@
     
     
     
+    <category term="DB" scheme="chunlife.top/categories/DB/"/>
+    
+    
+    <category term="MySQL" scheme="chunlife.top/tags/MySQL/"/>
     
   </entry>
   
@@ -116,6 +128,12 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="go-kratos" scheme="chunlife.top/tags/go-kratos/"/>
+    
+    <category term="http" scheme="chunlife.top/tags/http/"/>
     
   </entry>
   
@@ -138,6 +156,12 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="Protobuff" scheme="chunlife.top/tags/Protobuff/"/>
+    
+    <category term="submodule" scheme="chunlife.top/tags/submodule/"/>
     
   </entry>
   
@@ -159,6 +183,14 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="go-kratos" scheme="chunlife.top/tags/go-kratos/"/>
+    
+    <category term="fieldmask" scheme="chunlife.top/tags/fieldmask/"/>
+    
+    <category term="Protobuff" scheme="chunlife.top/tags/Protobuff/"/>
     
   </entry>
   
@@ -179,6 +211,12 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="Go" scheme="chunlife.top/tags/Go/"/>
+    
+    <category term="Leaf" scheme="chunlife.top/tags/Leaf/"/>
     
   </entry>
   
@@ -203,6 +241,12 @@
     
     
     
+    <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
+    
+    
+    <category term="monitor" scheme="chunlife.top/tags/monitor/"/>
+    
+    <category term="prometheus" scheme="chunlife.top/tags/prometheus/"/>
     
   </entry>
   
@@ -233,6 +277,10 @@
     
     
     
+    <category term="devops" scheme="chunlife.top/categories/devops/"/>
+    
+    
+    <category term="docker" scheme="chunlife.top/tags/docker/"/>
     
   </entry>
   
@@ -257,6 +305,10 @@
     
     
     
+    <category term="系统" scheme="chunlife.top/categories/系统/"/>
+    
+    
+    <category term="网络" scheme="chunlife.top/tags/网络/"/>
     
   </entry>
   
@@ -275,6 +327,10 @@
     
     
     
+    <category term="系统" scheme="chunlife.top/categories/系统/"/>
+    
+    
+    <category term="网络" scheme="chunlife.top/tags/网络/"/>
     
   </entry>
   
@@ -296,6 +352,10 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="设计模式" scheme="chunlife.top/tags/设计模式/"/>
     
   </entry>
   
@@ -318,6 +378,12 @@
     
     
     
+    <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
+    
+    
+    <category term="论文" scheme="chunlife.top/tags/论文/"/>
+    
+    <category term="A Scalable Distributed File System" scheme="chunlife.top/tags/A-Scalable-Distributed-File-System/"/>
     
   </entry>
   
@@ -340,6 +406,12 @@
     
     
     
+    <category term="分布式服务" scheme="chunlife.top/categories/分布式服务/"/>
+    
+    
+    <category term="MIT 6.824" scheme="chunlife.top/tags/MIT-6-824/"/>
+    
+    <category term="论文" scheme="chunlife.top/tags/论文/"/>
     
   </entry>
   
@@ -357,6 +429,10 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="获取周别 - Go" scheme="chunlife.top/tags/获取周别-Go/"/>
     
   </entry>
   
@@ -378,6 +454,12 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="redis" scheme="chunlife.top/tags/redis/"/>
+    
+    <category term="kafka" scheme="chunlife.top/tags/kafka/"/>
     
   </entry>
   
@@ -399,6 +481,12 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="GRPC" scheme="chunlife.top/tags/GRPC/"/>
+    
+    <category term="KONG" scheme="chunlife.top/tags/KONG/"/>
     
   </entry>
   
@@ -420,6 +508,12 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="幂等" scheme="chunlife.top/tags/幂等/"/>
+    
+    <category term="Go" scheme="chunlife.top/tags/Go/"/>
     
   </entry>
   
@@ -441,6 +535,14 @@
     
     
     
+    <category term="编程技术" scheme="chunlife.top/categories/编程技术/"/>
+    
+    
+    <category term="Go" scheme="chunlife.top/tags/Go/"/>
+    
+    <category term="fanout" scheme="chunlife.top/tags/fanout/"/>
+    
+    <category term="fanin" scheme="chunlife.top/tags/fanin/"/>
     
   </entry>
   
