@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;default&quot;]"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>MySQL各类索引总结以及优化 | Pure Life</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'e155b64355fa51e2e8a4ca9edc59e825';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">MySQL各类索引总结以及优化</h1><a id="logo" href="/.">Pure Life</a><p class="description">一亩三分路漫漫</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">MySQL各类索引总结以及优化</h1><div class="post-meta">2021-04-27<span> | </span><span class="category"><a href="/categories/DB/">DB</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">1.</span> <span class="toc-text">索引的好处</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">2.</span> <span class="toc-text">Hash索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">2.1.</span> <span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">3.</span> <span class="toc-text">B树索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">3.1.</span> <span class="toc-text">MySQL中的索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">3.2.</span> <span class="toc-text">InnoDB索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">3.3.</span> <span class="toc-text">索引的维护</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">4.</span> <span class="toc-text">MySQL添加索引操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">5.</span> <span class="toc-text">使用索引的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">5.1.</span> <span class="toc-text">索引列上不能使用表达式或函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">5.2.</span> <span class="toc-text">前缀索引和索引列的选择性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">5.3.</span> <span class="toc-text">联合索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">5.4.</span> <span class="toc-text">覆盖索引</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">6.</span> <span class="toc-text">索引优化查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">6.1.</span> <span class="toc-text">使用索引扫描来优化排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">6.2.</span> <span class="toc-text">模拟Hash索引优化查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">6.3.</span> <span class="toc-text">删除重复和冗余的索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#null"><span class="toc-number">6.3.1.</span> <span class="toc-text">使用工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#null"><span class="toc-number">6.3.2.</span> <span class="toc-text">查找未使用过的索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-number">6.4.</span> <span class="toc-text">更新索引统计信息以及减少索引碎片</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number">7.</span> <span class="toc-text">B+Tree结构</span></a></li></ol></div></div><div class="post-content"><p>MySQL中的索引，一般来说，我们使用的比较多的是b+tree，hash索引。</p>
+<p>且因为在MySQL中，存在不同的存储引擎，这两种索引存在的形式也有些不大一样。这里我们也只引入MyISAM和Innodb存储引擎。</p>
+<a id="more"></a>
+<p>使用到的示例数据：<a href="http://downloads.mysql.com/docs/sakila-db.zip" target="_blank" rel="noopener">sakila-db</a></p>
+<h1><span id="索引的好处">索引的好处</span></h1>
+<p>索引的好处指：索引给数据库带来性能损耗<strong>小于</strong>带来的好处，索引即是有利的。</p>
+<ul>
+<li>索引大大减少了存储引擎需要扫描的<strong>数据量</strong>；</li>
+<li>索引可以帮助我们进行排序以避免使用临时表；</li>
+<li>索引可以把随机I/O变为顺序I/O；</li>
+</ul>
+<p>添加索引会提高查询速度，其实也就是将数据不管从逻辑还是物理上，将无序数据变为有序数据。</p>
+<p>不过索引也是会带来一定的损耗的：</p>
+<p>索引的引入会增加写操作的成本。不过<code>Innodb</code>引入了插入缓存解决了这个问题。</p>
+<p>同时，太多索引会增加查询优化器的选择时间。</p>
+<h1><span id="hash索引">Hash索引</span></h1>
+<p>MyISAM和Innodb都不支持hash索引，不过Innodb有点不同的是，它不能说完全不支持，它的hash索引的创建由引擎自动优化创建，需要开启这个特性，人为无法干预创建。当我们试图创建时，mysql也不会报错，只不过会自动转化为B树索引。</p>
+<h2><span id="特点">特点</span></h2>
+<p>Hash索引是基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列时，才能够使用到hash索引。（故只支持等值比较查询<code>=，in()， &lt;=&gt;</code>，而不包含排序或范围查询的需求）</p>
+<p>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码。（哈希索引包括哈希值，以及行的指针）。</p>
+<p><strong>限制：</strong></p>
+<ul>
+<li>因索引不保存数据，索引需要读取行来读取想要的数据，发生二次查找，但有缓存，速度很快，所以也就没啥影响。</li>
+<li>无法用于排序，哈希索引数据并不是按照索引列的值顺序存储的，所以也就无法用于排序。</li>
+<li>哈希索引也不支持部分索引列匹配查找，因为哈希索引始终是使用索引的全部列值内容来计算哈希值的。如：数据列（a,b）上建立哈希索引，如果只查询数据列a，则无法使用该索引；也不支持范围查找。</li>
+<li>Hash索引中Hash码的计算可能存在Hash冲突。维护成本比较高。</li>
+</ul>
+<p>​       <strong>因此</strong>在绝大多数需求为单条记录查询的时候，可以选择哈希索引，查询性能最快；其余大部分场景，建议选择BTree索引。</p>
+<h1><span id="b树索引">B树索引</span></h1>
+<p>普通的B树和B+树中，最大区别就是，B 树可以在非叶结点中存储数据，但是 B+ 树的所有数据其实都存储在叶子节点中。</p>
+<p>参考文章：<a href="https://draveness.me/whys-the-design-mysql-b-plus-tree/" target="_blank" rel="noopener">为什么 MySQL 使用 B+ 树</a>，数据加载这小节。</p>
+<p>因为B树的节点都存储数据，那也就是说我要查询数据的话，必须遍历这些节点来取数据，运气好立马就能拿到数据，运气不好就会按树遍历的方式，来回折腾，速率是不稳定的。那B+树呢，因为数据都在叶子节点中，也就是数据都在树的最底下的那一层，当我通过索引去遍历时，通过一个 B+ 树最左侧的叶子节点，通过在叶子节点间建立链表连接，我们可以像链表一样遍历整个树中的全部数据。（通过此<a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank" rel="noopener">网站</a>进行模拟）</p>
+<p><img src="mysql-innodb-b-plus-tree.png" alt="mysql-innodb-b-plus-tree"></p>
+<p>通过模拟网站，我们也能看到节点是有排序的。</p>
+<h2><span id="mysql中的索引">MySQL中的索引</span></h2>
+<p>在MySQL中，索引是在存储引擎层实现的，所以并没有统一的索引标准，即不同存储引擎的索引的工作方式并不一样。而即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
+<p>MyISAM和InnoDB引擎中，<a href="#B+Tree%E7%BB%93%E6%9E%84">B树索引</a>不是相对等的，虽然其可以被称为同一类数据结构——平衡查找树。</p>
+<blockquote>
+<p>平衡查找树——每个叶子到根部的距离都是相同的，并且所有的键值都是按照键值的大小存放在同一层的叶子节点上的，各个叶子节点由指针来进行连接。</p>
+</blockquote>
+<p>MyISAM：</p>
+<p>叶子节点存储指向数据的物理地址。</p>
+<p>InnoDB：</p>
+<p>叶子节点指向数据的主键。</p>
+<blockquote>
+<p>树当中没有子结点的结点称为叶子结点</p>
+</blockquote>
+<p>主键即为聚集索引，<code>InnoDB</code>数据文件本身即为索引文件。树的叶子节点data域保存了完整的数据记录，而这个索引的<code>key</code>是数据表的主键。</p>
+<p>因为InnoDB作为主流，且在实际业务中好像也没什么机会使用到<code>MyISAM</code>引擎，所以接下来的索引各方面都从<code>InnoDB</code>出发。</p>
+<h2><span id="innodb索引">InnoDB索引</span></h2>
+<p>每一个索引在InnoDB里面都对应一棵B+树。</p>
+<p>假设，我们有一个主键列为ID的表，表中有字段k，并且在k上有索引。</p>
+<p>这个表的建表语句是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table T(</span><br><span class="line">    id int primary key, </span><br><span class="line">    k int not null, </span><br><span class="line">    name varchar(16),</span><br><span class="line">    index (k),</span><br><span class="line">)engine=InnoDB;</span><br></pre></td></tr></table></figure>
+<p>表中R1~R5的(ID,k)值分别为(100,1)、(200,2)、(300,3)、(500,5)和(600,6)，两棵树的示例示意图如下。</p>
+<p><img src="dcda101051f28502bd5c4402b292e38d.png" alt="模拟树"></p>
+<p>从图中不难看出，根据叶子节点的内容，索引类型分为主键索引和非主键索引。</p>
+<p>主键索引的叶子节点存的是整行数据。在InnoDB里，主键索引也被称为聚簇索引（clustered index）。</p>
+<p>非主键索引的叶子节点内容是主键的值。在InnoDB里，非主键索引也被称为二级索引（secondary index）。</p>
+<p>根据上面的索引结构说明，我们来讨论一个问题：<strong>基于主键索引和普通索引的查询有什么区别？</strong></p>
+<ul>
+<li>如果语句是select * from T where ID=500，即主键查询方式，则只需要搜索ID这棵B+树；</li>
+<li>如果语句是select * from T where k=5，即普通索引查询方式，则需要先搜索k索引树，得到ID的值为500，再到ID索引树搜索一次。这个过程称为<strong>回表</strong>。</li>
+</ul>
+<h2><span id="索引的维护">索引的维护</span></h2>
+<p>B+树为了维护索引有序性，在插入新值的时候需要做必要的维护。以上面这个图为例，如果插入新的行ID值为700，则只需要在R5的记录后面插入一个新记录。如果新插入的ID值为400，就相对麻烦了，需要逻辑上挪动后面的数据，空出位置。</p>
+<p><img src="image-20210426200555194.png" alt="原始状态"></p>
+<p><img src="image-20210426200727836.png" alt="插入大于当前的ID"></p>
+<p><img src="image-20210426200756171.png" alt="插入小于当前节点的ID"></p>
+<p>而更糟的情况是，如果R5所在的数据页已经满了，根据B+树的算法，这时候需要申请一个新的数据页，然后挪动部分数据过去。这个过程称为页分裂。在这种情况下，性能自然会受影响。</p>
+<p><img src="image-20210426200841507.png" alt="分裂"></p>
+<p>有分裂就有合并，当索引被删除时，空间不会被回收，当页利用率很低之后，就会开启合并，详细的我建议是利用我写的模拟网站进行模拟操作，另外是看<a href="https://zhuanlan.zhihu.com/p/98818611" target="_blank" rel="noopener">InnoDB中的页合并与分裂</a>。</p>
+<p>基于上面的索引维护过程说明，我们来讨论为什么在一些建表规范里面见到过类似的描述，要求建表语句里一定要有自增主键：</p>
+<p>自增主键是指自增列上定义的主键，在建表语句中一般是这么定义的： NOT NULL PRIMARY KEY AUTO_INCREMENT。</p>
+<p>插入新记录的时候可以不指定ID的值，系统会获取当前ID最大值加1作为下一条记录的ID值。</p>
+<p>也就是说，自增主键的插入数据模式，正符合了我们前面提到的递增插入的场景。每次插入一条新记录，都是追加操作，都不涉及到挪动其他记录，会自然增长到页数据满。</p>
+<p>而有业务逻辑的字段做主键，则往往不容易保证有序插入，这样写数据成本相对较高。</p>
+<p>除了考虑性能外，我们还可以从存储空间的角度来看。假设你的表中确实有一个唯一字段，比如字符串类型的身份证号，那应该用身份证号做主键，还是用自增字段做主键呢？</p>
+<p>由于每个非主键索引的叶子节点上都是主键的值。如果用身份证号做主键，那么每个二级索引的叶子节点占用约20个字节，而如果用整型做主键，则只要4个字节，如果是长整型（bigint）则是8个字节。</p>
+<p><strong>显然，主键长度越小，普通索引的叶子节点就越小，普通索引占用的空间也就越小。</strong></p>
+<p>所以，从性能和存储空间方面考量，自增主键往往是更合理的选择。</p>
+<p>有没有什么场景适合用业务字段直接做主键的呢？还是有的。比如，有些业务的场景需求是这样的：</p>
+<ol>
+<li>只有一个索引；</li>
+<li>该索引必须是唯一索引。</li>
+</ol>
+<p>你一定看出来了，这就是典型的KV场景。</p>
+<p>由于没有其他索引，所以也就不用考虑其他索引的叶子节点大小的问题。</p>
+<p>这时候我们就要优先考虑上一段提到的“尽量使用主键查询”原则，直接将这个索引设置为主键，可以避免每次查询需要搜索两棵树。</p>
+<p>B树索引这小节部分，很大部分补充自<code>MySQL实战45讲/05讲深入浅出索引</code>。</p>
+<hr>
+<h1><span id="mysql添加索引操作">MySQL添加索引操作</span></h1>
+<p><img src="1566884936165.png" alt="添加索引"></p>
+<h1><span id="使用索引的注意事项">使用索引的注意事项</span></h1>
+<p><img src="1566875667532.png" alt="使用索引的注意事项"></p>
+<h2><span id="索引列上不能使用表达式或函数">索引列上不能使用表达式或函数</span></h2>
+<p>例如<code>where id = 1</code>，<code>where to_int(id) = 1</code>，在<code>id</code>作为索引的这两条where子句，前者可以使用索引查询，而后者将无法使用索引。</p>
+<p>所以尽量在数据上动心思，不要在索引列上进行操作。</p>
+<p><img src="%E5%9B%BE%E5%83%8F3.png" alt=""></p>
+<h2><span id="前缀索引和索引列的选择性">前缀索引和索引列的选择性</span></h2>
+<p>选择性怎么体现，例如，数据库中性别列，只有男女两个选择（一般情况下），那么其可选择性即是极差，数据没有变化性，索引了这一组数据，会从文件中捞出一大堆这样的数据（很好理解，男女都有很多记录），我们要的情况是，索引中数据后，只捞出极少数数据或直接命中数据。</p>
+<p>所以我们会追求索引列数据的多样性。但有一些列多样性很好，但宽度极大，不利于索引（很好理解，中国少字姓氏总比外国人一批条字的姓氏好认），同时，索引可是有大小限制的（见上图）。</p>
+<p>这里，就有了前缀索引来解决这个问题。</p>
+<p>对于列的值较长，比如BLOB、TEXT、VARCHAR，就必须建立前缀索引，即将值的前一部分作为索引。这样既可以节约空间，又可以提高查询效率。<strong>但无法使用前缀索引做 ORDER BY 和 GROUP BY，也无法使用前缀索引做覆盖扫描</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 语法</span><br><span class="line">ALTER TABLE table_name ADD KEY(column_name(prefix_length));</span><br><span class="line"># 示例</span><br><span class="line">ALTER TABLE city ADD KEY(cityname(7))</span><br></pre></td></tr></table></figure>
+<p><strong>那如何量化前缀索引的选择性？</strong></p>
+<blockquote>
+<p><a href="https://www.cnblogs.com/gomysql/p/3628926.html" target="_blank" rel="noopener">MySQL前缀索引和索引选择性</a></p>
+</blockquote>
+<p>例如有这样一张表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select count(*) as cnt, city from city_demo group by city order by cnt desc limit 10;               </span><br><span class="line">+-----+--------------+</span><br><span class="line">| cnt | city         |</span><br><span class="line">+-----+--------------+</span><br><span class="line">|   8 | Garden Grove |</span><br><span class="line">|   7 | Escobar      |</span><br><span class="line">|   7 | Emeishan     |</span><br><span class="line">|   6 | Amroha       |</span><br><span class="line">|   6 | Tegal        |</span><br><span class="line">|   6 | Lancaster    |</span><br><span class="line">|   6 | Jelets       |</span><br><span class="line">|   6 | Ambattur     |</span><br><span class="line">|   6 | Yingkou      |</span><br><span class="line">|   6 | Monclova     |</span><br><span class="line">+-----+--------------+</span><br><span class="line">10 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+<p>可以先计算完整列的选择性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select count(distinct city) / count(*) from city_demo;</span><br><span class="line">+---------------------------------+</span><br><span class="line">| count(distinct city) / count(*) |</span><br><span class="line">+---------------------------------+</span><br><span class="line">|                          0.4283 |</span><br><span class="line">+---------------------------------+</span><br><span class="line">1 row in set (0.05 sec)</span><br></pre></td></tr></table></figure>
+<p>可以在一个查询中针对不同前缀长度的选择性进行计算，这对于大表非常有用，下面给出如何在同一个查询中计算不同前缀长度的选择性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select count(distinct left(city,3))/count(*) as sel3,</span><br><span class="line">    -&gt; count(distinct left(city,4))/count(*) as sel4,</span><br><span class="line">    -&gt; count(distinct left(city,5))/count(*) as sel5, </span><br><span class="line">    -&gt; count(distinct left(city,6))/count(*) as sel6 </span><br><span class="line">    -&gt; from city_demo;</span><br><span class="line">+--------+--------+--------+--------+</span><br><span class="line">| sel3   | sel4   | sel5   | sel6   |</span><br><span class="line">+--------+--------+--------+--------+</span><br><span class="line">| 0.3367 | 0.4075 | 0.4208 | 0.4267 |</span><br><span class="line">+--------+--------+--------+--------+</span><br><span class="line">1 row in set (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br></pre></td></tr></table></figure>
+<p>可以看见当索引前缀为6时的基数是0.4267，已经接近完整列选择性0.4283。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter table city_demo add key (city(6));</span><br><span class="line">Query OK, 0 rows affected (0.19 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure>
+<h2><span id="联合索引">联合索引</span></h2>
+<p>可以参考一下原则：</p>
+<ul>
+<li>经常会使用到的列优先</li>
+<li>选择性搞的列优先</li>
+<li>宽度小的列优先</li>
+</ul>
+<p>同时需要注意索引的注意项，例如索引字段不可施加函数，联合索引依然遵循，最左列不可使用函数，而且联合索引在使用时也不能缺失最左列。</p>
+<p>联合索引的B+树：</p>
+<p><img src="image-20210426204502697.png" alt="联合索引存储方式"></p>
+<p>也就是说，当我们要需要拿取name，age，id这三个字段时，会形成覆盖索引，不需要回表拿数据。</p>
+<h2><span id="覆盖索引">覆盖索引</span></h2>
+<p>优点：</p>
+<ul>
+<li>可以优化缓存，减少磁盘IO操作；</li>
+<li>可以减少随机IO，变随机IO操作为顺序IO操作</li>
+<li>可以避免对InnoDB主键索引的二次查询</li>
+<li>可以避免MyISAM表进行系统调用</li>
+</ul>
+<p>虽然优点很明显，但限制同样很明显，并不是可以任意生效覆盖索引的。例如：</p>
+<ul>
+<li>存储引擎本身不支持覆盖索引；</li>
+<li>查询中使用（获取）了太多列；</li>
+<li>使用了双<code>%</code>号的<code>like</code>查询。</li>
+</ul>
+<blockquote>
+<p>百分号是属于mysql自身的操作，其操作无法在磁盘中进行，必须要将数据读取至内存中进行操作。</p>
+</blockquote>
+<p>以<code>sakila</code>中<code>film</code>表为例。</p>
+<p><img src="%E5%9B%BE1.png" alt="film表"></p>
+<p><strong>操作1：</strong></p>
+<p>获取language_id，可以直接通过索引就能得到数据，不需要拿到索引后去数据列拿取数据。</p>
+<p><img src="%E5%9B%BE2.png" alt="图"></p>
+<p><strong>操作2：</strong></p>
+<p>直接从索引拿不到数据，需要读取索引到内存中，再到数据中过滤数据。</p>
+<p><img src="%E5%9B%BE3.png" alt="3"></p>
+<p><strong>操作3：</strong></p>
+<p>Innodb 主键作为聚集索引，数据与索引是存储在一起的，即使使用的是二级索引查询，获取多列数据，但其包含的是主键，所以依然属于覆盖索引。</p>
+<p><img src="%E5%9B%BE4.png" alt="4"></p>
+<p>1、覆盖索引：如果查询条件使用的是普通索引（或是联合索引的最左原则字段），查询结果是联合索引的字段或是主键，不用回表操作，直接返回结果，减少IO磁盘读写读取正行数据</p>
+<p>2、最左前缀：联合索引的最左 N 个字段，也可以是字符串索引的最左 M 个字符</p>
+<p>3、联合索引：根据创建联合索引的顺序，以最左原则进行where检索，比如（age，name）以age=1 或 age= 1 and name=‘张三’可以使用索引，单以name=‘张三’ 不会使用索引，考虑到存储空间的问题，还请根据业务需求，将查找频繁的数据进行靠左创建索引。</p>
+<p>4、索引下推：联合索引（name, age），name like '张%'and age &gt;10 检索，MySQL5.6版本之前，会对匹配的数据进行回表查询。5.6版本后，会先通过索引中覆盖的age数据过滤掉age&lt;10的数据，再进行回表查询，减少回表率，提升检索速度</p>
+<h1><span id="索引优化查询">索引优化查询</span></h1>
+<h2><span id="使用索引扫描来优化排序">使用索引扫描来优化排序</span></h2>
+<p>按照索引顺序扫描数据。</p>
+<p>需要的条件：</p>
+<ul>
+<li>索引的列顺序和Order By子句顺序完全一致；</li>
+<li>索引中所有列的方向（升序、降序）和Order By子句完全一致；</li>
+<li>Order By中的字段全部在关联表中的第一张表中。</li>
+</ul>
+<p>表结构：</p>
+<p><img src="%E5%9B%BE11.png" alt="表结构"></p>
+<p><code>rental_date</code>，<code>inventory_id</code>，<code>customer_id</code>，是联合唯一索引。</p>
+<p>INNODB-&gt;使用到了索引（主键）进行排序。success。</p>
+<p><img src="%E5%9B%BE12.png" alt="1"></p>
+<p>myisam使用了文件进行排序。</p>
+<p><img src="%E5%9B%BE13.png" alt="12"></p>
+<p>使用到了联合索引，获取完整的数据则需要回表查询数据。success。</p>
+<p><img src="%E5%9B%BE14.png" alt="14"></p>
+<p>使用到降序<code>desc</code>，则需要使用文件排序。</p>
+<p><img src="%E5%9B%BE15.png" alt="123"></p>
+<p>联合索引中最左边的列使用范围查找，则导致右边的索引失效。</p>
+<p><img src="%E5%9B%BE16.png" alt="16"></p>
+<h2><span id="模拟hash索引优化查询">模拟Hash索引优化查询</span></h2>
+<p>Innodb是引擎自动管理，而我们可以手动进行创建。</p>
+<ul>
+<li>其只能处理键值的全值匹配查找；</li>
+<li>所使用的Hash算法决定索引键的大小。</li>
+</ul>
+<p>可以用于对数据很长的列，计算Hash反而会缩短其长度。添加Hash可以使用MySQL触发器。</p>
+<h2><span id="删除重复和冗余的索引">删除重复和冗余的索引</span></h2>
+<h3><span id="使用工具">使用工具</span></h3>
+<p><code>pt-duplicate-key-checker </code>，可以检查一些重复和冗余的索引。</p>
+<blockquote>
+<p>使用的话：<a href="http://www.fordba.com/percona-toolkit-pt-duplicate-key-checker.html" target="_blank" rel="noopener">Percona-Toolkit系列之pt-duplicate-key-checker冗余索引/外键检测利器</a></p>
+</blockquote>
+<h3><span id="查找未使用过的索引">查找未使用过的索引</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select object_schema,object_name,index_name,b.`TABLE_ROWS`</span><br><span class="line">FROM performance_schema.table_io_waits_summary_by_index_usage a</span><br><span class="line">JOIN information_schema.tables b ON</span><br><span class="line">    a.`OBJECT_SCHEMA`=b.`TABLE_SCHEMA` AND</span><br><span class="line">    a.`OBJECT_NAME`=b.`TABLE_NAME`</span><br><span class="line">WHERE index_name IS NOT NULL</span><br><span class="line">AND count_star = 0</span><br><span class="line">ORDER BY object_schema, object_name;</span><br></pre></td></tr></table></figure>
+<h2><span id="更新索引统计信息以及减少索引碎片">更新索引统计信息以及减少索引碎片</span></h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">analyze talbe table_name</span><br><span class="line"></span><br><span class="line">optimize table table_name  // 使用不当将锁表</span><br></pre></td></tr></table></figure>
+<p>经常更新数据的磁盘需要整理碎片，数据库也是这样，Optimize Table语句对MyISAM和InnoDB类型的表都有效。</p>
+<h1><span id="btree结构">B+Tree结构</span></h1>
+<blockquote>
+<p><a href="https://www.jianshu.com/p/486a514b0ded" target="_blank" rel="noopener">MYSQL-B+TREE索引原理</a></p>
+</blockquote>
+<p>非叶子节点不存储data，只存储索引key；只有叶子节点才存储data。<code>（叶子节点为树中没有子节点的节点）</code>（所以B树索引查找数据是一级一级深入的找）</p>
+<p>在B+Tree的每个叶子节点增加一个指向相邻叶子节点的指针，就形成了<strong>带有顺序访问指针的B+Tree</strong>。</p>
+<p><img src="3575048-b5309bfe660a8ce9.webp" alt="img"></p>
+<hr>
+<blockquote>
+<p>参考：[MySQL Index](<a href="https://github.com/Snailclimb/JavaGuide/blob/master/docs/database/MySQL" target="_blank" rel="noopener">https://github.com/Snailclimb/JavaGuide/blob/master/docs/database/MySQL</a> <a href="http://Index.md" target="_blank" rel="noopener">Index.md</a>)</p>
+</blockquote>
+</div><div id="donate"><link rel="stylesheet" type="text/css" href="/css/donate.css"><script type="text/javascript" src="/js/donate.js" successtext="复制成功!"></script><a class="pos-f tr3" id="github" href="https://github.com/Kaiyuan/donate-page" arget="_blank" title="Github"></a><div id="DonateText">Donate</div><ul class="list pos-f" id="donateBox"><li id="PayPal"><a href="https://paypal.me/zanghong" target="_blank"></a></li><li id="AliPay" qr="/img/zhifubao.png"></li><li id="WeChat" qr="/img/weixin.png"></li></ul><div class="pos-f left-100" id="QRBox"><div id="MainBox"></div></div></div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css"><p><span>本文标题：</span>MySQL各类索引总结以及优化</p><p><span>文章作者：</span>小师</p><p><span>发布时间：</span>2021-04-27</p><p><span>最后更新：</span>2022-05-04</p><p><span>原始链接：</span><a href="/2021/04/27/MySQL简单索引总结汇/">chunlife.top/2021/04/27/MySQL简单索引总结汇/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="chunlife.top/2021/04/27/MySQL简单索引总结汇/"></i></span></p><p><span>版权声明：</span>本站所有文章均采用知识共享署名4.0国际许可协议进行许可</p></div><br><div class="tags"><a href="/tags/mysql/"><i class="fa fa-tag"></i>mysql</a><a href="/tags/索引/"><i class="fa fa-tag"></i>索引</a><a href="/tags/优化/"><i class="fa fa-tag"></i>优化</a></div><div class="post-nav"><a class="pre" href="/2021/04/30/MySQL事务中的MVCC/">MySQL事务中的MVCC</a><a class="next" href="/2021/04/25/zookeeper中的一致性/">zookeeper中的一致性</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=1.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=1.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=1.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: '01eb77bfd18de524243f',
+  clientSecret: '8cb336d6c7ac88bcc0ffb29c496f7dafe5c082e3',
+  repo: 'younglifestyle.github.io',
+  owner: 'younglifestyle',
+  admin: ['younglifestyle'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-client="ca-pub-2375091422289560" data-ad-slot="8776143066" data-ad-format="fluid" data-ad-layout="in-article" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="chunlife.top"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/DB/">DB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/devops/">devops</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式服务/">分布式服务</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂项/">杂项</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/系统/">系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/编程技术/">编程技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/高并发/" style="font-size: 15px;">高并发</a> <a href="/tags/6-824/" style="font-size: 15px;">6.824</a> <a href="/tags/MapReduce/" style="font-size: 15px;">MapReduce</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/MIT-6-824/" style="font-size: 15px;">MIT 6.824</a> <a href="/tags/论文/" style="font-size: 15px;">论文</a> <a href="/tags/幂等/" style="font-size: 15px;">幂等</a> <a href="/tags/Go/" style="font-size: 15px;">Go</a> <a href="/tags/Axure/" style="font-size: 15px;">Axure</a> <a href="/tags/微信和小程序/" style="font-size: 15px;">微信和小程序</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/macOS/" style="font-size: 15px;">macOS</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Windows/" style="font-size: 15px;">Windows</a> <a href="/tags/CSDN/" style="font-size: 15px;">CSDN</a> <a href="/tags/Bigtable/" style="font-size: 15px;">Bigtable</a> <a href="/tags/结构化数据存储系统/" style="font-size: 15px;">结构化数据存储系统</a> <a href="/tags/随笔/" style="font-size: 15px;">随笔</a> <a href="/tags/bilibili源码/" style="font-size: 15px;">bilibili源码</a> <a href="/tags/bilibili-code/" style="font-size: 15px;">bilibili code</a> <a href="/tags/elasticsearch/" style="font-size: 15px;">elasticsearch</a> <a href="/tags/Gateway/" style="font-size: 15px;">Gateway</a> <a href="/tags/搭建博客/" style="font-size: 15px;">搭建博客</a> <a href="/tags/github-pages/" style="font-size: 15px;">github pages</a> <a href="/tags/coding-Pages/" style="font-size: 15px;">coding Pages</a> <a href="/tags/A-Scalable-Distributed-File-System/" style="font-size: 15px;">A Scalable Distributed File System</a> <a href="/tags/apidoc/" style="font-size: 15px;">apidoc</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/Goroutine/" style="font-size: 15px;">Goroutine</a> <a href="/tags/Go-Micro/" style="font-size: 15px;">Go Micro</a> <a href="/tags/调试/" style="font-size: 15px;">调试</a> <a href="/tags/pprof/" style="font-size: 15px;">pprof</a> <a href="/tags/performance/" style="font-size: 15px;">performance</a> <a href="/tags/性能/" style="font-size: 15px;">性能</a> <a href="/tags/go-mod/" style="font-size: 15px;">go mod</a> <a href="/tags/微服务/" style="font-size: 15px;">微服务</a> <a href="/tags/OpenTrace/" style="font-size: 15px;">OpenTrace</a> <a href="/tags/Prometheus/" style="font-size: 15px;">Prometheus</a> <a href="/tags/context/" style="font-size: 15px;">context</a> <a href="/tags/gin/" style="font-size: 15px;">gin</a> <a href="/tags/go-test/" style="font-size: 15px;">go test</a> <a href="/tags/httptest/" style="font-size: 15px;">httptest</a> <a href="/tags/oracle/" style="font-size: 15px;">oracle</a> <a href="/tags/plugin/" style="font-size: 15px;">plugin</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/lantern/" style="font-size: 15px;">lantern</a> <a href="/tags/chromium-谷歌访问助手/" style="font-size: 15px;">chromium 谷歌访问助手</a> <a href="/tags/nil-compare-interface/" style="font-size: 15px;">nil compare interface</a> <a href="/tags/Google-MapReduce/" style="font-size: 15px;">Google MapReduce</a> <a href="/tags/Shell/" style="font-size: 15px;">Shell</a> <a href="/tags/exec/" style="font-size: 15px;">exec</a> <a href="/tags/goroutine/" style="font-size: 15px;">goroutine</a> <a href="/tags/fanout/" style="font-size: 15px;">fanout</a> <a href="/tags/fanin/" style="font-size: 15px;">fanin</a> <a href="/tags/基础/" style="font-size: 15px;">基础</a> <a href="/tags/读写文件/" style="font-size: 15px;">读写文件</a> <a href="/tags/Goland/" style="font-size: 15px;">Goland</a> <a href="/tags/GRPC/" style="font-size: 15px;">GRPC</a> <a href="/tags/Jetbrains/" style="font-size: 15px;">Jetbrains</a> <a href="/tags/singleflight/" style="font-size: 15px;">singleflight</a> <a href="/tags/cache/" style="font-size: 15px;">cache</a> <a href="/tags/Freescale/" style="font-size: 15px;">Freescale</a> <a href="/tags/C语言/" style="font-size: 15px;">C语言</a> <a href="/tags/后台运行/" style="font-size: 15px;">后台运行</a> <a href="/tags/nohub/" style="font-size: 15px;">nohub</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/文件共享-邮件/" style="font-size: 15px;">文件共享_邮件</a> <a href="/tags/markdown/" style="font-size: 15px;">markdown</a> <a href="/tags/Leaf/" style="font-size: 15px;">Leaf</a> <a href="/tags/mongoDB/" style="font-size: 15px;">mongoDB</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/事务/" style="font-size: 15px;">事务</a> <a href="/tags/MVCC/" style="font-size: 15px;">MVCC</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/explain/" style="font-size: 15px;">explain</a> <a href="/tags/Gorm/" style="font-size: 15px;">Gorm</a> <a href="/tags/json/" style="font-size: 15px;">json</a> <a href="/tags/存储/" style="font-size: 15px;">存储</a> <a href="/tags/翻页/" style="font-size: 15px;">翻页</a> <a href="/tags/索引/" style="font-size: 15px;">索引</a> <a href="/tags/优化/" style="font-size: 15px;">优化</a> <a href="/tags/串口/" style="font-size: 15px;">串口</a> <a href="/tags/PCI/" style="font-size: 15px;">PCI</a> <a href="/tags/QT/" style="font-size: 15px;">QT</a> <a href="/tags/raft/" style="font-size: 15px;">raft</a> <a href="/tags/OpenSSL/" style="font-size: 15px;">OpenSSL</a> <a href="/tags/RSA加密解密/" style="font-size: 15px;">RSA加密解密</a> <a href="/tags/SECS-GEM-Go/" style="font-size: 15px;">SECS/GEM - Go</a> <a href="/tags/SECS-GEM/" style="font-size: 15px;">SECS/GEM</a> <a href="/tags/UDP/" style="font-size: 15px;">UDP</a> <a href="/tags/TCP/" style="font-size: 15px;">TCP</a> <a href="/tags/GFS/" style="font-size: 15px;">GFS</a> <a href="/tags/The-Google-File-System/" style="font-size: 15px;">The Google File System</a> <a href="/tags/ARM/" style="font-size: 15px;">ARM</a> <a href="/tags/Tiny6410/" style="font-size: 15px;">Tiny6410</a> <a href="/tags/yapi/" style="font-size: 15px;">yapi</a> <a href="/tags/资料/" style="font-size: 15px;">资料</a> <a href="/tags/bufio/" style="font-size: 15px;">bufio</a> <a href="/tags/ReadLine-ReadBytes/" style="font-size: 15px;">ReadLine - ReadBytes</a> <a href="/tags/缓存/" style="font-size: 15px;">缓存</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/08/18/桌面客户端Golang-Wails快速开发/">桌面客户端Golang-Wails快速开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2023/11/15/SECS-GEM-Golang解包、封包库/">SECS/GEM-Golang解包、封包库</a></li><li class="post-list-item"><a class="post-list-link" href="/2023/05/18/Go语言实现HTTP到gRPC请求转换的最简单方法/">Go语言实现HTTP到gRPC请求转换的最简单方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2023/04/01/自动mock-grpc服务/">自动mock grpc服务</a></li><li class="post-list-item"><a class="post-list-link" href="/2023/02/22/SECS-GEM协议学习/">SECS/GEM协议学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/10/27/Golang-oracle使用/">Golang oracle使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/07/21/Yapi的安装以及使用/">Yapi的安装以及使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/06/24/MySQL-实战45讲-学习笔记/">MySQL 实战45讲 学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/06/16/go-kratos写代码浅记/">go-kratos写代码浅记</a></li><li class="post-list-item"><a class="post-list-link" href="/2022/05/09/proto管理之submodule/">proto管理之submodule</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://purelife.gitbook.io/little-design-powerpoint/" title="PowerPoint设计小册" target="_blank">PowerPoint设计小册</a><ul></ul><a href="https://masuit.com" title="懒得勤快的博客" target="_blank">懒得勤快的博客</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 <a href="/." rel="nofollow">Pure Life.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
