@@ -13,10 +13,10 @@
 </blockquote>
 <a id="more"></a>
 <h2><span id="客户端截图">客户端截图</span></h2>
-<img src="image-20241208190234491.png" alt="客户端示意图" style="zoom:80%;">
+<p><img src="image-20241208190234491.png" alt="客户端示意图"></p>
 <p>增加了选择本地文件，或保存内容到文件的操作，另外<code>保存</code>按钮若有文件则保存在文件以及<code>localStorage</code>中，无文件则正常保存在<code>localStorage</code>。</p>
 <p>另外实现了一个保存历史文件的功能，若设置了本地文件，则会在保存时，也会在执行文件下新建一个历史备份文件。</p>
-<img src="image-20241208192401905.png" alt="历史文件" style="zoom:80%;">
+<p><img src="image-20241208192401905.png" alt="历史文件"></p>
 <h2><span id="问题">问题</span></h2>
 <h3><span id="代理的问题">代理的问题</span></h3>
 <p><code>wails</code>比较奇怪的地方是在<code>build</code>的镜像，它的网络协议地址是<code>http://wails.localhost</code>，不是正常的本地localhost这样，所以默认在<code>amis</code>中，不加域名请求接口的话，接口前缀会被带上<code>wails.localhost</code>，例如<code>http://wails.localhost/api/v1/test/xxxxx</code>这样的。所以需要手动的对<code>fetcher</code>进行一些修改，对所有发起的请求加一个自定义的域名前缀，例如我这里改为了<code>http://127.0.0.1:32155</code>。</p>
