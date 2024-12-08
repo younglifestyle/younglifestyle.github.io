@@ -34,7 +34,7 @@
 <h3><span id="image类型不走fetcher">image类型不走fetcher</span></h3>
 <p>还记得我们前面，我们设置了一个全局拦截器，是在<code>fetcher</code>中实现的，这里面设置了域名以及<code>Header</code>，但是<code>image</code>不走<code>fetcher</code>，这就比较难崩了，所以image还不能直接使用这种方式去请求。</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"imageMode"</span>: <span class="string">"original"</span>,</span><br><span class="line">    <span class="attr">"src"</span>: <span class="string">"/api/v1/download/image?id=$&#123;id&#125;"</span>,</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"image"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以使用其他方式替换，例如使用api将图片数据请求过来，然后使用<code>tpl</code>组件，用原生<img>来处理图片显示的事情。</p>
+<p>可以使用其他方式替换，例如使用api将图片数据请求过来，然后使用<code>tpl</code>组件，用原生<code>img</code>来处理图片显示的事情。</p>
 <h3><span id="涉及到的修改的文件">涉及到的修改的文件</span></h3>
 <p>修改的库：<a href="https://github.com/aisuda/amis-editor-demo" target="_blank" rel="noopener">amis-editor-demo</a>。</p>
 <p><code>/route/Editor.tsx</code>，Editor上的按钮以及对文件的处理。</p>
